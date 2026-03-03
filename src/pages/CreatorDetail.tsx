@@ -28,10 +28,8 @@ const CreatorDetail = () => {
   const [selectedCampaign, setSelectedCampaign] = useState("");
   const [inviteMessage, setInviteMessage] = useState("");
 
-  // Try mock data first
   const mockCreator = creators.find((c) => c.id === id);
 
-  // Try fetching from DB if not mock
   useEffect(() => {
     if (mockCreator || !id) return;
     const fetchCreator = async () => {
@@ -45,7 +43,6 @@ const CreatorDetail = () => {
     fetchCreator();
   }, [id, mockCreator]);
 
-  // Check if saved
   useEffect(() => {
     if (!user || role !== "brand" || !id) return;
     const targetId = mockCreator ? null : id;
@@ -54,19 +51,17 @@ const CreatorDetail = () => {
       .then(({ data }) => setIsSaved(!!data));
   }, [user, role, id]);
 
-  // Fetch brand campaigns for invite
   useEffect(() => {
     if (!user || role !== "brand") return;
     supabase.from("campaigns").select("id, title").eq("brand_user_id", user.id).eq("status", "active")
       .then(({ data }) => setCampaigns(data || []));
   }, [user, role]);
 
-  // Build creator object from either source
   const creator = mockCreator || (dbCreator ? {
     id: id!,
     name: dbProfile?.full_name || "Creator",
     handle: dbCreator.instagram_handle || "@creator",
-    avatar: dbProfile?.avatar_url || `https://api.dicebear.com/9.x/avataaars/svg?seed=${id?.slice(0, 8)}`,
+    avatar: dbProfile?.avatar_url || `https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face`,
     category: dbCreator.primary_niche || "Lifestyle",
     followers: dbCreator.instagram_followers ? `${(dbCreator.instagram_followers / 1000).toFixed(0)}K` : "—",
     engagement: dbCreator.engagement_rate ? `${dbCreator.engagement_rate}%` : "—",
@@ -93,35 +88,26 @@ const CreatorDetail = () => {
 
   const handleMessage = async () => {
     if (!user || !isRealUser) {
-      toast.info("Chat works with registered users. This is a demo profile.");
+      toast.info("Messaging is available for registered users.");
       return;
     }
     setStartingChat(true);
-
-    // Check existing conversation
     const { data: existing } = await supabase
-      .from("conversations")
-      .select("id")
+      .from("conversations").select("id")
       .or(`and(participant_1.eq.${user.id},participant_2.eq.${id}),and(participant_1.eq.${id},participant_2.eq.${user.id})`)
       .maybeSingle();
 
     if (existing) {
       navigate(`/messages/${existing.id}`);
     } else {
-      const { data: newConv } = await supabase.from("conversations").insert({
-        participant_1: user.id,
-        participant_2: id!,
-      }).select("id").single();
+      const { data: newConv } = await supabase.from("conversations").insert({ participant_1: user.id, participant_2: id! }).select("id").single();
       if (newConv) navigate(`/messages/${newConv.id}`);
     }
     setStartingChat(false);
   };
 
   const handleSave = async () => {
-    if (!user || !isRealUser) {
-      toast.info("Save works with registered creators.");
-      return;
-    }
+    if (!user || !isRealUser) { toast.info("Save works with registered creators."); return; }
     if (isSaved) {
       await supabase.from("saved_creators").delete().eq("brand_user_id", user.id).eq("creator_user_id", id!);
       setIsSaved(false);
@@ -129,23 +115,22 @@ const CreatorDetail = () => {
     } else {
       await supabase.from("saved_creators").insert({ brand_user_id: user.id, creator_user_id: id! });
       setIsSaved(true);
-      toast.success("Creator saved! ❤️");
+      toast.success("Creator saved");
     }
   };
 
   const handleInvite = async () => {
     if (!selectedCampaign || !user || !id) return;
-    // Create notification for creator
     const campaign = campaigns.find(c => c.id === selectedCampaign);
     await supabase.from("notifications").insert({
       user_id: id,
-      title: "Campaign Invitation! 🎯",
+      title: "Campaign Invitation",
       message: `You've been invited to "${campaign?.title}". ${inviteMessage || "Check it out!"}`,
       type: "campaign",
       reference_type: "campaign",
       reference_id: selectedCampaign,
     });
-    toast.success("Invitation sent! 🚀");
+    toast.success("Invitation sent");
     setInviteOpen(false);
     setSelectedCampaign("");
     setInviteMessage("");
@@ -155,70 +140,69 @@ const CreatorDetail = () => {
     <div className="min-h-screen bg-background max-w-lg mx-auto">
       {/* Header */}
       <div className="relative">
-        <div className="h-36 gradient-primary relative">
-          <div className="absolute inset-0 bg-primary-foreground/5" />
-          <button onClick={() => navigate(-1)} className="absolute top-4 left-4 w-9 h-9 rounded-xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center z-10">
-            <ArrowLeft className="w-5 h-5 text-primary-foreground" />
+        <div className="h-32 gradient-primary relative">
+          <button onClick={() => navigate(-1)} className="absolute top-4 left-4 w-8 h-8 rounded-lg bg-primary-foreground/15 backdrop-blur-sm flex items-center justify-center z-10">
+            <ArrowLeft className="w-4 h-4 text-primary-foreground" />
           </button>
           <div className="absolute top-4 right-4 flex gap-2 z-10">
-            <button className="w-9 h-9 rounded-xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center">
+            <button className="w-8 h-8 rounded-lg bg-primary-foreground/15 backdrop-blur-sm flex items-center justify-center">
               <Share2 className="w-4 h-4 text-primary-foreground" />
             </button>
             {role === "brand" && (
-              <button onClick={handleSave} className="w-9 h-9 rounded-xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center">
+              <button onClick={handleSave} className="w-8 h-8 rounded-lg bg-primary-foreground/15 backdrop-blur-sm flex items-center justify-center">
                 <Heart className={`w-4 h-4 ${isSaved ? "text-accent fill-accent" : "text-primary-foreground"}`} />
               </button>
             )}
           </div>
         </div>
 
-        <div className="px-4 -mt-12 relative z-10">
+        <div className="px-4 -mt-10 relative z-10">
           <div className="flex items-end gap-3">
             <div className="relative">
-              <img src={creator.avatar} alt={creator.name} className="w-24 h-24 rounded-2xl border-4 border-background object-cover shadow-lg bg-secondary" />
+              <img src={creator.avatar} alt={creator.name} className="w-20 h-20 rounded-xl border-4 border-background object-cover shadow-md bg-muted" />
               {creator.verified && (
-                <CheckCircle className="absolute -bottom-1 -right-1 w-6 h-6 text-primary fill-background" />
+                <CheckCircle className="absolute -bottom-1 -right-1 w-5 h-5 text-primary fill-background" />
               )}
             </div>
             <div className="pb-1">
-              <h1 className="font-heading font-bold text-xl text-foreground">{creator.name}</h1>
-              <p className="text-sm text-muted-foreground">{creator.handle}</p>
+              <h1 className="font-heading font-bold text-lg text-foreground tracking-tight">{creator.name}</h1>
+              <p className="text-xs text-muted-foreground">{creator.handle}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Bio */}
-      <div className="px-4 mt-4">
+      <div className="px-4 mt-3">
         <p className="text-sm text-muted-foreground leading-relaxed">{creator.bio}</p>
         {dbCreator?.secondary_niches && dbCreator.secondary_niches.length > 0 && (
           <div className="flex gap-1.5 mt-2 flex-wrap">
             <Badge variant="secondary" className="text-[10px]">{creator.category}</Badge>
             {dbCreator.secondary_niches.map((n: string) => (
-              <Badge key={n} variant="outline" className="text-[10px] border-border">{n}</Badge>
+              <Badge key={n} variant="outline" className="text-[10px]">{n}</Badge>
             ))}
           </div>
         )}
       </div>
 
-      {/* Stats Row */}
-      <div className="px-4 mt-4 grid grid-cols-3 gap-2.5">
+      {/* Stats */}
+      <div className="px-4 mt-4 grid grid-cols-3 gap-2">
         {[
           { label: "Followers", value: creator.followers, icon: Users },
           { label: "Engagement", value: creator.engagement, icon: TrendingUp },
-          { label: "Rating", value: "4.8⭐", icon: Star },
+          { label: "Rating", value: "4.8", icon: Star },
         ].map((stat, i) => (
-          <div key={i} className="glass-card rounded-2xl p-3 text-center">
-            <p className="font-heading font-bold text-base text-card-foreground">{stat.value}</p>
+          <div key={i} className="glass-card rounded-lg p-3 text-center">
+            <p className="font-heading font-bold text-sm text-card-foreground">{stat.value}</p>
             <p className="text-[10px] text-muted-foreground mt-0.5">{stat.label}</p>
           </div>
         ))}
       </div>
 
       {/* Details */}
-      <div className="px-4 mt-4 space-y-2.5">
-        <div className="glass-card rounded-2xl p-4">
-          <h3 className="font-heading font-semibold text-sm text-card-foreground mb-2.5">Details</h3>
+      <div className="px-4 mt-4 space-y-2">
+        <div className="glass-card rounded-xl p-4">
+          <h3 className="font-heading font-semibold text-xs text-card-foreground mb-2.5 uppercase tracking-wider">Details</h3>
           <div className="space-y-2">
             {[
               { icon: MapPin, label: "Location", value: creator.location },
@@ -226,7 +210,7 @@ const CreatorDetail = () => {
               { icon: Star, label: "Category", value: creator.category },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+                <div className="w-8 h-8 rounded-md bg-secondary flex items-center justify-center">
                   <item.icon className="w-4 h-4 text-primary" />
                 </div>
                 <div>
@@ -238,9 +222,8 @@ const CreatorDetail = () => {
           </div>
         </div>
 
-        {/* Rate Card */}
-        <div className="glass-card rounded-2xl p-4">
-          <h3 className="font-heading font-semibold text-sm text-card-foreground mb-2">Rate Card</h3>
+        <div className="glass-card rounded-xl p-4">
+          <h3 className="font-heading font-semibold text-xs text-card-foreground mb-2 uppercase tracking-wider">Rate Card</h3>
           {dbCreator && (dbCreator.rate_feed_post || dbCreator.rate_reel || dbCreator.rate_story) ? (
             <div className="grid grid-cols-3 gap-2">
               {[
@@ -248,24 +231,23 @@ const CreatorDetail = () => {
                 { label: "Reel", value: dbCreator.rate_reel },
                 { label: "Story", value: dbCreator.rate_story },
               ].filter(r => r.value).map((rate, i) => (
-                <div key={i} className="text-center p-2 rounded-xl bg-secondary/50">
-                  <p className="font-heading font-bold text-sm gradient-text">₹{parseInt(rate.value).toLocaleString()}</p>
+                <div key={i} className="text-center p-2 rounded-lg bg-secondary/50">
+                  <p className="font-heading font-bold text-sm text-primary">₹{parseInt(rate.value).toLocaleString()}</p>
                   <p className="text-[9px] text-muted-foreground mt-0.5">{rate.label}</p>
                 </div>
               ))}
             </div>
           ) : (
             <>
-              <p className="font-heading font-bold text-lg gradient-text">{creator.rate}</p>
+              <p className="font-heading font-bold text-base text-primary">{creator.rate}</p>
               <p className="text-[10px] text-muted-foreground mt-0.5">Per campaign collaboration</p>
             </>
           )}
         </div>
 
-        {/* Content Formats */}
         {dbCreator?.content_formats && dbCreator.content_formats.length > 0 && (
-          <div className="glass-card rounded-2xl p-4">
-            <h3 className="font-heading font-semibold text-sm text-card-foreground mb-2">Content Formats</h3>
+          <div className="glass-card rounded-xl p-4">
+            <h3 className="font-heading font-semibold text-xs text-card-foreground mb-2 uppercase tracking-wider">Content Formats</h3>
             <div className="flex gap-1.5 flex-wrap">
               {dbCreator.content_formats.map((f: string) => (
                 <Badge key={f} variant="secondary" className="text-[10px]">{f}</Badge>
@@ -274,28 +256,27 @@ const CreatorDetail = () => {
           </div>
         )}
 
-        {/* Social Handles */}
         {dbCreator && (
-          <div className="glass-card rounded-2xl p-4">
-            <h3 className="font-heading font-semibold text-sm text-card-foreground mb-2">Connected Platforms</h3>
+          <div className="glass-card rounded-xl p-4">
+            <h3 className="font-heading font-semibold text-xs text-card-foreground mb-2 uppercase tracking-wider">Connected Platforms</h3>
             <div className="space-y-2">
               {dbCreator.instagram_handle && (
                 <div className="flex items-center gap-2">
-                  <Instagram className="w-4 h-4 text-accent" />
+                  <Instagram className="w-4 h-4 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">{dbCreator.instagram_handle}</span>
                   {dbCreator.instagram_followers && <Badge variant="secondary" className="text-[9px]">{(dbCreator.instagram_followers / 1000).toFixed(0)}K</Badge>}
                 </div>
               )}
               {dbCreator.youtube_channel && (
                 <div className="flex items-center gap-2">
-                  <Youtube className="w-4 h-4 text-destructive" />
+                  <Youtube className="w-4 h-4 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">YouTube</span>
-                  {dbCreator.youtube_subscribers && <Badge variant="secondary" className="text-[9px]">{(dbCreator.youtube_subscribers / 1000).toFixed(0)}K subs</Badge>}
+                  {dbCreator.youtube_subscribers && <Badge variant="secondary" className="text-[9px]">{(dbCreator.youtube_subscribers / 1000).toFixed(0)}K</Badge>}
                 </div>
               )}
               {dbCreator.twitter_handle && (
                 <div className="flex items-center gap-2">
-                  <Twitter className="w-4 h-4 text-primary" />
+                  <Twitter className="w-4 h-4 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">{dbCreator.twitter_handle}</span>
                 </div>
               )}
@@ -306,14 +287,14 @@ const CreatorDetail = () => {
 
       {/* CTA */}
       <div className="px-4 py-5 pb-24">
-        <div className="flex gap-2.5">
-          <Button variant="gradient-outline" className="flex-1 h-12 rounded-2xl font-heading" onClick={handleMessage} disabled={startingChat}>
+        <div className="flex gap-2">
+          <Button variant="outline" className="flex-1 h-11 rounded-lg font-heading" onClick={handleMessage} disabled={startingChat}>
             <MessageCircle className="w-4 h-4" /> Message
           </Button>
           {role === "brand" && isRealUser && campaigns.length > 0 ? (
             <Drawer open={inviteOpen} onOpenChange={setInviteOpen}>
               <DrawerTrigger asChild>
-                <Button variant="gradient" className="flex-1 h-12 rounded-2xl font-heading">
+                <Button className="flex-1 h-11 rounded-lg font-heading">
                   <Send className="w-4 h-4" /> Invite
                 </Button>
               </DrawerTrigger>
@@ -327,7 +308,7 @@ const CreatorDetail = () => {
                     <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Campaign</label>
                     <div className="space-y-1.5">
                       {campaigns.map(c => (
-                        <button key={c.id} onClick={() => setSelectedCampaign(c.id)} className={`w-full p-3 rounded-xl text-left text-sm font-heading transition-all ${selectedCampaign === c.id ? "gradient-primary text-primary-foreground shadow-md" : "bg-secondary text-secondary-foreground"}`}>
+                        <button key={c.id} onClick={() => setSelectedCampaign(c.id)} className={`w-full p-3 rounded-lg text-left text-sm font-heading transition-all ${selectedCampaign === c.id ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
                           {c.title}
                         </button>
                       ))}
@@ -335,23 +316,23 @@ const CreatorDetail = () => {
                   </div>
                   <div>
                     <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Message (optional)</label>
-                    <textarea value={inviteMessage} onChange={e => setInviteMessage(e.target.value)} placeholder="Custom message for the creator..." rows={2} className="w-full px-3 py-2 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" />
+                    <textarea value={inviteMessage} onChange={e => setInviteMessage(e.target.value)} placeholder="Custom message for the creator..." rows={2} className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" />
                   </div>
                 </div>
                 <DrawerFooter>
-                  <Button variant="gradient" className="w-full h-12 rounded-2xl font-heading" disabled={!selectedCampaign} onClick={handleInvite}>
+                  <Button className="w-full h-11 rounded-lg font-heading" disabled={!selectedCampaign} onClick={handleInvite}>
                     <Send className="w-4 h-4" /> Send Invitation
                   </Button>
                   <DrawerClose asChild>
-                    <Button variant="outline" className="w-full rounded-2xl">Cancel</Button>
+                    <Button variant="outline" className="w-full rounded-lg">Cancel</Button>
                   </DrawerClose>
                 </DrawerFooter>
               </DrawerContent>
             </Drawer>
           ) : (
-            <Button variant="gradient" className="flex-1 h-12 rounded-2xl font-heading" onClick={() => {
+            <Button className="flex-1 h-11 rounded-lg font-heading" onClick={() => {
               if (role === "brand") navigate("/campaigns/create");
-              else toast.info("Collaboration feature coming soon!");
+              else toast.info("Collaboration feature coming soon");
             }}>
               <Briefcase className="w-4 h-4" /> {role === "brand" ? "Create Campaign" : "Collaborate"}
             </Button>
