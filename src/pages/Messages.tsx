@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
+import { useNavigate } from "react-router-dom";
 import { Search, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -23,6 +24,7 @@ const mockConversations: MockConversation[] = [
 
 const Messages = () => {
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const filtered = mockConversations.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase())
@@ -39,7 +41,6 @@ const Messages = () => {
         </div>
       </header>
 
-      {/* Search */}
       <div className="px-4 mt-3">
         <div className="relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -53,18 +54,18 @@ const Messages = () => {
         </div>
       </div>
 
-      {/* Conversation List */}
       <div className="mt-3">
         {filtered.map((conv, i) => (
           <div
             key={conv.id}
-            className="px-4 py-3 flex items-center gap-3 hover:bg-secondary/30 cursor-pointer transition-colors opacity-0 animate-fade-up"
+            onClick={() => navigate(`/messages/${conv.id}`)}
+            className="px-4 py-3 flex items-center gap-3 hover:bg-secondary/30 cursor-pointer transition-colors opacity-0 animate-fade-up active:bg-secondary/50"
             style={{ animationDelay: `${i * 50}ms`, animationFillMode: "forwards" }}
           >
             <div className="relative shrink-0">
               <img src={conv.avatar} alt={conv.name} className="w-12 h-12 rounded-2xl object-cover" />
               {conv.online && (
-                <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-background" />
+                <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-primary border-2 border-background" />
               )}
             </div>
             <div className="flex-1 min-w-0">
