@@ -116,8 +116,17 @@ const Campaigns = () => {
       <div className="px-4 mt-3 space-y-2.5 mb-4">
         <p className="text-[10px] text-muted-foreground font-heading">{filtered.length} campaigns</p>
         {filtered.map((campaign, i) => (
-          <div key={campaign.id} onClick={() => navigate(`/campaigns/${campaign.id}`)}>
-            <CampaignCard campaign={campaign} index={i} />
+          <div key={campaign.id}>
+            <div onClick={() => navigate(`/campaigns/${campaign.id}`)}>
+              <CampaignCard campaign={campaign} index={i} />
+            </div>
+            {role === "brand" && (campaign as any).isReal && (
+              <div className="px-1 mt-1">
+                <Button size="sm" variant="outline" className="w-full h-7 text-[10px] rounded-lg" onClick={() => navigate(`/campaigns/${campaign.id}/manage`)}>
+                  Manage Applications
+                </Button>
+              </div>
+            )}
           </div>
         ))}
         {filtered.length === 0 && (

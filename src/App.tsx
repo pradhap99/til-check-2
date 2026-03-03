@@ -15,6 +15,7 @@ import CreatorDetail from "./pages/CreatorDetail";
 import Campaigns from "./pages/Campaigns";
 import CampaignDetail from "./pages/CampaignDetail";
 import CreateCampaign from "./pages/CreateCampaign";
+import CampaignManage from "./pages/CampaignManage";
 import Messages from "./pages/Messages";
 import ChatConversation from "./pages/ChatConversation";
 import Notifications from "./pages/Notifications";
@@ -22,6 +23,12 @@ import Onboarding from "./pages/Onboarding";
 import EditProfile from "./pages/EditProfile";
 import MyApplications from "./pages/MyApplications";
 import Profile from "./pages/Profile";
+import Earnings from "./pages/Earnings";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings";
+import Support from "./pages/Support";
+import Reviews from "./pages/Reviews";
+import SavedCreators from "./pages/SavedCreators";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,12 +52,19 @@ const App = () => (
               <Route path="/campaigns" element={<ProtectedRoute><Campaigns /></ProtectedRoute>} />
               <Route path="/campaigns/create" element={<ProtectedRoute requiredRole="brand"><CreateCampaign /></ProtectedRoute>} />
               <Route path="/campaigns/:id" element={<ProtectedRoute><CampaignDetail /></ProtectedRoute>} />
+              <Route path="/campaigns/:id/manage" element={<ProtectedRoute requiredRole="brand"><CampaignManage /></ProtectedRoute>} />
               <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
               <Route path="/messages/:id" element={<ProtectedRoute><ChatConversation /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
               <Route path="/applications" element={<ProtectedRoute><MyApplications /></ProtectedRoute>} />
+              <Route path="/earnings" element={<ProtectedRoute><Earnings /></ProtectedRoute>} />
+              <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+              <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+              <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
+              <Route path="/reviews" element={<ProtectedRoute><Reviews /></ProtectedRoute>} />
+              <Route path="/saved" element={<ProtectedRoute requiredRole="brand"><SavedCreators /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </OnboardingProvider>
