@@ -1,8 +1,12 @@
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { creators } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, CheckCircle, MapPin, Users, TrendingUp, Heart, Share2, MessageCircle, Instagram, Youtube, Twitter, Star } from "lucide-react";
+import { toast } from "sonner";
 
 const platformIcon: Record<string, any> = {
   Instagram, YouTube: Youtube, Twitter,
@@ -11,6 +15,10 @@ const platformIcon: Record<string, any> = {
 const CreatorDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, role } = useAuth();
+  const [startingChat, setStartingChat] = useState(false);
+
+  // Try mock data first
   const creator = creators.find((c) => c.id === id);
 
   if (!creator) {
@@ -22,6 +30,16 @@ const CreatorDetail = () => {
   }
 
   const PlatformIcon = platformIcon[creator.platform] || Instagram;
+
+  const handleMessage = async () => {
+    if (!user) return;
+    setStartingChat(true);
+
+    // For mock creators, we can't create real conversations
+    // But for real creators with user_ids, we can
+    toast.info("Chat feature works with real users. Try signing up two accounts!");
+    setStartingChat(false);
+  };
 
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto">
@@ -42,7 +60,6 @@ const CreatorDetail = () => {
           </div>
         </div>
 
-        {/* Avatar */}
         <div className="px-4 -mt-12 relative z-10">
           <div className="flex items-end gap-3">
             <div className="relative">
@@ -111,7 +128,7 @@ const CreatorDetail = () => {
       {/* CTA */}
       <div className="px-4 py-5 pb-24">
         <div className="flex gap-2.5">
-          <Button variant="gradient-outline" className="flex-1 h-12 rounded-2xl font-heading">
+          <Button variant="gradient-outline" className="flex-1 h-12 rounded-2xl font-heading" onClick={handleMessage} disabled={startingChat}>
             <MessageCircle className="w-4 h-4" /> Message
           </Button>
           <Button variant="gradient" className="flex-1 h-12 rounded-2xl font-heading">

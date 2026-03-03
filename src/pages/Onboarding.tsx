@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowRight, ArrowLeft, CheckCircle, Instagram, Youtube, Twitter, MapPin, Briefcase, Palette } from "lucide-react";
+import { ArrowRight, ArrowLeft, CheckCircle, Instagram, Youtube } from "lucide-react";
 import { toast } from "sonner";
 
 const niches = ["Fashion", "Tech", "Fitness", "Food", "Travel", "Gaming", "Beauty", "Lifestyle", "Finance", "Comedy", "Education", "Health"];
@@ -12,10 +13,11 @@ const cities = ["Mumbai", "Delhi", "Bangalore", "Hyderabad", "Pune", "Chennai", 
 
 const CreatorOnboarding = () => {
   const { user } = useAuth();
+  const { refresh } = useOnboarding();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  
+
   const [primaryNiche, setPrimaryNiche] = useState("");
   const [secondaryNiches, setSecondaryNiches] = useState<string[]>([]);
   const [formats, setFormats] = useState<string[]>([]);
@@ -24,13 +26,8 @@ const CreatorOnboarding = () => {
   const [city, setCity] = useState("");
   const [bio, setBio] = useState("");
 
-  const toggleSecondary = (n: string) => {
-    setSecondaryNiches(prev => prev.includes(n) ? prev.filter(x => x !== n) : prev.length < 3 ? [...prev, n] : prev);
-  };
-
-  const toggleFormat = (f: string) => {
-    setFormats(prev => prev.includes(f) ? prev.filter(x => x !== f) : [...prev, f]);
-  };
+  const toggleSecondary = (n: string) => setSecondaryNiches(prev => prev.includes(n) ? prev.filter(x => x !== n) : prev.length < 3 ? [...prev, n] : prev);
+  const toggleFormat = (f: string) => setFormats(prev => prev.includes(f) ? prev.filter(x => x !== f) : [...prev, f]);
 
   const steps = [
     {
@@ -142,6 +139,7 @@ const CreatorOnboarding = () => {
         bio,
       }).eq("user_id", user.id);
       toast.success("Welcome aboard! 🎉");
+      refresh();
       navigate("/home");
     } catch {
       toast.error("Something went wrong. Please try again.");
@@ -153,7 +151,6 @@ const CreatorOnboarding = () => {
 
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto flex flex-col">
-      {/* Progress */}
       <div className="px-4 pt-5">
         <div className="flex gap-1.5">
           {steps.map((_, i) => (
@@ -163,31 +160,20 @@ const CreatorOnboarding = () => {
         <p className="text-[10px] text-muted-foreground mt-2 font-heading">Step {step + 1} of {steps.length}</p>
       </div>
 
-      {/* Content */}
       <div className="flex-1 px-4 pt-6">
         <h1 className="text-xl font-heading font-bold text-foreground">{currentStep.title}</h1>
         <p className="text-sm text-muted-foreground mt-1 mb-5">{currentStep.subtitle}</p>
         {currentStep.content}
       </div>
 
-      {/* Footer */}
       <div className="px-4 pb-8 pt-4 flex gap-2.5">
         {step > 0 && (
           <Button variant="outline" className="h-12 rounded-2xl px-5" onClick={() => setStep(s => s - 1)}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
         )}
-        <Button
-          variant="gradient"
-          className="flex-1 h-12 rounded-2xl font-heading"
-          disabled={!currentStep.valid || loading}
-          onClick={() => step < steps.length - 1 ? setStep(s => s + 1) : handleComplete()}
-        >
-          {step < steps.length - 1 ? (
-            <>Continue <ArrowRight className="w-4 h-4" /></>
-          ) : (
-            <>Complete Setup <CheckCircle className="w-4 h-4" /></>
-          )}
+        <Button variant="gradient" className="flex-1 h-12 rounded-2xl font-heading" disabled={!currentStep.valid || loading} onClick={() => step < steps.length - 1 ? setStep(s => s + 1) : handleComplete()}>
+          {step < steps.length - 1 ? <>Continue <ArrowRight className="w-4 h-4" /></> : <>Complete Setup <CheckCircle className="w-4 h-4" /></>}
         </Button>
       </div>
     </div>
@@ -196,6 +182,7 @@ const CreatorOnboarding = () => {
 
 const BrandOnboarding = () => {
   const { user } = useAuth();
+  const { refresh } = useOnboarding();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -284,6 +271,7 @@ const BrandOnboarding = () => {
         onboarding_step: 3,
       });
       toast.success("Your brand profile is set! 🚀");
+      refresh();
       navigate("/home");
     } catch {
       toast.error("Something went wrong.");

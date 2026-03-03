@@ -1,23 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { campaigns } from "@/data/mockData";
+import { campaigns as mockCampaigns } from "@/data/mockData";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import CampaignCard from "@/components/CampaignCard";
 import Layout from "@/components/Layout";
 import { Search, SlidersHorizontal, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
+import { Badge } from "@/components/ui/badge";
 
-const campaignCategories = ["All", ...Array.from(new Set(campaigns.map((c) => c.category)))];
-const budgetRanges = ["All", "Under ₹5L", "₹5-10L", "₹10L+"];
+const campaignCategories = ["All", ...Array.from(new Set(mockCampaigns.map((c) => c.category)))];
 
 const Campaigns = () => {
   const navigate = useNavigate();
-  const { role } = useAuth();
+  const { user, role } = useAuth();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
+  const [dbCampaigns, setDbCampaigns] = useState<any[]>([]);
 
-  const filtered = campaigns.filter((c) => {
+  // Fetch real campaigns from DB
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      const { data } = await supabase
+        .from("campaigns")
+        .select("*, brand_profiles(business_name)")
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+      setDbCampaigns(data || []);
+    };
+    fetchCampaigns();
+  }, []);
+
+  // Merge mock + real campaigns
+  const allCampaigns = [
+    ...dbCampaigns.map(c => ({
+      id: c.id,
+      brand: (c as any).brand_profiles?.business_name || "Brand",
+      logo: "🚀",
+      title: c.title,
+      budget: c.total_budget ? `₹${(parseInt(c.total_budget) / 100000).toFixed(0)}L` : "—",
+      category: c.niche_targeting?.[0] || "General",
+      deadline: c.end_date ? new Date(c.end_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—",
+      slots: c.slots_total || 5,
+      filled: c.slots_filled || 0,
+      description: c.description || "",
+      platforms: c.required_platforms || [],
+      isReal: true,
+    })),
+    ...mockCampaigns.map(c => ({ ...c, isReal: false })),
+  ];
+
+  const filtered = allCampaigns.filter((c) => {
     const matchSearch = c.title.toLowerCase().includes(search.toLowerCase()) || c.brand.toLowerCase().includes(search.toLowerCase());
     const matchCategory = selectedCategory === "All" || c.category === selectedCategory;
     return matchSearch && matchCategory;
@@ -33,7 +67,7 @@ const Campaigns = () => {
           </p>
         </div>
         {role === "brand" && (
-          <Button size="sm" variant="gradient" className="h-8 text-xs rounded-xl">
+          <Button size="sm" variant="gradient" className="h-8 text-xs rounded-xl" onClick={() => navigate("/campaigns/create")}>
             <Plus className="w-3.5 h-3.5" /> Create
           </Button>
         )}
@@ -80,7 +114,7 @@ const Campaigns = () => {
 
       {/* Results */}
       <div className="px-4 mt-3 space-y-2.5 mb-4">
-        <p className="text-[10px] text-muted-foreground font-heading">{filtered.length} campaigns live</p>
+        <p className="text-[10px] text-muted-foreground font-heading">{filtered.length} campaigns</p>
         {filtered.map((campaign, i) => (
           <div key={campaign.id} onClick={() => navigate(`/campaigns/${campaign.id}`)}>
             <CampaignCard campaign={campaign} index={i} />
