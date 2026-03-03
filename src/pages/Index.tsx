@@ -6,7 +6,7 @@ import CampaignCard from "@/components/CampaignCard";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowRight, Bell, Search, MessageCircle, Briefcase, Wallet, BarChart3, Plus, TrendingUp, Users } from "lucide-react";
+import { ArrowRight, Bell, Search, MessageCircle, Briefcase, Wallet, BarChart3, Plus, TrendingUp, Users, Sparkles, FileText } from "lucide-react";
 
 const Index = () => {
   const { user, role } = useAuth();
@@ -80,12 +80,12 @@ const Index = () => {
         <div className="grid grid-cols-3 gap-2">
           {(role === "brand" ? [
             { icon: Plus, label: "New Campaign", to: "/campaigns/create" },
-            { icon: Search, label: "Find Creators", to: "/creators" },
+            { icon: Sparkles, label: "Recommendations", to: "/recommendations" },
             { icon: Wallet, label: "Payments", to: "/earnings" },
           ] : [
             { icon: Briefcase, label: "Campaigns", to: "/campaigns" },
+            { icon: FileText, label: "Applications", to: "/applications" },
             { icon: Wallet, label: "Earnings", to: "/earnings" },
-            { icon: BarChart3, label: "Analytics", to: "/analytics" },
           ]).map((action, i) => (
             <Link key={i} to={action.to} className="border border-border rounded-lg p-3 text-center hover-lift flex flex-col items-center gap-2">
               <div className="w-8 h-8 rounded-md bg-secondary flex items-center justify-center">

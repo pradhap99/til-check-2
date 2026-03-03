@@ -22,6 +22,8 @@ import Notifications from "./pages/Notifications";
 import Onboarding from "./pages/Onboarding";
 import EditProfile from "./pages/EditProfile";
 import MyApplications from "./pages/MyApplications";
+import CreatorWorkspace from "./pages/CreatorWorkspace";
+import Recommendations from "./pages/Recommendations";
 import Profile from "./pages/Profile";
 import Earnings from "./pages/Earnings";
 import Analytics from "./pages/Analytics";
@@ -59,6 +61,8 @@ const App = () => (
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
               <Route path="/applications" element={<ProtectedRoute><MyApplications /></ProtectedRoute>} />
+              <Route path="/workspace/:applicationId" element={<ProtectedRoute><CreatorWorkspace /></ProtectedRoute>} />
+              <Route path="/recommendations" element={<ProtectedRoute requiredRole="brand"><Recommendations /></ProtectedRoute>} />
               <Route path="/earnings" element={<ProtectedRoute><Earnings /></ProtectedRoute>} />
               <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
