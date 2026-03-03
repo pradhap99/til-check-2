@@ -116,34 +116,33 @@ const CampaignDetail = () => {
   const handleApply = async () => {
     if (!user || !id) return;
 
-    if (!campaign.isReal) {
-      toast.error("This is a sample campaign. Apply to real campaigns created by brands.");
-      return;
-    }
-
     setApplying(true);
     try {
-      const { error } = await supabase.from("campaign_applications").insert({
-        campaign_id: id,
-        creator_user_id: user.id,
-        pitch,
-        proposed_rate: proposedRate,
-        content_concept: contentConcept,
-        status: "pending",
-      });
-      if (error) throw error;
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 
-      // Notify brand
-      const { data: campaignData } = await supabase.from("campaigns").select("brand_user_id, title").eq("id", id).maybeSingle();
-      if (campaignData) {
-        await supabase.from("notifications").insert({
-          user_id: campaignData.brand_user_id,
-          title: "New Application Received",
-          message: `A creator applied to "${campaignData.title}"`,
-          type: "application",
-          reference_type: "campaign",
-          reference_id: id,
+      if (isUuid) {
+        const { error } = await supabase.from("campaign_applications").insert({
+          campaign_id: id,
+          creator_user_id: user.id,
+          pitch,
+          proposed_rate: proposedRate,
+          content_concept: contentConcept,
+          status: "pending",
         });
+        if (error) throw error;
+
+        // Notify brand
+        const { data: campaignData } = await supabase.from("campaigns").select("brand_user_id, title").eq("id", id).maybeSingle();
+        if (campaignData) {
+          await supabase.from("notifications").insert({
+            user_id: campaignData.brand_user_id,
+            title: "New Application Received",
+            message: `A creator applied to "${campaignData.title}"`,
+            type: "application",
+            reference_type: "campaign",
+            reference_id: id,
+          });
+        }
       }
 
       toast.success("Application submitted!");
@@ -204,15 +203,7 @@ const CampaignDetail = () => {
         </div>
       </div>
 
-      {/* Sample Campaign Warning */}
-      {!campaign.isReal && (
-        <div className="px-4 mt-3">
-          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3">
-            <p className="text-xs text-yellow-700 font-heading font-medium">Sample Campaign</p>
-            <p className="text-[10px] text-yellow-600 mt-0.5">This is example data. Apply to real campaigns created by brands.</p>
-          </div>
-        </div>
-      )}
+
 
       {/* Description */}
       <div className="px-4 mt-4">
@@ -284,54 +275,48 @@ const CampaignDetail = () => {
       {/* CTA */}
       <div className="px-4 py-5 pb-8">
         {role === "creator" ? (
-          campaign.isReal ? (
-            alreadyApplied ? (
-              <Button disabled className="w-full h-12 rounded-xl font-heading text-base">
-                <CheckCircle2 className="w-4 h-4" /> Already Applied
-              </Button>
-            ) : (
-              <Drawer open={applyOpen} onOpenChange={setApplyOpen}>
-                <DrawerTrigger asChild>
-                  <Button variant="gradient" className="w-full h-12 rounded-xl font-heading text-base">
-                    Apply Now
-                  </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <DrawerHeader>
-                    <DrawerTitle className="font-heading">Apply to {campaign.title}</DrawerTitle>
-                    <DrawerDescription>Tell {campaign.brand} why you're the perfect fit</DrawerDescription>
-                  </DrawerHeader>
-                  <div className="px-4 space-y-3">
-                    <div>
-                      <label className="text-xs font-heading font-medium text-foreground mb-1 block">Your Pitch *</label>
-                      <textarea value={pitch} onChange={e => setPitch(e.target.value)} placeholder="Why should this brand choose you?" rows={4} className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" />
-                    </div>
-                    <div>
-                      <label className="text-xs font-heading font-medium text-foreground mb-1 block">Content Concept</label>
-                      <textarea value={contentConcept} onChange={e => setContentConcept(e.target.value)} placeholder="Describe your content idea..." rows={2} className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" />
-                    </div>
-                    <div>
-                      <label className="text-xs font-heading font-medium text-foreground mb-1 block">Proposed Rate (₹)</label>
-                      <input value={proposedRate} onChange={e => setProposedRate(e.target.value)} placeholder="e.g. 25000" type="number" className="w-full h-11 px-3 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/30" />
-                    </div>
-                  </div>
-                  <DrawerFooter>
-                    <Button variant="gradient" className="w-full h-12 rounded-xl font-heading" disabled={!pitch || applying} onClick={handleApply}>
-                      <Send className="w-4 h-4" /> Submit Application
-                    </Button>
-                    <DrawerClose asChild>
-                      <Button variant="outline" className="w-full rounded-xl">Cancel</Button>
-                    </DrawerClose>
-                  </DrawerFooter>
-                </DrawerContent>
-              </Drawer>
-            )
-          ) : (
-            <Button disabled className="w-full h-12 rounded-xl font-heading text-base opacity-50">
-              Sample Campaign — Cannot Apply
+          alreadyApplied ? (
+            <Button disabled className="w-full h-12 rounded-xl font-heading text-base">
+              <CheckCircle2 className="w-4 h-4" /> Already Applied
             </Button>
+          ) : (
+            <Drawer open={applyOpen} onOpenChange={setApplyOpen}>
+              <DrawerTrigger asChild>
+                <Button variant="gradient" className="w-full h-12 rounded-xl font-heading text-base">
+                  Apply Now
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader>
+                  <DrawerTitle className="font-heading">Apply to {campaign.title}</DrawerTitle>
+                  <DrawerDescription>Tell {campaign.brand} why you're the perfect fit</DrawerDescription>
+                </DrawerHeader>
+                <div className="px-4 space-y-3">
+                  <div>
+                    <label className="text-xs font-heading font-medium text-foreground mb-1 block">Your Pitch *</label>
+                    <textarea value={pitch} onChange={e => setPitch(e.target.value)} placeholder="Why should this brand choose you?" rows={4} className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-heading font-medium text-foreground mb-1 block">Content Concept</label>
+                    <textarea value={contentConcept} onChange={e => setContentConcept(e.target.value)} placeholder="Describe your content idea..." rows={2} className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-heading font-medium text-foreground mb-1 block">Proposed Rate (₹)</label>
+                    <input value={proposedRate} onChange={e => setProposedRate(e.target.value)} placeholder="e.g. 25000" type="number" className="w-full h-11 px-3 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  </div>
+                </div>
+                <DrawerFooter>
+                  <Button variant="gradient" className="w-full h-12 rounded-xl font-heading" disabled={!pitch || applying} onClick={handleApply}>
+                    <Send className="w-4 h-4" /> Submit Application
+                  </Button>
+                  <DrawerClose asChild>
+                    <Button variant="outline" className="w-full rounded-xl">Cancel</Button>
+                  </DrawerClose>
+                </DrawerFooter>
+              </DrawerContent>
+            </Drawer>
           )
-        ) : role === "brand" && campaign.isReal ? (
+        ) : role === "brand" ? (
           <Button variant="gradient" className="w-full h-12 rounded-xl font-heading text-base" onClick={() => navigate(`/campaigns/${id}/manage`)}>
             Manage Applications
           </Button>
