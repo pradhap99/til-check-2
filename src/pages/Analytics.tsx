@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Badge } from "@/components/ui/badge";
 import {
-  TrendingUp, Users, Eye, Target, BarChart3, Zap, Star, Award,
-  ArrowUp, ArrowDown, IndianRupee, Briefcase, Heart, MessageCircle
+  TrendingUp, Users, Eye, Target, BarChart3, Star,
+  ArrowUp, ArrowDown, Briefcase
 } from "lucide-react";
 
 const Analytics = () => {
@@ -27,21 +26,13 @@ const Analytics = () => {
           supabase.from("creator_profiles").select("*").eq("user_id", user.id).maybeSingle(),
         ]);
         setCreatorProfile(cpResult.data);
-        setStats(prev => ({
-          ...prev,
-          applications: appCount || 0,
-          accepted: acceptedCount || 0,
-        }));
+        setStats(prev => ({ ...prev, applications: appCount || 0, accepted: acceptedCount || 0 }));
       } else {
         const [{ count: campCount }, { count: appCount }] = await Promise.all([
           supabase.from("campaigns").select("*", { count: "exact", head: true }).eq("brand_user_id", user.id),
           supabase.from("campaign_applications").select("*, campaigns!inner(brand_user_id)", { count: "exact", head: true }).eq("campaigns.brand_user_id", user.id),
         ]);
-        setStats(prev => ({
-          ...prev,
-          campaigns: campCount || 0,
-          applications: appCount || 0,
-        }));
+        setStats(prev => ({ ...prev, campaigns: campCount || 0, applications: appCount || 0 }));
       }
       setLoading(false);
     };
@@ -52,7 +43,7 @@ const Analytics = () => {
     return (
       <Layout>
         <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="w-10 h-10 rounded-xl gradient-primary animate-pulse-glow" />
+          <div className="w-6 h-6 rounded-md bg-foreground animate-pulse-glow" />
         </div>
       </Layout>
     );
@@ -62,7 +53,7 @@ const Analytics = () => {
 
   return (
     <Layout>
-      <header className="px-4 pt-6 pb-2">
+      <header className="px-5 pt-6 pb-2">
         <h1 className="text-xl font-heading font-bold text-foreground">Analytics</h1>
         <p className="text-xs text-muted-foreground">
           {role === "creator" ? "Track your growth & performance" : "Campaign performance & ROI"}
@@ -70,7 +61,7 @@ const Analytics = () => {
       </header>
 
       {/* Overview Cards */}
-      <div className="px-4 mt-4 grid grid-cols-2 gap-2.5">
+      <div className="px-5 mt-4 grid grid-cols-2 gap-2">
         {role === "creator" ? (
           <>
             <StatCard icon={Eye} label="Profile Views" value="—" trend="+12%" up />
@@ -84,102 +75,82 @@ const Analytics = () => {
           <>
             <StatCard icon={Briefcase} label="Campaigns" value={stats.campaigns.toString()} />
             <StatCard icon={Users} label="Applications" value={stats.applications.toString()} />
-            <StatCard icon={IndianRupee} label="Total Spent" value="—" />
-            <StatCard icon={TrendingUp} label="Avg ROI" value="—" />
+            <StatCard icon={TrendingUp} label="Total Spent" value="—" />
+            <StatCard icon={BarChart3} label="Avg ROI" value="—" />
             <StatCard icon={Star} label="Creator Rating" value="4.8" />
-            <StatCard icon={Zap} label="Avg Engagement" value="—" />
+            <StatCard icon={Target} label="Avg Engagement" value="—" />
           </>
         )}
       </div>
 
-      {/* Performance Section */}
+      {/* Social Performance */}
       {role === "creator" && (
-        <>
-          {/* Social Stats */}
-          <div className="px-4 mt-5">
-            <h3 className="font-heading font-bold text-sm text-foreground mb-3">Social Performance</h3>
-            <div className="space-y-2">
-              {[
-                { platform: "Instagram", followers: creatorProfile?.instagram_followers || 0, icon: "📸", color: "bg-accent/10" },
-                { platform: "YouTube", followers: creatorProfile?.youtube_subscribers || 0, icon: "📹", color: "bg-destructive/10" },
-                { platform: "TikTok", followers: creatorProfile?.tiktok_followers || 0, icon: "🎵", color: "bg-primary/10" },
-              ].filter(p => p.followers > 0).map((p, i) => (
-                <div key={i} className="glass-card rounded-2xl p-3.5 flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl ${p.color} flex items-center justify-center text-lg`}>{p.icon}</div>
-                  <div className="flex-1">
-                    <p className="font-heading font-semibold text-sm text-card-foreground">{p.platform}</p>
-                    <p className="text-[10px] text-muted-foreground">{p.followers.toLocaleString("en-IN")} followers</p>
-                  </div>
-                  <Badge variant="secondary" className="text-[10px]">Connected</Badge>
-                </div>
-              ))}
-              {(!creatorProfile?.instagram_followers && !creatorProfile?.youtube_subscribers) && (
-                <div className="text-center py-8">
-                  <p className="text-xs text-muted-foreground">Connect your social accounts to see analytics</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Growth Tips */}
-          <div className="px-4 mt-5 mb-4">
-            <h3 className="font-heading font-bold text-sm text-foreground mb-3">💡 Growth Recommendations</h3>
-            <div className="space-y-2">
-              {[
-                { title: "Post Reels consistently", desc: "Creators who post 4+ Reels/week see 3x more brand inquiries", icon: "🎬" },
-                { title: "Optimize your rate card", desc: "Profiles with rate cards get 2x more campaign applications", icon: "💰" },
-                { title: "Respond within 24 hours", desc: "Fast responders get prioritized in brand search results", icon: "⚡" },
-                { title: "Keep media kit updated", desc: "Updated media kits with recent metrics increase trust", icon: "📊" },
-              ].map((tip, i) => (
-                <div key={i} className="glass-card rounded-2xl p-3.5 flex items-start gap-3 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 80}ms`, animationFillMode: "forwards" }}>
-                  <span className="text-lg mt-0.5">{tip.icon}</span>
-                  <div>
-                    <p className="font-heading font-semibold text-xs text-card-foreground">{tip.title}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">{tip.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Brand: Campaign Performance */}
-      {role === "brand" && (
-        <div className="px-4 mt-5 mb-4">
-          <h3 className="font-heading font-bold text-sm text-foreground mb-3">Campaign Insights</h3>
+        <div className="px-5 mt-5">
+          <h3 className="font-heading font-semibold text-sm text-foreground mb-3">Social Performance</h3>
           <div className="space-y-2">
             {[
-              { title: "Optimize creator selection", desc: "Focus on creators with 3-8% engagement rates for best ROI", icon: "🎯" },
-              { title: "Content diversity matters", desc: "Campaigns with Reels + Stories get 2.5x more reach than feed-only", icon: "📱" },
-              { title: "Tier-2 city creators", desc: "20% lower rates with comparable engagement. Great for budget campaigns", icon: "🏙️" },
-              { title: "Festival campaign timing", desc: "Start campaigns 3-4 weeks before major festivals for maximum impact", icon: "🎉" },
-            ].map((tip, i) => (
-              <div key={i} className="glass-card rounded-2xl p-3.5 flex items-start gap-3 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 80}ms`, animationFillMode: "forwards" }}>
-                <span className="text-lg mt-0.5">{tip.icon}</span>
-                <div>
-                  <p className="font-heading font-semibold text-xs text-card-foreground">{tip.title}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">{tip.desc}</p>
+              { platform: "Instagram", followers: creatorProfile?.instagram_followers || 0, color: "bg-secondary" },
+              { platform: "YouTube", followers: creatorProfile?.youtube_subscribers || 0, color: "bg-secondary" },
+              { platform: "TikTok", followers: creatorProfile?.tiktok_followers || 0, color: "bg-secondary" },
+            ].filter(p => p.followers > 0).map((p, i) => (
+              <div key={i} className="border border-border rounded-lg p-3.5 flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-lg ${p.color} flex items-center justify-center`}>
+                  <span className="text-xs font-heading font-bold text-foreground">{p.platform.charAt(0)}</span>
                 </div>
+                <div className="flex-1">
+                  <p className="font-heading font-medium text-sm text-foreground">{p.platform}</p>
+                  <p className="text-xs text-muted-foreground">{p.followers.toLocaleString("en-IN")} followers</p>
+                </div>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-secondary text-muted-foreground font-medium">Connected</span>
               </div>
             ))}
+            {(!creatorProfile?.instagram_followers && !creatorProfile?.youtube_subscribers) && (
+              <div className="text-center py-8">
+                <p className="text-xs text-muted-foreground">Connect your social accounts to see analytics</p>
+              </div>
+            )}
           </div>
         </div>
       )}
+
+      {/* Recommendations */}
+      <div className="px-5 mt-5 mb-4">
+        <h3 className="font-heading font-semibold text-sm text-foreground mb-3">
+          {role === "creator" ? "Growth Recommendations" : "Campaign Insights"}
+        </h3>
+        <div className="space-y-2">
+          {(role === "creator" ? [
+            { title: "Post Reels consistently", desc: "Creators posting 4+ Reels/week see 3x more brand inquiries" },
+            { title: "Optimize your rate card", desc: "Profiles with rate cards get 2x more campaign invitations" },
+            { title: "Respond within 24 hours", desc: "Fast responders are prioritized in brand search results" },
+            { title: "Keep media kit updated", desc: "Updated media kits with recent metrics increase trust" },
+          ] : [
+            { title: "Optimize creator selection", desc: "Focus on creators with 3-8% engagement rates for best ROI" },
+            { title: "Content diversity matters", desc: "Campaigns with Reels + Stories get 2.5x more reach" },
+            { title: "Tier-2 city creators", desc: "20% lower rates with comparable engagement for budget campaigns" },
+            { title: "Festival campaign timing", desc: "Start 3-4 weeks before major festivals for maximum impact" },
+          ]).map((tip, i) => (
+            <div key={i} className="border border-border rounded-lg p-3.5 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
+              <p className="font-heading font-medium text-sm text-foreground">{tip.title}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{tip.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </Layout>
   );
 };
 
 const StatCard = ({ icon: Icon, label, value, trend, up }: { icon: any; label: string; value: string; trend?: string; up?: boolean }) => (
-  <div className="glass-card rounded-2xl p-3.5">
-    <div className="flex items-center gap-2 mb-1">
-      <Icon className="w-3.5 h-3.5 text-primary" />
+  <div className="border border-border rounded-lg p-3.5">
+    <div className="flex items-center gap-1.5 mb-1">
+      <Icon className="w-3.5 h-3.5 text-muted-foreground" />
       <span className="text-[10px] text-muted-foreground">{label}</span>
     </div>
     <div className="flex items-end justify-between">
-      <p className="font-heading font-bold text-lg text-card-foreground">{value}</p>
+      <p className="font-heading font-bold text-lg text-foreground">{value}</p>
       {trend && (
-        <span className={`text-[10px] font-heading font-medium flex items-center gap-0.5 ${up ? "text-primary" : "text-destructive"}`}>
+        <span className={`text-[10px] font-medium flex items-center gap-0.5 ${up ? "text-success" : "text-destructive"}`}>
           {up ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />} {trend}
         </span>
       )}
