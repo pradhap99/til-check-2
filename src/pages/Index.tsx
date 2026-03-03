@@ -6,7 +6,11 @@ import CampaignCard from "@/components/CampaignCard";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowRight, Bell, Search, MessageCircle, Briefcase, Wallet, BarChart3, Plus, TrendingUp, Users, Sparkles, FileText, Shield } from "lucide-react";
+import {
+  ArrowRight, Bell, Search, MessageCircle, Briefcase, Wallet,
+  Plus, TrendingUp, Users, Sparkles, FileText, Shield, IndianRupee,
+  CheckCircle, Clock
+} from "lucide-react";
 
 const Index = () => {
   const { user, role } = useAuth();
@@ -16,16 +20,93 @@ const Index = () => {
   const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "there";
   const [unreadNotifs, setUnreadNotifs] = useState(0);
   const [unreadMsgs, setUnreadMsgs] = useState(0);
+  const [stats, setStats] = useState({
+    totalEarnings: 0,
+    pendingPayments: 0,
+    activeCampaigns: 0,
+    applicationsCount: 0,
+  });
 
   useEffect(() => {
     if (!user) return;
+
+    // Unread counts
     supabase.from("notifications").select("*", { count: "exact", head: true })
       .eq("user_id", user.id).eq("read", false)
       .then(({ count }) => setUnreadNotifs(count || 0));
     supabase.from("messages").select("*", { count: "exact", head: true })
       .neq("sender_id", user.id).is("read_at", null)
       .then(({ count }) => setUnreadMsgs(count || 0));
-  }, [user]);
+
+    // Real stats
+    const loadStats = async () => {
+      if (role === "creator") {
+        // Creator stats
+        const { data: txs } = await supabase
+          .from("transactions")
+          .select("amount, status")
+          .eq("payee_user_id", user.id);
+        
+        const totalEarnings = (txs || []).filter(t => t.status === "completed").reduce((s, t) => s + Number(t.amount), 0);
+        const pendingPayments = (txs || []).filter(t => t.status === "pending").reduce((s, t) => s + Number(t.amount), 0);
+
+        const { count: appsCount } = await supabase
+          .from("campaign_applications")
+          .select("*", { count: "exact", head: true })
+          .eq("creator_user_id", user.id);
+
+        const { count: activeCount } = await supabase
+          .from("campaign_applications")
+          .select("*", { count: "exact", head: true })
+          .eq("creator_user_id", user.id)
+          .eq("status", "accepted");
+
+        setStats({
+          totalEarnings,
+          pendingPayments,
+          activeCampaigns: activeCount || 0,
+          applicationsCount: appsCount || 0,
+        });
+      } else {
+        // Brand stats
+        const { data: txs } = await supabase
+          .from("transactions")
+          .select("amount, status")
+          .eq("payer_user_id", user.id);
+
+        const totalEarnings = (txs || []).filter(t => t.status === "completed").reduce((s, t) => s + Number(t.amount), 0);
+
+        const { count: campCount } = await supabase
+          .from("campaigns")
+          .select("*", { count: "exact", head: true })
+          .eq("brand_user_id", user.id)
+          .eq("status", "active");
+
+        const { data: myCampaigns } = await supabase
+          .from("campaigns")
+          .select("id")
+          .eq("brand_user_id", user.id);
+
+        let appsCount = 0;
+        if (myCampaigns && myCampaigns.length > 0) {
+          const { count } = await supabase
+            .from("campaign_applications")
+            .select("*", { count: "exact", head: true })
+            .in("campaign_id", myCampaigns.map(c => c.id))
+            .eq("status", "pending");
+          appsCount = count || 0;
+        }
+
+        setStats({
+          totalEarnings,
+          pendingPayments: 0,
+          activeCampaigns: campCount || 0,
+          applicationsCount: appsCount,
+        });
+      }
+    };
+    loadStats();
+  }, [user, role]);
 
   const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening";
 
@@ -61,37 +142,54 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Quick Stats */}
-      <section className="px-5 mt-5 grid grid-cols-3 gap-2">
-        {[
-          { label: "Active Creators", value: "12.4K", icon: Users },
-          { label: "Live Campaigns", value: "2,847", icon: Briefcase },
-          { label: "Avg. Engagement", value: "5.8%", icon: TrendingUp },
-        ].map((stat, i) => (
-          <div key={i} className="border border-border rounded-lg p-3 text-center opacity-0 animate-fade-up" style={{ animationDelay: `${i * 50}ms`, animationFillMode: "forwards" }}>
-            <p className="font-heading font-bold text-base text-foreground">{stat.value}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">{stat.label}</p>
+      {/* Personal Stats */}
+      <section className="px-5 mt-5">
+        <div className="bg-primary text-primary-foreground rounded-xl p-4 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary-foreground/5 rounded-full -translate-y-6 translate-x-6" />
+          <div className="relative z-10">
+            <p className="text-[10px] text-primary-foreground/70 uppercase tracking-wider font-heading">
+              {role === "brand" ? "Total Spent" : "Total Earnings"}
+            </p>
+            <p className="text-2xl font-heading font-bold mt-1">₹{stats.totalEarnings.toLocaleString("en-IN")}</p>
+            <div className="flex gap-3 mt-3">
+              <div>
+                <p className="text-[9px] text-primary-foreground/60">{role === "brand" ? "Active Campaigns" : "Active Projects"}</p>
+                <p className="text-sm font-heading font-bold">{stats.activeCampaigns}</p>
+              </div>
+              <div>
+                <p className="text-[9px] text-primary-foreground/60">{role === "brand" ? "Pending Reviews" : "Applications"}</p>
+                <p className="text-sm font-heading font-bold">{stats.applicationsCount}</p>
+              </div>
+              {role === "creator" && stats.pendingPayments > 0 && (
+                <div>
+                  <p className="text-[9px] text-primary-foreground/60">Pending</p>
+                  <p className="text-sm font-heading font-bold">₹{stats.pendingPayments.toLocaleString("en-IN")}</p>
+                </div>
+              )}
+            </div>
           </div>
-        ))}
+        </div>
       </section>
 
       {/* Quick Actions */}
       <section className="px-5 mt-4">
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {(role === "brand" ? [
-            { icon: Plus, label: "New Campaign", to: "/campaigns/create" },
-            { icon: Sparkles, label: "Recommendations", to: "/recommendations" },
+            { icon: Plus, label: "Create", to: "/campaigns/create" },
+            { icon: Sparkles, label: "Recommend", to: "/recommendations" },
             { icon: Shield, label: "Escrow", to: "/escrow" },
+            { icon: Wallet, label: "Payments", to: "/earnings" },
           ] : [
             { icon: Briefcase, label: "Campaigns", to: "/campaigns" },
             { icon: FileText, label: "Applications", to: "/applications" },
             { icon: Shield, label: "Escrow", to: "/escrow" },
+            { icon: Wallet, label: "Earnings", to: "/earnings" },
           ]).map((action, i) => (
-            <Link key={i} to={action.to} className="border border-border rounded-lg p-3 text-center hover-lift flex flex-col items-center gap-2">
-              <div className="w-8 h-8 rounded-md bg-secondary flex items-center justify-center">
-                <action.icon className="w-4 h-4 text-foreground" />
+            <Link key={i} to={action.to} className="border border-border rounded-lg p-2.5 text-center hover:bg-secondary/50 transition-colors flex flex-col items-center gap-1.5">
+              <div className="w-7 h-7 rounded-md bg-secondary flex items-center justify-center">
+                <action.icon className="w-3.5 h-3.5 text-foreground" />
               </div>
-              <p className="text-[10px] font-medium text-foreground">{action.label}</p>
+              <p className="text-[9px] font-medium text-foreground">{action.label}</p>
             </Link>
           ))}
         </div>

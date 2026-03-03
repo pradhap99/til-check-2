@@ -5,8 +5,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import CreatorCard from "@/components/CreatorCard";
 import Layout from "@/components/Layout";
-import { Search, SlidersHorizontal, X, Users, Heart } from "lucide-react";
+import { Search, SlidersHorizontal, X, Users, Heart, MapPin } from "lucide-react";
 import { toast } from "sonner";
+
+const locationOptions = ["All", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pune", "Kolkata", "Jaipur", "Ahmedabad", "Goa", "Kochi", "Lucknow"];
 
 const Creators = () => {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ const Creators = () => {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedPlatform, setSelectedPlatform] = useState("All");
+  const [selectedLocation, setSelectedLocation] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
   const [dbCreators, setDbCreators] = useState<any[]>([]);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
@@ -29,12 +32,13 @@ const Creators = () => {
           const profile = pMap.get(cp.user_id);
           return {
             id: `db-${cp.user_id}`, realUserId: cp.user_id,
-            name: profile?.full_name || "Creator", handle: cp.instagram_handle || "@creator",
+            name: profile?.full_name || "Creator", handle: cp.instagram_handle ? `@${cp.instagram_handle}` : "@creator",
             avatar: profile?.avatar_url || `https://api.dicebear.com/9.x/initials/svg?seed=${(profile?.full_name || 'C').charAt(0)}`,
             category: cp.primary_niche || "Lifestyle",
             followers: cp.instagram_followers ? `${(cp.instagram_followers / 1000).toFixed(0)}K` : "—",
             engagement: cp.engagement_rate ? `${cp.engagement_rate}%` : "—",
-            platform: "Instagram" as const, location: profile?.location_city || "India",
+            platform: "Instagram" as const,
+            location: profile?.location_city || "India",
             rate: cp.rate_reel ? `₹${parseInt(cp.rate_reel).toLocaleString()}` : "Contact",
             verified: cp.verified || false, bio: "", isReal: true,
           };
@@ -51,13 +55,14 @@ const Creators = () => {
   const allCreators = [...dbCreators, ...mockCreators.map(c => ({ ...c, isReal: false, realUserId: null }))];
 
   const filtered = allCreators.filter((c) => {
-    const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.handle.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.handle.toLowerCase().includes(search.toLowerCase()) || c.location.toLowerCase().includes(search.toLowerCase());
     const matchCategory = selectedCategory === "All" || c.category === selectedCategory;
     const matchPlatform = selectedPlatform === "All" || c.platform === selectedPlatform;
-    return matchSearch && matchCategory && matchPlatform;
+    const matchLocation = selectedLocation === "All" || c.location.toLowerCase().includes(selectedLocation.toLowerCase());
+    return matchSearch && matchCategory && matchPlatform && matchLocation;
   });
 
-  const activeFilters = (selectedCategory !== "All" ? 1 : 0) + (selectedPlatform !== "All" ? 1 : 0);
+  const activeFilters = (selectedCategory !== "All" ? 1 : 0) + (selectedPlatform !== "All" ? 1 : 0) + (selectedLocation !== "All" ? 1 : 0);
 
   const handleSaveCreator = async (creatorUserId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -83,7 +88,7 @@ const Creators = () => {
       <div className="px-5 mt-3 flex gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input type="text" placeholder="Search creators..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full h-10 pl-10 pr-4 rounded-lg bg-background text-foreground placeholder:text-muted-foreground text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
+          <input type="text" placeholder="Search by name, handle, or city..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full h-10 pl-10 pr-4 rounded-lg bg-background text-foreground placeholder:text-muted-foreground text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
         </div>
         <button onClick={() => setShowFilters(!showFilters)} className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 border transition-all relative ${showFilters ? "bg-foreground border-foreground" : "border-border"}`}>
           <SlidersHorizontal className={`w-4 h-4 ${showFilters ? "text-background" : "text-muted-foreground"}`} />
@@ -109,8 +114,18 @@ const Creators = () => {
               ))}
             </div>
           </div>
+          <div>
+            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1.5 flex items-center gap-1">
+              <MapPin className="w-3 h-3" /> Location
+            </p>
+            <div className="flex gap-1.5 flex-wrap">
+              {locationOptions.map(loc => (
+                <button key={loc} onClick={() => setSelectedLocation(loc)} className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-all border ${selectedLocation === loc ? "border-foreground text-foreground bg-foreground/5" : "border-border text-muted-foreground"}`}>{loc}</button>
+              ))}
+            </div>
+          </div>
           {activeFilters > 0 && (
-            <button onClick={() => { setSelectedCategory("All"); setSelectedPlatform("All"); }} className="text-xs text-destructive font-medium flex items-center gap-1">
+            <button onClick={() => { setSelectedCategory("All"); setSelectedPlatform("All"); setSelectedLocation("All"); }} className="text-xs text-destructive font-medium flex items-center gap-1">
               <X className="w-3 h-3" /> Clear filters
             </button>
           )}
