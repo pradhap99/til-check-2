@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, CheckCircle, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 
-const campaignTypes = ["Sponsored Post", "Product Review", "Brand Ambassador", "Affiliate", "UGC", "Event"];
+const campaignTypes = ["Sponsored Post", "Product Review", "Brand Ambassador", "Affiliate", "UGC", "Event", "Barter"];
 const platformOptions = ["Instagram", "YouTube", "Twitter", "TikTok"];
 const nicheOptions = ["Fashion", "Tech", "Beauty", "Food", "Fitness", "Travel", "Gaming", "Lifestyle", "Finance", "Comedy"];
 
@@ -25,7 +25,11 @@ const CreateCampaign = () => {
   const [budgetPerCreator, setBudgetPerCreator] = useState("");
   const [slotsTotal, setSlotsTotal] = useState("5");
   const [endDate, setEndDate] = useState("");
+  const [barterProductName, setBarterProductName] = useState("");
+  const [barterProductValue, setBarterProductValue] = useState("");
+  const [barterProductDescription, setBarterProductDescription] = useState("");
 
+  const isBarter = campaignType === "Barter";
   const togglePlatform = (p: string) => setPlatforms(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
   const toggleNiche = (n: string) => setNiches(prev => prev.includes(n) ? prev.filter(x => x !== n) : [...prev, n]);
 
@@ -88,17 +92,36 @@ const CreateCampaign = () => {
     },
     {
       title: "Budget & timeline",
-      subtitle: "Set your budget and deadline",
+      subtitle: isBarter ? "Product details & deadline" : "Set your budget and deadline",
       content: (
         <div className="space-y-3">
-          <div>
-            <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Total Budget (₹)</label>
-            <input value={totalBudget} onChange={e => setTotalBudget(e.target.value)} placeholder="e.g. 500000" type="number" className="w-full h-11 px-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
-          </div>
-          <div>
-            <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Budget per Creator (₹)</label>
-            <input value={budgetPerCreator} onChange={e => setBudgetPerCreator(e.target.value)} placeholder="e.g. 50000" type="number" className="w-full h-11 px-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
-          </div>
+          {isBarter ? (
+            <>
+              <div>
+                <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Product Name *</label>
+                <input value={barterProductName} onChange={e => setBarterProductName(e.target.value)} placeholder="e.g. Skincare Kit, Sneakers" className="w-full h-11 px-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </div>
+              <div>
+                <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Product Value (₹)</label>
+                <input value={barterProductValue} onChange={e => setBarterProductValue(e.target.value)} placeholder="e.g. 5000" type="number" className="w-full h-11 px-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </div>
+              <div>
+                <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Product Description</label>
+                <textarea value={barterProductDescription} onChange={e => setBarterProductDescription(e.target.value)} placeholder="Describe the product being gifted..." rows={3} className="w-full px-3 py-2 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" />
+              </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Total Budget (₹)</label>
+                <input value={totalBudget} onChange={e => setTotalBudget(e.target.value)} placeholder="e.g. 500000" type="number" className="w-full h-11 px-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </div>
+              <div>
+                <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Budget per Creator (₹)</label>
+                <input value={budgetPerCreator} onChange={e => setBudgetPerCreator(e.target.value)} placeholder="e.g. 50000" type="number" className="w-full h-11 px-3 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
+              </div>
+            </>
+          )}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Creator Slots</label>
@@ -109,9 +132,15 @@ const CreateCampaign = () => {
               <input value={endDate} onChange={e => setEndDate(e.target.value)} type="date" className="w-full h-11 px-3 rounded-xl bg-secondary text-foreground text-sm border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30" />
             </div>
           </div>
+          {isBarter && (
+            <div className="bg-accent/5 border border-accent/10 rounded-xl p-3 mt-2">
+              <p className="text-[10px] font-heading font-medium text-accent">🎁 Barter Campaign</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">Creators receive your product instead of cash. Product will be shipped to accepted creators.</p>
+            </div>
+          )}
         </div>
       ),
-      valid: !!totalBudget && !!endDate,
+      valid: isBarter ? (!!barterProductName && !!endDate) : (!!totalBudget && !!endDate),
     },
   ];
 
@@ -126,12 +155,16 @@ const CreateCampaign = () => {
         campaign_type: campaignType.toLowerCase().replace(/ /g, "_"),
         required_platforms: platforms,
         niche_targeting: niches,
-        total_budget: totalBudget,
-        budget_per_creator: budgetPerCreator,
+        total_budget: isBarter ? barterProductValue || "0" : totalBudget,
+        budget_per_creator: isBarter ? barterProductValue || "0" : budgetPerCreator,
         slots_total: parseInt(slotsTotal) || 5,
         end_date: endDate,
         status: "active",
-      });
+        is_barter: isBarter,
+        barter_product_name: isBarter ? barterProductName : null,
+        barter_product_value: isBarter ? barterProductValue : null,
+        barter_product_description: isBarter ? barterProductDescription : null,
+      } as any);
       if (error) throw error;
       toast.success("Campaign published! 🚀");
       navigate("/campaigns");

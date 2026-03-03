@@ -499,9 +499,15 @@ const CampaignManage = () => {
 
                   {(sub.status === "submitted" || sub.status === "revision_requested") && (
                     <div className="flex gap-2 mt-3">
-                      <Button size="sm" variant="outline" className="h-8 text-[10px] rounded-lg border-destructive/30 text-destructive" onClick={() => { setSelectedSubmission(sub); setFeedback(""); setReviewOpen(true); }}>
-                        <RotateCcw className="w-3 h-3" /> Revise
-                      </Button>
+                      {(sub.revision_count || 0) < 2 ? (
+                        <Button size="sm" variant="outline" className="h-8 text-[10px] rounded-lg border-destructive/30 text-destructive" onClick={() => { setSelectedSubmission(sub); setFeedback(""); setReviewOpen(true); }}>
+                          <RotateCcw className="w-3 h-3" /> Revise ({sub.revision_count || 0}/2)
+                        </Button>
+                      ) : (
+                        <Badge className="bg-yellow-500/10 text-yellow-600 border-0 text-[9px]">
+                          Max revisions reached
+                        </Badge>
+                      )}
                       <Button size="sm" variant="gradient" className="flex-1 h-8 text-[10px] rounded-lg" onClick={() => {
                         setSelectedSubmission(sub);
                         setFeedback("");
@@ -512,8 +518,8 @@ const CampaignManage = () => {
                     </div>
                   )}
 
-                  {sub.revision_count && sub.revision_count > 0 && (
-                    <p className="text-[9px] text-muted-foreground mt-1">Revision #{sub.revision_count}</p>
+                  {sub.revision_count != null && sub.revision_count > 0 && (
+                    <p className="text-[9px] text-muted-foreground mt-1">Revision #{sub.revision_count} of 2</p>
                   )}
                 </div>
               );
