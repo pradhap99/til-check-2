@@ -117,11 +117,11 @@ const Index = () => {
           {(role === "brand" ? [
             { emoji: "🎯", label: "Post Campaign", to: "/campaigns/create" },
             { emoji: "🔍", label: "Find Creators", to: "/creators" },
-            { emoji: "📊", label: "My Campaigns", to: "/campaigns" },
+            { emoji: "💰", label: "Payments", to: "/earnings" },
           ] : [
             { emoji: "🔥", label: "Live Campaigns", to: "/campaigns" },
-            { emoji: "📈", label: "My Stats", to: "/profile" },
-            { emoji: "💼", label: "Applications", to: "/applications" },
+            { emoji: "💰", label: "Earnings", to: "/earnings" },
+            { emoji: "📊", label: "Analytics", to: "/analytics" },
           ]).map((action, i) => (
             <Link key={i} to={action.to} className="flex-1 glass-card rounded-2xl p-3 text-center hover-lift">
               <span className="text-xl">{action.emoji}</span>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, TrendingUp, Users, ChevronRight, Shield, HelpCircle, FileText, Instagram, Youtube, Twitter } from "lucide-react";
+import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, TrendingUp, Users, ChevronRight, Shield, HelpCircle, FileText, Instagram, Youtube, Twitter, BarChart3, Wallet, MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
@@ -100,8 +100,7 @@ const Profile = () => {
             ))}
           </div>
 
-          {/* Social handles */}
-          {(creatorProfile.instagram_handle || creatorProfile.youtube_channel || creatorProfile.twitter_handle) && (
+          {(creatorProfile.instagram_handle || creatorProfile.youtube_channel) && (
             <div className="px-4 mt-3 flex gap-2">
               {creatorProfile.instagram_handle && (
                 <Badge variant="outline" className="text-xs border-border text-muted-foreground">
@@ -116,7 +115,6 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Rate Card */}
           {(creatorProfile.rate_feed_post || creatorProfile.rate_reel || creatorProfile.rate_story) && (
             <div className="px-4 mt-3">
               <div className="glass-card rounded-2xl p-4">
@@ -156,9 +154,12 @@ const Profile = () => {
         <p className="text-[10px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">Account</p>
         {[
           { icon: Edit3, label: "Edit Profile", desc: "Update your info & media kit", to: "/profile/edit" },
-          { icon: Heart, label: "Saved", desc: role === "brand" ? "Bookmarked creators" : "Saved campaigns" },
+          { icon: Wallet, label: role === "brand" ? "Payments" : "Earnings", desc: role === "brand" ? "Track campaign payments" : "Your earnings & withdrawals", to: "/earnings" },
+          { icon: BarChart3, label: "Analytics", desc: "Performance & growth metrics", to: "/analytics" },
+          { icon: Star, label: "Reviews", desc: "Ratings & feedback", to: "/reviews" },
+          { icon: Heart, label: role === "brand" ? "Saved Creators" : "Saved Campaigns", desc: role === "brand" ? "Bookmarked creators" : "Saved campaigns", to: role === "brand" ? "/saved" : "/campaigns" },
+          { icon: FileText, label: "My Applications", desc: "Track campaign applications", to: "/applications" },
           { icon: Bell, label: "Notifications", desc: "Campaign updates & messages", to: "/notifications" },
-          { icon: FileText, label: "My Applications", desc: "Track your campaign applications", to: "/applications" },
         ].map((item, i) => (
           <button
             key={i}
@@ -179,15 +180,18 @@ const Profile = () => {
 
         <p className="text-[10px] font-heading font-semibold text-muted-foreground uppercase tracking-wider mb-2 mt-5 px-1">Preferences</p>
         {[
-          { icon: Shield, label: "Privacy & Security" },
-          { icon: HelpCircle, label: "Help & Support" },
-          { icon: Settings, label: "App Settings" },
+          { icon: Settings, label: "Settings", desc: "Account, notifications, privacy", to: "/settings" },
+          { icon: HelpCircle, label: "Help & Support", desc: "FAQ, disputes, contact", to: "/support" },
+          { icon: Shield, label: "Privacy & Security", to: "/settings" },
         ].map((item, i) => (
-          <button key={i} className="w-full glass-card rounded-xl p-3.5 flex items-center gap-3 hover-lift opacity-0 animate-fade-up" style={{ animationDelay: `${(i + 4) * 60}ms`, animationFillMode: "forwards" }}>
+          <button key={i} onClick={() => item.to && navigate(item.to)} className="w-full glass-card rounded-xl p-3.5 flex items-center gap-3 hover-lift opacity-0 animate-fade-up" style={{ animationDelay: `${(i + 7) * 60}ms`, animationFillMode: "forwards" }}>
             <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center shrink-0">
               <item.icon className="w-4 h-4 text-muted-foreground" />
             </div>
-            <p className="font-heading font-medium text-sm text-card-foreground flex-1 text-left">{item.label}</p>
+            <div className="flex-1 text-left">
+              <p className="font-heading font-medium text-sm text-card-foreground">{item.label}</p>
+              {item.desc && <p className="text-[10px] text-muted-foreground">{item.desc}</p>}
+            </div>
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </button>
         ))}
