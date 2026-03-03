@@ -1,32 +1,34 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { Home, Search, Briefcase, MessageCircle, User } from "lucide-react";
-
-const navItems = [
-  { path: "/home", icon: Home, label: "Home" },
-  { path: "/creators", icon: Search, label: "Discover" },
-  { path: "/campaigns", icon: Briefcase, label: "Campaigns" },
-  { path: "/messages", icon: MessageCircle, label: "Messages" },
-  { path: "/profile", icon: User, label: "Profile" },
-];
+import { useAuth } from "@/contexts/AuthContext";
 
 const BottomNav = () => {
   const location = useLocation();
+  const { role } = useAuth();
+
+  const tabs = [
+    { icon: Home, label: "Home", to: "/home" },
+    { icon: Search, label: role === "brand" ? "Creators" : "Discover", to: "/creators" },
+    { icon: Briefcase, label: "Campaigns", to: "/campaigns" },
+    { icon: MessageCircle, label: "Messages", to: "/messages" },
+    { icon: User, label: "Profile", to: "/profile" },
+  ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-t border-border pb-safe">
-      <div className="flex items-center justify-around h-14 max-w-lg mx-auto px-1">
-        {navItems.map((item) => {
-          const isActive = location.pathname.startsWith(item.path);
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border">
+      <div className="max-w-lg mx-auto flex items-center justify-around h-14">
+        {tabs.map((tab) => {
+          const isActive = location.pathname === tab.to || location.pathname.startsWith(tab.to + "/");
           return (
             <Link
-              key={item.path}
-              to={item.path}
-              className={`flex flex-col items-center justify-center gap-0.5 w-14 h-full transition-colors duration-150 ${
-                isActive ? "text-primary" : "text-muted-foreground"
+              key={tab.to}
+              to={tab.to}
+              className={`flex flex-col items-center justify-center gap-0.5 w-14 py-1 transition-colors ${
+                isActive ? "text-foreground" : "text-muted-foreground"
               }`}
             >
-              <item.icon className="w-5 h-5" strokeWidth={isActive ? 2.2 : 1.6} />
-              <span className={`text-[9px] font-heading ${isActive ? "font-semibold" : "font-medium"}`}>{item.label}</span>
+              <tab.icon className="w-[18px] h-[18px]" strokeWidth={isActive ? 2.5 : 1.5} />
+              <span className={`text-[10px] ${isActive ? "font-semibold" : "font-normal"}`}>{tab.label}</span>
             </Link>
           );
         })}
