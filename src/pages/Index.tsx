@@ -8,12 +8,12 @@ import CampaignCard from "@/components/CampaignCard";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowRight, Sparkles, TrendingUp, Users, Zap, Bell, Search, MessageCircle } from "lucide-react";
+import { ArrowRight, TrendingUp, Users, BarChart3, Bell, Search, MessageCircle, Briefcase, Wallet, Plus } from "lucide-react";
 
 const Index = () => {
   const { user, role } = useAuth();
   const navigate = useNavigate();
-  const topCreators = creators.slice(0, 3);
+  const topCreators = creators.slice(0, 4);
   const topCampaigns = campaigns.slice(0, 3);
   const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "there";
   const [unreadNotifs, setUnreadNotifs] = useState(0);
@@ -21,111 +21,81 @@ const Index = () => {
 
   useEffect(() => {
     if (!user) return;
-    // Count unread notifications
     supabase.from("notifications").select("*", { count: "exact", head: true })
       .eq("user_id", user.id).eq("read", false)
       .then(({ count }) => setUnreadNotifs(count || 0));
 
-    // Count unread messages
     supabase.from("messages").select("*", { count: "exact", head: true })
       .neq("sender_id", user.id).is("read_at", null)
       .then(({ count }) => setUnreadMsgs(count || 0));
   }, [user]);
 
+  const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening";
+
   return (
     <Layout>
       {/* Header */}
-      <header className="px-4 pt-6 pb-2 flex items-center justify-between">
+      <header className="px-4 pt-6 pb-1 flex items-center justify-between">
         <div>
-          <p className="text-xs text-muted-foreground font-heading">Good {new Date().getHours() < 12 ? "morning" : new Date().getHours() < 17 ? "afternoon" : "evening"}</p>
-          <h1 className="text-xl font-heading font-bold text-foreground">Hi, {firstName} 👋</h1>
+          <p className="text-xs text-muted-foreground font-body">{greeting}</p>
+          <h1 className="text-xl font-heading font-bold text-foreground tracking-tight">Hi, {firstName}</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <Link to="/messages" className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center relative">
-            <MessageCircle className="w-4.5 h-4.5 text-muted-foreground" />
-            {unreadMsgs > 0 && <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-accent border-2 border-background" />}
+        <div className="flex items-center gap-1.5">
+          <Link to="/messages" className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center relative">
+            <MessageCircle className="w-4 h-4 text-muted-foreground" />
+            {unreadMsgs > 0 && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent" />}
           </Link>
-          <Link to="/notifications" className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center relative">
-            <Bell className="w-4.5 h-4.5 text-muted-foreground" />
-            {unreadNotifs > 0 && <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-accent border-2 border-background" />}
+          <Link to="/notifications" className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center relative">
+            <Bell className="w-4 h-4 text-muted-foreground" />
+            {unreadNotifs > 0 && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent" />}
           </Link>
         </div>
       </header>
 
-      {/* Search Bar */}
+      {/* Search */}
       <div className="px-4 mt-3">
         <div onClick={() => navigate("/creators")} className="cursor-pointer">
           <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <div className="w-full h-11 pl-10 pr-4 rounded-2xl bg-secondary/70 border border-border/50 flex items-center">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <div className="w-full h-10 pl-9 pr-4 rounded-lg bg-secondary border border-border/50 flex items-center">
               <span className="text-sm text-muted-foreground">Search creators, campaigns...</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Hero Card */}
-      <section className="px-4 py-4">
-        <div className="gradient-primary rounded-3xl p-5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-40 h-40 bg-primary-foreground/10 rounded-full -translate-y-12 translate-x-12" />
-          <div className="absolute bottom-0 left-0 w-28 h-28 bg-primary-foreground/5 rounded-full translate-y-8 -translate-x-8" />
-          <div className="relative z-10">
-            <Badge className="bg-primary-foreground/20 text-primary-foreground border-0 mb-2.5 text-[10px]">
-              🚀 {role === "brand" ? "Find Creators" : "New Opportunities"}
-            </Badge>
-            <h2 className="text-xl font-heading font-bold text-primary-foreground leading-tight">
-              {role === "brand"
-                ? <>Discover Top<br/>Indian Creators</>
-                : <>Your Next Big<br/>Collab Awaits</>
-              }
-            </h2>
-            <p className="text-primary-foreground/80 text-xs mt-1.5 leading-relaxed">
-              {role === "brand"
-                ? "10,000+ verified creators ready for your next campaign."
-                : "500+ brands looking for creators like you."
-              }
-            </p>
-            <Button
-              size="sm"
-              className="mt-3 bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-heading h-9 text-xs rounded-xl"
-              onClick={() => navigate(role === "brand" ? "/creators" : "/campaigns")}
-            >
-              {role === "brand" ? "Browse Creators" : "Explore Campaigns"} <ArrowRight className="w-3.5 h-3.5" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
       {/* Quick Stats */}
-      <section className="px-4 grid grid-cols-3 gap-2.5">
+      <section className="px-4 mt-4 grid grid-cols-3 gap-2">
         {[
-          { icon: Users, label: "Creators", value: "10K+", color: "text-primary" },
-          { icon: TrendingUp, label: "Campaigns", value: "2.5K+", color: "text-accent" },
-          { icon: Zap, label: "Matches", value: "50K+", color: "text-primary" },
+          { label: "Active Creators", value: "12.4K", icon: Users },
+          { label: "Live Campaigns", value: "2,847", icon: Briefcase },
+          { label: "Avg. Engagement", value: "5.8%", icon: TrendingUp },
         ].map((stat, i) => (
-          <div key={i} className="glass-card rounded-2xl p-3 text-center opacity-0 animate-fade-up" style={{ animationDelay: `${i * 80}ms`, animationFillMode: "forwards" }}>
-            <stat.icon className={`w-4.5 h-4.5 mx-auto ${stat.color} mb-1`} />
-            <p className="font-heading font-bold text-base text-card-foreground">{stat.value}</p>
+          <div key={i} className="glass-card rounded-lg p-3 text-center opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
+            <stat.icon className="w-4 h-4 mx-auto text-primary mb-1.5" />
+            <p className="font-heading font-bold text-sm text-card-foreground">{stat.value}</p>
             <p className="text-[10px] text-muted-foreground">{stat.label}</p>
           </div>
         ))}
       </section>
 
       {/* Quick Actions */}
-      <section className="px-4 mt-5">
-        <div className="flex gap-2.5">
+      <section className="px-4 mt-4">
+        <div className="grid grid-cols-3 gap-2">
           {(role === "brand" ? [
-            { emoji: "🎯", label: "Post Campaign", to: "/campaigns/create" },
-            { emoji: "🔍", label: "Find Creators", to: "/creators" },
-            { emoji: "💰", label: "Payments", to: "/earnings" },
+            { icon: Plus, label: "New Campaign", to: "/campaigns/create" },
+            { icon: Search, label: "Find Creators", to: "/creators" },
+            { icon: Wallet, label: "Payments", to: "/earnings" },
           ] : [
-            { emoji: "🔥", label: "Live Campaigns", to: "/campaigns" },
-            { emoji: "💰", label: "Earnings", to: "/earnings" },
-            { emoji: "📊", label: "Analytics", to: "/analytics" },
+            { icon: Briefcase, label: "Live Campaigns", to: "/campaigns" },
+            { icon: Wallet, label: "Earnings", to: "/earnings" },
+            { icon: BarChart3, label: "Analytics", to: "/analytics" },
           ]).map((action, i) => (
-            <Link key={i} to={action.to} className="flex-1 glass-card rounded-2xl p-3 text-center hover-lift">
-              <span className="text-xl">{action.emoji}</span>
-              <p className="text-[10px] font-heading font-medium text-card-foreground mt-1">{action.label}</p>
+            <Link key={i} to={action.to} className="glass-card rounded-lg p-3 text-center hover-lift flex flex-col items-center gap-1.5">
+              <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center">
+                <action.icon className="w-4 h-4 text-primary" />
+              </div>
+              <p className="text-[10px] font-heading font-medium text-card-foreground">{action.label}</p>
             </Link>
           ))}
         </div>
@@ -134,12 +104,12 @@ const Index = () => {
       {/* Top Creators */}
       <section className="px-4 mt-6">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-heading font-bold text-base text-foreground">Top Creators</h3>
+          <h3 className="font-heading font-bold text-sm text-foreground">Top Creators</h3>
           <Link to="/creators" className="text-xs text-primary font-heading font-medium flex items-center gap-0.5">
-            See all <ArrowRight className="w-3 h-3" />
+            View all <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           {topCreators.map((creator, i) => (
             <div key={creator.id} onClick={() => navigate(`/creators/${creator.id}`)}>
               <CreatorCard creator={creator} index={i} />
@@ -151,12 +121,12 @@ const Index = () => {
       {/* Live Campaigns */}
       <section className="px-4 mt-6 mb-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-heading font-bold text-base text-foreground">🔥 Live Campaigns</h3>
+          <h3 className="font-heading font-bold text-sm text-foreground">Live Campaigns</h3>
           <Link to="/campaigns" className="text-xs text-primary font-heading font-medium flex items-center gap-0.5">
-            See all <ArrowRight className="w-3 h-3" />
+            View all <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           {topCampaigns.map((campaign, i) => (
             <div key={campaign.id} onClick={() => navigate(`/campaigns/${campaign.id}`)}>
               <CampaignCard campaign={campaign} index={i} />
