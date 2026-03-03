@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { creators, campaigns } from "@/data/mockData";
@@ -6,13 +7,30 @@ import CreatorCard from "@/components/CreatorCard";
 import CampaignCard from "@/components/CampaignCard";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight, Sparkles, TrendingUp, Users, Zap, Bell, Search, MessageCircle } from "lucide-react";
 
 const Index = () => {
   const { user, role } = useAuth();
+  const navigate = useNavigate();
   const topCreators = creators.slice(0, 3);
   const topCampaigns = campaigns.slice(0, 3);
   const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "there";
+  const [unreadNotifs, setUnreadNotifs] = useState(0);
+  const [unreadMsgs, setUnreadMsgs] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+    // Count unread notifications
+    supabase.from("notifications").select("*", { count: "exact", head: true })
+      .eq("user_id", user.id).eq("read", false)
+      .then(({ count }) => setUnreadNotifs(count || 0));
+
+    // Count unread messages
+    supabase.from("messages").select("*", { count: "exact", head: true })
+      .neq("sender_id", user.id).is("read_at", null)
+      .then(({ count }) => setUnreadMsgs(count || 0));
+  }, [user]);
 
   return (
     <Layout>
@@ -25,25 +43,25 @@ const Index = () => {
         <div className="flex items-center gap-2">
           <Link to="/messages" className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center relative">
             <MessageCircle className="w-4.5 h-4.5 text-muted-foreground" />
-            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-accent border-2 border-background" />
+            {unreadMsgs > 0 && <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-accent border-2 border-background" />}
           </Link>
           <Link to="/notifications" className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center relative">
             <Bell className="w-4.5 h-4.5 text-muted-foreground" />
-            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-accent border-2 border-background" />
+            {unreadNotifs > 0 && <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-accent border-2 border-background" />}
           </Link>
         </div>
       </header>
 
       {/* Search Bar */}
       <div className="px-4 mt-3">
-        <Link to="/creators" className="block">
+        <div onClick={() => navigate("/creators")} className="cursor-pointer">
           <div className="relative">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <div className="w-full h-11 pl-10 pr-4 rounded-2xl bg-secondary/70 border border-border/50 flex items-center">
               <span className="text-sm text-muted-foreground">Search creators, campaigns...</span>
             </div>
           </div>
-        </Link>
+        </div>
       </div>
 
       {/* Hero Card */}
@@ -56,18 +74,22 @@ const Index = () => {
               🚀 {role === "brand" ? "Find Creators" : "New Opportunities"}
             </Badge>
             <h2 className="text-xl font-heading font-bold text-primary-foreground leading-tight">
-              {role === "brand" 
+              {role === "brand"
                 ? <>Discover Top<br/>Indian Creators</>
                 : <>Your Next Big<br/>Collab Awaits</>
               }
             </h2>
             <p className="text-primary-foreground/80 text-xs mt-1.5 leading-relaxed">
-              {role === "brand" 
+              {role === "brand"
                 ? "10,000+ verified creators ready for your next campaign."
                 : "500+ brands looking for creators like you."
               }
             </p>
-            <Button size="sm" className="mt-3 bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-heading h-9 text-xs rounded-xl">
+            <Button
+              size="sm"
+              className="mt-3 bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-heading h-9 text-xs rounded-xl"
+              onClick={() => navigate(role === "brand" ? "/creators" : "/campaigns")}
+            >
               {role === "brand" ? "Browse Creators" : "Explore Campaigns"} <ArrowRight className="w-3.5 h-3.5" />
             </Button>
           </div>
@@ -99,7 +121,7 @@ const Index = () => {
           ] : [
             { emoji: "🔥", label: "Live Campaigns", to: "/campaigns" },
             { emoji: "📈", label: "My Stats", to: "/profile" },
-            { emoji: "💼", label: "Applications", to: "/profile" },
+            { emoji: "💼", label: "Applications", to: "/applications" },
           ]).map((action, i) => (
             <Link key={i} to={action.to} className="flex-1 glass-card rounded-2xl p-3 text-center hover-lift">
               <span className="text-xl">{action.emoji}</span>
@@ -119,7 +141,9 @@ const Index = () => {
         </div>
         <div className="space-y-2.5">
           {topCreators.map((creator, i) => (
-            <CreatorCard key={creator.id} creator={creator} index={i} />
+            <div key={creator.id} onClick={() => navigate(`/creators/${creator.id}`)}>
+              <CreatorCard creator={creator} index={i} />
+            </div>
           ))}
         </div>
       </section>
@@ -134,7 +158,9 @@ const Index = () => {
         </div>
         <div className="space-y-2.5">
           {topCampaigns.map((campaign, i) => (
-            <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+            <div key={campaign.id} onClick={() => navigate(`/campaigns/${campaign.id}`)}>
+              <CampaignCard campaign={campaign} index={i} />
+            </div>
           ))}
         </div>
       </section>
