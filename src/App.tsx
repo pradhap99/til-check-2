@@ -26,6 +26,7 @@ import CreatorWorkspace from "./pages/CreatorWorkspace";
 import Recommendations from "./pages/Recommendations";
 import Profile from "./pages/Profile";
 import Earnings from "./pages/Earnings";
+import Escrow from "./pages/Escrow";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import Support from "./pages/Support";
@@ -64,6 +65,7 @@ const App = () => (
               <Route path="/workspace/:applicationId" element={<ProtectedRoute><CreatorWorkspace /></ProtectedRoute>} />
               <Route path="/recommendations" element={<ProtectedRoute requiredRole="brand"><Recommendations /></ProtectedRoute>} />
               <Route path="/earnings" element={<ProtectedRoute><Earnings /></ProtectedRoute>} />
+              <Route path="/escrow" element={<ProtectedRoute><Escrow /></ProtectedRoute>} />
               <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
               <Route path="/support" element={<ProtectedRoute><Support /></ProtectedRoute>} />
