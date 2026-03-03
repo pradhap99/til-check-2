@@ -299,8 +299,13 @@ const CreatorWorkspace = () => {
                     </p>
                   )}
 
-                  {sub?.revision_count && sub.revision_count > 0 && (
-                    <p className="text-[9px] text-muted-foreground mt-1">Revision #{sub.revision_count}</p>
+                  {sub?.revision_count != null && sub.revision_count > 0 && (
+                    <div className="flex items-center justify-between mt-1">
+                      <p className="text-[9px] text-muted-foreground">Revision #{sub.revision_count} of 2</p>
+                      {sub.revision_count >= 2 && (
+                        <span className="text-[9px] text-yellow-600 font-heading font-medium">Max revisions reached</span>
+                      )}
+                    </div>
                   )}
                 </div>
               );

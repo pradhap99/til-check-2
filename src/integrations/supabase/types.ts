@@ -175,8 +175,10 @@ export type Database = {
           deadline: string | null
           description: string | null
           id: string
+          max_revisions: number | null
           platform: string | null
           quantity: number | null
+          revision_deadline_hours: number | null
           specifications: string | null
           usage_rights: string | null
         }
@@ -188,8 +190,10 @@ export type Database = {
           deadline?: string | null
           description?: string | null
           id?: string
+          max_revisions?: number | null
           platform?: string | null
           quantity?: number | null
+          revision_deadline_hours?: number | null
           specifications?: string | null
           usage_rights?: string | null
         }
@@ -201,8 +205,10 @@ export type Database = {
           deadline?: string | null
           description?: string | null
           id?: string
+          max_revisions?: number | null
           platform?: string | null
           quantity?: number | null
+          revision_deadline_hours?: number | null
           specifications?: string | null
           usage_rights?: string | null
         }
@@ -219,6 +225,9 @@ export type Database = {
       campaigns: {
         Row: {
           applications_count: number | null
+          barter_product_description: string | null
+          barter_product_name: string | null
+          barter_product_value: string | null
           brand_guidelines_url: string | null
           brand_user_id: string
           budget_per_creator: string | null
@@ -232,6 +241,7 @@ export type Database = {
           go_live_date: string | null
           hashtag_guidelines: string[] | null
           id: string
+          is_barter: boolean | null
           language_requirements: string[] | null
           location_targeting: string[] | null
           min_engagement_rate: number | null
@@ -248,6 +258,9 @@ export type Database = {
         }
         Insert: {
           applications_count?: number | null
+          barter_product_description?: string | null
+          barter_product_name?: string | null
+          barter_product_value?: string | null
           brand_guidelines_url?: string | null
           brand_user_id: string
           budget_per_creator?: string | null
@@ -261,6 +274,7 @@ export type Database = {
           go_live_date?: string | null
           hashtag_guidelines?: string[] | null
           id?: string
+          is_barter?: boolean | null
           language_requirements?: string[] | null
           location_targeting?: string[] | null
           min_engagement_rate?: number | null
@@ -277,6 +291,9 @@ export type Database = {
         }
         Update: {
           applications_count?: number | null
+          barter_product_description?: string | null
+          barter_product_name?: string | null
+          barter_product_value?: string | null
           brand_guidelines_url?: string | null
           brand_user_id?: string
           budget_per_creator?: string | null
@@ -290,6 +307,7 @@ export type Database = {
           go_live_date?: string | null
           hashtag_guidelines?: string[] | null
           id?: string
+          is_barter?: boolean | null
           language_requirements?: string[] | null
           location_targeting?: string[] | null
           min_engagement_rate?: number | null
@@ -470,7 +488,9 @@ export type Database = {
           content_url: string | null
           created_at: string
           creator_user_id: string
+          deadline_at: string | null
           deliverable_id: string
+          escalated: boolean | null
           hashtags: string[] | null
           id: string
           published_at: string | null
@@ -491,7 +511,9 @@ export type Database = {
           content_url?: string | null
           created_at?: string
           creator_user_id: string
+          deadline_at?: string | null
           deliverable_id: string
+          escalated?: boolean | null
           hashtags?: string[] | null
           id?: string
           published_at?: string | null
@@ -512,7 +534,9 @@ export type Database = {
           content_url?: string | null
           created_at?: string
           creator_user_id?: string
+          deadline_at?: string | null
           deliverable_id?: string
+          escalated?: boolean | null
           hashtags?: string[] | null
           id?: string
           published_at?: string | null
@@ -901,7 +925,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "creator" | "brand"
+      app_role: "creator" | "brand" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1029,7 +1053,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["creator", "brand"],
+      app_role: ["creator", "brand", "admin"],
     },
   },
 } as const

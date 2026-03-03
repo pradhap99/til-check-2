@@ -4,7 +4,7 @@ import { useOnboarding } from "@/contexts/OnboardingContext";
 
 interface Props {
   children: React.ReactNode;
-  requiredRole?: "creator" | "brand";
+  requiredRole?: "creator" | "brand" | "admin";
 }
 
 const ProtectedRoute = ({ children, requiredRole }: Props) => {

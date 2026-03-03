@@ -124,6 +124,7 @@ const Profile = () => {
         <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-2 px-1">Account</p>
         {[
           { icon: Edit3, label: "Edit Profile", to: "/profile/edit" },
+          ...(role === "creator" ? [{ icon: FileText, label: "My Media Kit", to: "/media-kit" }] : []),
           { icon: Wallet, label: role === "brand" ? "Payments" : "Earnings", to: "/earnings" },
           { icon: BarChart3, label: "Analytics", to: "/analytics" },
           { icon: Star, label: "Reviews", to: "/reviews" },
