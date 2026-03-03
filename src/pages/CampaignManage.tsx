@@ -7,8 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import {
   ArrowLeft, Users, CheckCircle, XCircle, Clock, MessageCircle,
-  Eye, ThumbsUp, ThumbsDown, Star, Send, ChevronRight
+  Eye, ThumbsUp, ThumbsDown, Star, Send, ChevronRight, Upload,
+  FileCheck, AlertCircle, ExternalLink, RotateCcw
 } from "lucide-react";
+import {
+  Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerTrigger, DrawerClose,
+} from "@/components/ui/drawer";
 
 interface Application {
   id: string;
@@ -24,14 +28,34 @@ interface Application {
   creatorFollowers?: number;
 }
 
+interface Submission {
+  id: string;
+  deliverable_id: string;
+  creator_user_id: string;
+  status: string;
+  content_url: string | null;
+  caption: string | null;
+  submission_notes: string | null;
+  review_feedback: string | null;
+  published_url: string | null;
+  revision_count: number | null;
+  submitted_at: string | null;
+  creatorName?: string;
+  deliverableType?: string;
+}
+
 const CampaignManage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [campaign, setCampaign] = useState<any>(null);
   const [applications, setApplications] = useState<Application[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"applications" | "accepted" | "deliverables">("applications");
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
+  const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
     if (!user || !id) return;
@@ -61,6 +85,25 @@ const CampaignManage = () => {
           creatorFollowers: cpMap.get(a.creator_user_id)?.instagram_followers || 0,
         })));
       }
+
+      // Fetch deliverable submissions
+      const { data: subs } = await supabase
+        .from("deliverable_submissions")
+        .select("*, campaign_deliverables(content_type)")
+        .in("application_id", (apps || []).map(a => a.id));
+
+      if (subs && subs.length > 0) {
+        const creatorIds = [...new Set(subs.map(s => s.creator_user_id))];
+        const { data: profiles } = await supabase.from("profiles").select("user_id, full_name").in("user_id", creatorIds);
+        const pMap = new Map((profiles || []).map(p => [p.user_id, p.full_name]));
+
+        setSubmissions(subs.map(s => ({
+          ...s,
+          creatorName: pMap.get(s.creator_user_id) || "Creator",
+          deliverableType: (s as any).campaign_deliverables?.content_type || "Content",
+        })));
+      }
+
       setLoading(false);
     };
     fetch();
@@ -75,7 +118,6 @@ const CampaignManage = () => {
     setApplications(prev => prev.map(a => a.id === appId ? { ...a, status } : a));
     toast.success(status === "accepted" ? "Creator accepted! 🎉" : status === "rejected" ? "Application declined" : "Status updated");
 
-    // Create notification for creator
     const app = applications.find(a => a.id === appId);
     if (app) {
       await supabase.from("notifications").insert({
@@ -89,9 +131,33 @@ const CampaignManage = () => {
     }
   };
 
+  const handleReviewSubmission = async (action: "approved" | "revision_requested" | "rejected") => {
+    if (!selectedSubmission) return;
+    const updates: any = { status: action, review_feedback: feedback };
+    if (action === "approved") updates.approved_at = new Date().toISOString();
+    if (action === "revision_requested") updates.revision_count = (selectedSubmission.revision_count || 0) + 1;
+
+    await supabase.from("deliverable_submissions").update(updates).eq("id", selectedSubmission.id);
+
+    // Notify creator
+    await supabase.from("notifications").insert({
+      user_id: selectedSubmission.creator_user_id,
+      title: action === "approved" ? "Content Approved! ✅" : action === "revision_requested" ? "Revision Requested 📝" : "Content Update",
+      message: feedback || `Your submission has been ${action.replace("_", " ")}.`,
+      type: "campaign",
+      reference_type: "campaign",
+      reference_id: id,
+    });
+
+    setSubmissions(prev => prev.map(s => s.id === selectedSubmission.id ? { ...s, status: action, review_feedback: feedback } : s));
+    toast.success(action === "approved" ? "Content approved! ✅" : action === "revision_requested" ? "Revision requested" : "Submission rejected");
+    setReviewOpen(false);
+    setFeedback("");
+    setSelectedSubmission(null);
+  };
+
   const startConversation = async (creatorUserId: string) => {
     if (!user) return;
-    // Check existing conversation
     const { data: existing } = await supabase
       .from("conversations")
       .select("id")
@@ -103,19 +169,19 @@ const CampaignManage = () => {
       return;
     }
 
-    const { data: newConv, error } = await supabase.from("conversations").insert({
+    const { data: newConv } = await supabase.from("conversations").insert({
       participant_1: user.id,
       participant_2: creatorUserId,
       campaign_id: id,
     }).select("id").single();
 
-    if (newConv) {
-      navigate(`/messages/${newConv.id}`);
-    }
+    if (newConv) navigate(`/messages/${newConv.id}`);
   };
 
   const pendingApps = applications.filter(a => a.status === "pending");
   const acceptedApps = applications.filter(a => a.status === "accepted");
+  const pendingSubs = submissions.filter(s => s.status === "submitted");
+  const approvedSubs = submissions.filter(s => s.status === "approved");
 
   if (loading) {
     return (
@@ -124,6 +190,16 @@ const CampaignManage = () => {
       </div>
     );
   }
+
+  const submissionStatusConfig: Record<string, { color: string; icon: any; label: string }> = {
+    not_started: { color: "bg-secondary text-muted-foreground", icon: Clock, label: "Not Started" },
+    in_progress: { color: "bg-yellow-500/10 text-yellow-600", icon: Upload, label: "In Progress" },
+    submitted: { color: "bg-accent/10 text-accent", icon: FileCheck, label: "Submitted" },
+    approved: { color: "bg-primary/10 text-primary", icon: CheckCircle, label: "Approved" },
+    revision_requested: { color: "bg-yellow-500/10 text-yellow-600", icon: RotateCcw, label: "Revision" },
+    published: { color: "bg-primary/10 text-primary", icon: ExternalLink, label: "Published" },
+    rejected: { color: "bg-destructive/10 text-destructive", icon: XCircle, label: "Rejected" },
+  };
 
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto">
@@ -134,31 +210,38 @@ const CampaignManage = () => {
         </button>
         <div className="flex-1 min-w-0">
           <h1 className="font-heading font-semibold text-sm text-foreground truncate">{campaign?.title || "Campaign"}</h1>
-          <p className="text-[10px] text-muted-foreground">{applications.length} applications</p>
+          <p className="text-[10px] text-muted-foreground">{applications.length} applications • {submissions.length} submissions</p>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="px-4 mt-4 grid grid-cols-3 gap-2">
-        <div className="glass-card rounded-xl p-3 text-center">
+      <div className="px-4 mt-4 grid grid-cols-4 gap-2">
+        <div className="glass-card rounded-xl p-2.5 text-center">
           <p className="font-heading font-bold text-lg text-card-foreground">{pendingApps.length}</p>
-          <p className="text-[9px] text-muted-foreground">Pending</p>
+          <p className="text-[8px] text-muted-foreground">Pending</p>
         </div>
-        <div className="glass-card rounded-xl p-3 text-center">
+        <div className="glass-card rounded-xl p-2.5 text-center">
           <p className="font-heading font-bold text-lg text-primary">{acceptedApps.length}</p>
-          <p className="text-[9px] text-muted-foreground">Accepted</p>
+          <p className="text-[8px] text-muted-foreground">Accepted</p>
         </div>
-        <div className="glass-card rounded-xl p-3 text-center">
+        <div className="glass-card rounded-xl p-2.5 text-center">
+          <p className="font-heading font-bold text-lg text-accent">{pendingSubs.length}</p>
+          <p className="text-[8px] text-muted-foreground">To Review</p>
+        </div>
+        <div className="glass-card rounded-xl p-2.5 text-center">
           <p className="font-heading font-bold text-lg text-card-foreground">{campaign?.slots_total || 0}</p>
-          <p className="text-[9px] text-muted-foreground">Total Slots</p>
+          <p className="text-[8px] text-muted-foreground">Slots</p>
         </div>
       </div>
 
       {/* Tabs */}
       <div className="px-4 mt-4 flex gap-1.5">
         {(["applications", "accepted", "deliverables"] as const).map(t => (
-          <button key={t} onClick={() => setTab(t)} className={`px-3 py-1.5 rounded-full text-[10px] font-heading font-medium capitalize transition-all ${tab === t ? "gradient-primary text-primary-foreground shadow-sm" : "bg-secondary text-secondary-foreground"}`}>
+          <button key={t} onClick={() => setTab(t)} className={`flex-1 py-2 rounded-xl text-[10px] font-heading font-medium capitalize transition-all relative ${tab === t ? "gradient-primary text-primary-foreground shadow-sm" : "bg-secondary text-secondary-foreground"}`}>
             {t}
+            {t === "deliverables" && pendingSubs.length > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent text-[9px] font-bold text-accent-foreground flex items-center justify-center">{pendingSubs.length}</span>
+            )}
           </button>
         ))}
       </div>
@@ -167,10 +250,7 @@ const CampaignManage = () => {
       <div className="px-4 mt-4 space-y-2.5 mb-8">
         {tab === "applications" && (
           pendingApps.length === 0 ? (
-            <div className="text-center py-12">
-              <Users className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
-              <p className="font-heading font-medium text-muted-foreground">No pending applications</p>
-            </div>
+            <EmptyState icon={Users} text="No pending applications" />
           ) : (
             pendingApps.map((app, i) => (
               <ApplicationCard key={app.id} app={app} onAccept={() => updateStatus(app.id, "accepted")} onReject={() => updateStatus(app.id, "rejected")} onMessage={() => startConversation(app.creator_user_id)} index={i} />
@@ -180,10 +260,7 @@ const CampaignManage = () => {
 
         {tab === "accepted" && (
           acceptedApps.length === 0 ? (
-            <div className="text-center py-12">
-              <CheckCircle className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
-              <p className="font-heading font-medium text-muted-foreground">No accepted creators yet</p>
-            </div>
+            <EmptyState icon={CheckCircle} text="No accepted creators yet" />
           ) : (
             acceptedApps.map((app, i) => (
               <div key={app.id} className="glass-card rounded-2xl p-4 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
@@ -209,16 +286,127 @@ const CampaignManage = () => {
         )}
 
         {tab === "deliverables" && (
-          <div className="text-center py-12">
-            <Eye className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
-            <p className="font-heading font-medium text-muted-foreground">Content submissions will appear here</p>
-            <p className="text-xs text-muted-foreground mt-1">Once accepted creators submit their deliverables</p>
-          </div>
+          submissions.length === 0 ? (
+            <EmptyState icon={Eye} text="No submissions yet" subtitle="Accepted creators will submit their content here" />
+          ) : (
+            submissions.map((sub, i) => {
+              const config = submissionStatusConfig[sub.status] || submissionStatusConfig.not_started;
+              const StatusIcon = config.icon;
+              return (
+                <div key={sub.id} className="glass-card rounded-2xl p-4 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <p className="font-heading font-semibold text-sm text-card-foreground">{sub.creatorName}</p>
+                      <p className="text-[10px] text-muted-foreground">{sub.deliverableType} • {sub.submitted_at ? new Date(sub.submitted_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "Not submitted"}</p>
+                    </div>
+                    <Badge className={`${config.color} border-0 text-[9px] font-heading`}>
+                      <StatusIcon className="w-3 h-3 mr-0.5" /> {config.label}
+                    </Badge>
+                  </div>
+
+                  {sub.content_url && (
+                    <a href={sub.content_url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary mt-2 flex items-center gap-1">
+                      <ExternalLink className="w-3 h-3" /> View Content
+                    </a>
+                  )}
+
+                  {sub.caption && <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{sub.caption}</p>}
+                  {sub.submission_notes && <p className="text-[10px] text-muted-foreground mt-1 italic">"{sub.submission_notes}"</p>}
+
+                  {sub.review_feedback && (
+                    <div className="mt-2 p-2 rounded-lg bg-primary/5">
+                      <p className="text-[10px] text-primary font-heading font-medium">Feedback: {sub.review_feedback}</p>
+                    </div>
+                  )}
+
+                  {sub.published_url && (
+                    <a href={sub.published_url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-primary mt-1 flex items-center gap-1">
+                      <ExternalLink className="w-3 h-3" /> Published Link
+                    </a>
+                  )}
+
+                  {(sub.status === "submitted" || sub.status === "revision_requested") && (
+                    <div className="flex gap-2 mt-3">
+                      <Button size="sm" variant="outline" className="h-7 text-[10px] rounded-lg border-destructive/30 text-destructive" onClick={() => { setSelectedSubmission(sub); setReviewOpen(true); }}>
+                        <RotateCcw className="w-3 h-3" /> Revise
+                      </Button>
+                      <Button size="sm" variant="gradient" className="flex-1 h-7 text-[10px] rounded-lg" onClick={() => {
+                        setSelectedSubmission(sub);
+                        handleReviewSubmission("approved");
+                      }}>
+                        <CheckCircle className="w-3 h-3" /> Approve
+                      </Button>
+                    </div>
+                  )}
+
+                  {sub.revision_count && sub.revision_count > 0 && (
+                    <p className="text-[9px] text-muted-foreground mt-1">Revision #{sub.revision_count}</p>
+                  )}
+                </div>
+              );
+            })
+          )
         )}
       </div>
+
+      {/* Review Drawer */}
+      <Drawer open={reviewOpen} onOpenChange={setReviewOpen}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle className="font-heading">Review Submission</DrawerTitle>
+            <DrawerDescription>Provide feedback for {selectedSubmission?.creatorName}</DrawerDescription>
+          </DrawerHeader>
+          <div className="px-4 space-y-3">
+            {selectedSubmission?.content_url && (
+              <a href={selectedSubmission.content_url} target="_blank" rel="noopener noreferrer" className="glass-card rounded-xl p-3 flex items-center gap-2 text-sm text-primary">
+                <ExternalLink className="w-4 h-4" /> View Submitted Content
+              </a>
+            )}
+            <div>
+              <label className="text-xs font-heading font-medium text-foreground mb-1 block">Checklist</label>
+              <div className="space-y-1.5">
+                {["Product prominently featured", "Captions match guidelines", "Legal disclaimers included", "Content quality meets standards", "Correct hashtags used"].map((item, i) => (
+                  <label key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <input type="checkbox" className="rounded border-border" />
+                    {item}
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Feedback</label>
+              <textarea value={feedback} onChange={e => setFeedback(e.target.value)} placeholder="Comments for the creator..." rows={3} className="w-full px-3 py-2 rounded-xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" />
+            </div>
+          </div>
+          <DrawerFooter>
+            <div className="flex gap-2 w-full">
+              <Button variant="outline" className="flex-1 h-11 rounded-2xl border-destructive/30 text-destructive" onClick={() => handleReviewSubmission("rejected")}>
+                <XCircle className="w-4 h-4" /> Reject
+              </Button>
+              <Button variant="outline" className="flex-1 h-11 rounded-2xl" onClick={() => handleReviewSubmission("revision_requested")}>
+                <RotateCcw className="w-4 h-4" /> Request Changes
+              </Button>
+            </div>
+            <Button variant="gradient" className="w-full h-12 rounded-2xl font-heading" onClick={() => handleReviewSubmission("approved")}>
+              <CheckCircle className="w-4 h-4" /> Approve Content
+            </Button>
+            <DrawerClose asChild>
+              <Button variant="ghost" className="w-full">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };
+
+const EmptyState = ({ icon: Icon, text, subtitle }: { icon: any; text: string; subtitle?: string }) => (
+  <div className="text-center py-12">
+    <Icon className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
+    <p className="font-heading font-medium text-muted-foreground">{text}</p>
+    {subtitle && <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>}
+  </div>
+);
 
 const ApplicationCard = ({ app, onAccept, onReject, onMessage, index }: { app: Application; onAccept: () => void; onReject: () => void; onMessage: () => void; index: number }) => (
   <div className="glass-card rounded-2xl p-4 opacity-0 animate-fade-up" style={{ animationDelay: `${index * 60}ms`, animationFillMode: "forwards" }}>
