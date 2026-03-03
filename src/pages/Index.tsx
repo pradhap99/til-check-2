@@ -68,6 +68,7 @@ const Index = () => {
           <Link to="/creators" className="text-sm text-primary font-medium flex items-center gap-1">
             View all <ArrowRight className="w-3.5 h-3.5" />
           </Link>
+
         </div>
         <div className="space-y-3">
           {topCreators.map((creator, i) => (

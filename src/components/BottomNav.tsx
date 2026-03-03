@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Home, Users, Briefcase, User } from "lucide-react";
 
 const navItems = [
-  { path: "/", icon: Home, label: "Home" },
+  { path: "/home", icon: Home, label: "Home" },
   { path: "/creators", icon: Users, label: "Creators" },
   { path: "/campaigns", icon: Briefcase, label: "Campaigns" },
   { path: "/profile", icon: User, label: "Profile" },
