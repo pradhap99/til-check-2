@@ -39,6 +39,12 @@
     --success: 142 71% 45%;
     --success-foreground: 210 40% 98%;
 
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --info: 210 100% 52%;
+    --info-foreground: 0 0% 100%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 222 47% 11%;
     --sidebar-primary: 222 47% 11%;
@@ -50,6 +56,11 @@
 
     --font-heading: 'Plus Jakarta Sans', sans-serif;
     --font-body: 'Inter', sans-serif;
+
+    --gradient-mesh-1: 222 47% 11%;
+    --gradient-mesh-2: 230 60% 25%;
+    --gradient-mesh-3: 262 83% 58%;
+    --gradient-mesh-4: 180 60% 35%;
   }
 
   .dark {
@@ -83,6 +94,12 @@
 
     --success: 142 71% 35%;
     --success-foreground: 210 40% 98%;
+
+    --warning: 38 80% 40%;
+    --warning-foreground: 0 0% 100%;
+
+    --info: 210 80% 45%;
+    --info-foreground: 0 0% 100%;
 
     --sidebar-background: 224 71% 5%;
     --sidebar-foreground: 210 40% 98%;
@@ -128,12 +145,34 @@
     background-clip: text;
   }
 
+  .gradient-text-hero {
+    background: linear-gradient(135deg, hsl(210 40% 98%), hsl(262 83% 68%), hsl(180 60% 55%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   .glass-card {
+    background: hsla(0 0% 100% / 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsla(0 0% 100% / 0.12);
+  }
+
+  .glass-card-solid {
     @apply bg-card border border-border shadow-sm;
   }
 
   .hover-lift {
     @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md;
+  }
+
+  .hover-lift-lg {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .btn-micro {
+    @apply transition-transform duration-150 active:scale-95;
   }
 
   .animate-pulse-glow {
@@ -143,5 +182,139 @@
   @keyframes pulse-glow {
     0%, 100% { opacity: 0.6; }
     50% { opacity: 1; }
+  }
+
+  /* Mesh gradient background for auth */
+  .mesh-gradient-bg {
+    background:
+      radial-gradient(ellipse at 20% 50%, hsla(222 47% 11% / 0.95) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, hsla(230 60% 25% / 0.8) 0%, transparent 50%),
+      radial-gradient(ellipse at 40% 80%, hsla(262 83% 58% / 0.6) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, hsla(180 60% 35% / 0.4) 0%, transparent 50%),
+      hsl(222 47% 8%);
+    animation: mesh-shift 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes mesh-shift {
+    0% {
+      background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%;
+    }
+    50% {
+      background-position: 50% 20%, 80% 40%, 20% 60%, 60% 80%;
+    }
+    100% {
+      background-position: 20% 50%, 60% 10%, 40% 80%, 80% 50%;
+    }
+  }
+
+  /* Noise texture overlay */
+  .noise-overlay::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 128px;
+  }
+
+  /* Dot grid background */
+  .dot-grid-bg {
+    background-image: radial-gradient(circle, hsla(220 9% 46% / 0.15) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Radial gradient for home */
+  .radial-gradient-bg {
+    background: radial-gradient(ellipse at 50% 0%, hsla(262 83% 58% / 0.06) 0%, transparent 60%);
+  }
+
+  /* Gradient ring for avatars */
+  .gradient-ring {
+    padding: 2px;
+    background: linear-gradient(135deg, hsl(262 83% 58%), hsl(180 60% 45%), hsl(262 83% 58%));
+    border-radius: 9999px;
+  }
+
+  .gradient-ring > * {
+    border-radius: 9999px;
+  }
+
+  /* Skeleton shimmer */
+  .skeleton-shimmer {
+    background: linear-gradient(90deg, hsl(var(--secondary)) 25%, hsl(var(--muted)) 50%, hsl(var(--secondary)) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Category strip */
+  .category-strip {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .category-strip::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .category-strip-tech::before { background: hsl(210 100% 52%); }
+  .category-strip-fashion::before { background: hsl(330 80% 55%); }
+  .category-strip-beauty::before { background: hsl(300 60% 55%); }
+  .category-strip-food::before { background: hsl(25 95% 53%); }
+  .category-strip-fitness::before { background: hsl(142 71% 45%); }
+  .category-strip-travel::before { background: hsl(180 60% 45%); }
+  .category-strip-gaming::before { background: hsl(262 83% 58%); }
+  .category-strip-finance::before { background: hsl(38 92% 50%); }
+  .category-strip-comedy::before { background: hsl(0 84% 60%); }
+  .category-strip-lifestyle::before { background: hsl(200 70% 50%); }
+
+  /* Count-up animation */
+  @keyframes count-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-count-up {
+    animation: count-up 0.6s ease-out forwards;
+  }
+
+  /* Auto-scroll testimonials */
+  @keyframes scroll-x {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-scroll-x {
+    animation: scroll-x 30s linear infinite;
+  }
+  .animate-scroll-x:hover {
+    animation-play-state: paused;
+  }
+
+  /* Admin sidebar */
+  .admin-sidebar {
+    background: hsl(224 71% 4%);
+    color: hsl(210 40% 98%);
+  }
+
+  /* Hot/New badges */
+  .badge-hot {
+    background: linear-gradient(135deg, hsl(0 84% 60%), hsl(25 95% 53%));
+    color: white;
+  }
+  .badge-new {
+    background: linear-gradient(135deg, hsl(142 71% 45%), hsl(180 60% 45%));
+    color: white;
   }
 }

@@ -55,6 +55,14 @@ export default {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
         },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -92,6 +100,14 @@ export default {
           "0%": { transform: "translateY(100%)" },
           "100%": { transform: "translateY(0)" },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-6px)" },
+        },
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 20px hsla(262 83% 58% / 0.15)" },
+          "50%": { boxShadow: "0 0 40px hsla(262 83% 58% / 0.3)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -99,6 +115,8 @@ export default {
         "fade-up": "fade-up 0.35s ease-out forwards",
         "fade-in": "fade-in 0.3s ease-out forwards",
         "slide-up": "slide-up 0.4s ease-out",
+        "float": "float 3s ease-in-out infinite",
+        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
       },
     },
   },
