@@ -560,19 +560,22 @@ const CampaignManage = () => {
           </DrawerHeader>
           <div className="px-4 space-y-3">
             <div>
-              <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Reason (optional but recommended)</label>
+              <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Reason</label>
               <div className="flex flex-wrap gap-1.5 mb-2">
-                {["Not the right fit", "Budget mismatch", "Insufficient reach", "Content style doesn't align", "Position filled"].map(r => (
-                  <button key={r} onClick={() => setRejectReason(r)} className={`px-2.5 py-1.5 rounded-lg text-[10px] font-heading transition-all ${rejectReason === r ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"}`}>
+                {["Not the right fit", "Budget mismatch", "Insufficient reach", "Content style doesn't align", "Position filled", "Brand safety concern"].map(r => (
+                  <button key={r} onClick={() => setRejectReason(r)} className={`px-2.5 py-1.5 rounded-lg text-[10px] font-heading transition-all btn-micro ${rejectReason === r ? "bg-destructive text-destructive-foreground" : "bg-secondary text-secondary-foreground"}`}>
                     {r}
                   </button>
                 ))}
               </div>
-              <textarea value={rejectReason} onChange={e => setRejectReason(e.target.value)} placeholder="Additional feedback for the creator..." rows={3} className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none" />
+              <textarea value={rejectReason} onChange={e => setRejectReason(e.target.value)} placeholder="Additional feedback for the creator..." rows={3} className="w-full px-3 py-2 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-destructive/20 resize-none" />
+            </div>
+            <div className="bg-destructive/5 border border-destructive/10 rounded-lg p-3">
+              <p className="text-[10px] text-destructive font-heading font-medium">⚠️ This action cannot be undone. The creator will be notified with your feedback.</p>
             </div>
           </div>
           <DrawerFooter>
-            <Button variant="destructive" className="w-full h-12 rounded-xl font-heading" onClick={handleReject}>
+            <Button variant="destructive" className="w-full h-12 rounded-xl font-heading btn-micro" onClick={handleReject}>
               <XCircle className="w-4 h-4" /> Decline Application
             </Button>
             <DrawerClose asChild>
