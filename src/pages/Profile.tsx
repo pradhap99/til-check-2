@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, ChevronRight, Shield, HelpCircle, FileText, BarChart3, Wallet } from "lucide-react";
+import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, ChevronRight, Shield, HelpCircle, FileText, BarChart3, Wallet, Instagram, Youtube, Twitter, Linkedin, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
@@ -12,6 +12,7 @@ const Profile = () => {
   const [profile, setProfile] = useState<any>(null);
   const [creatorProfile, setCreatorProfile] = useState<any>(null);
   const [brandProfile, setBrandProfile] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -25,6 +26,9 @@ const Profile = () => {
         const { data: bp } = await supabase.from("brand_profiles").select("*").eq("user_id", user.id).maybeSingle();
         setBrandProfile(bp);
       }
+      // Check admin
+      const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
+      if (roles?.some(r => r.role === "admin")) setIsAdmin(true);
     };
     fetchProfiles();
   }, [user, role]);
@@ -35,6 +39,13 @@ const Profile = () => {
   };
 
   const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email;
+
+  // Social platforms for creator
+  const socialPlatforms = creatorProfile ? [
+    { icon: Instagram, label: "IG", value: creatorProfile.instagram_followers, color: "text-pink-500" },
+    { icon: Youtube, label: "YT", value: creatorProfile.youtube_subscribers, color: "text-red-500" },
+    { icon: Twitter, label: "TW", value: creatorProfile.tiktok_followers, color: "text-blue-400" },
+  ].filter(p => p.value && p.value > 0) : [];
 
   return (
     <Layout>
@@ -87,6 +98,22 @@ const Profile = () => {
         </div>
       )}
 
+      {/* Social Platforms Compact */}
+      {role === "creator" && socialPlatforms.length > 0 && (
+        <div className="px-5 mt-3">
+          <div className="border border-border rounded-lg p-3 flex items-center gap-3">
+            {socialPlatforms.map((p, i) => (
+              <div key={i} className="flex items-center gap-1.5">
+                <p.icon className={`w-3.5 h-3.5 ${p.color}`} />
+                <span className="text-xs font-heading font-semibold text-foreground">
+                  {p.value > 999999 ? `${(p.value / 1000000).toFixed(1)}M` : `${(p.value / 1000).toFixed(0)}K`}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Rate Card */}
       {role === "creator" && creatorProfile && (creatorProfile.rate_feed_post || creatorProfile.rate_reel) && (
         <div className="px-5 mt-3">
@@ -131,6 +158,7 @@ const Profile = () => {
           { icon: Heart, label: role === "brand" ? "Saved Creators" : "Saved", to: role === "brand" ? "/saved" : "/campaigns" },
           { icon: FileText, label: "Applications", to: "/applications" },
           { icon: Bell, label: "Notifications", to: "/notifications" },
+          ...(isAdmin ? [{ icon: Shield, label: "Admin Panel", to: "/admin" }] : []),
         ].map((item, i) => (
           <button
             key={i}

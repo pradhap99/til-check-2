@@ -27,7 +27,7 @@ const CampaignCard = ({ campaign, index = 0 }: CampaignCardProps) => {
 
   return (
     <div
-      className={`border border-border rounded-xl p-4 cursor-pointer hover-lift btn-micro opacity-0 animate-fade-up category-strip ${categoryColors[campaign.category] || ""}`}
+      className={`border border-border rounded-xl p-4 cursor-pointer hover-lift btn-micro opacity-0 animate-fade-up active:scale-[0.97] transition-transform duration-150 category-strip ${categoryColors[campaign.category] || ""}`}
       style={{ animationDelay: `${index * 50}ms`, animationFillMode: "forwards" }}
     >
       <div className="flex items-start gap-3 pl-2">

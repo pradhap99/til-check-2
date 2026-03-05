@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowRight, ArrowLeft, CheckCircle } from "lucide-react";
+import { ArrowRight, ArrowLeft, CheckCircle, Instagram, Youtube, Twitter, Linkedin } from "lucide-react";
 import { toast } from "sonner";
 
 const niches = ["Fashion", "Tech", "Fitness", "Food", "Travel", "Gaming", "Beauty", "Lifestyle", "Finance", "Comedy", "Education", "Health"];
@@ -22,12 +22,45 @@ const CreatorOnboarding = () => {
   const [secondaryNiches, setSecondaryNiches] = useState<string[]>([]);
   const [formats, setFormats] = useState<string[]>([]);
   const [instagramHandle, setInstagramHandle] = useState("");
+  const [instagramFollowers, setInstagramFollowers] = useState("");
   const [youtubeChannel, setYoutubeChannel] = useState("");
+  const [youtubeSubscribers, setYoutubeSubscribers] = useState("");
+  const [twitterHandle, setTwitterHandle] = useState("");
+  const [twitterFollowers, setTwitterFollowers] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
   const [city, setCity] = useState("");
   const [bio, setBio] = useState("");
 
   const toggleSecondary = (n: string) => setSecondaryNiches(prev => prev.includes(n) ? prev.filter(x => x !== n) : prev.length < 3 ? [...prev, n] : prev);
   const toggleFormat = (f: string) => setFormats(prev => prev.includes(f) ? prev.filter(x => x !== f) : [...prev, f]);
+
+  const PlatformRow = ({ icon: Icon, label, color, handle, setHandle, handlePlaceholder, followers, setFollowers, followersLabel }: any) => (
+    <div className="border border-border rounded-xl p-3.5 space-y-2.5">
+      <div className="flex items-center gap-2.5">
+        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${color}`}>
+          <Icon className="w-4 h-4" />
+        </div>
+        <span className="text-sm font-heading font-medium text-foreground">{label}</span>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <input
+          placeholder={handlePlaceholder}
+          value={handle}
+          onChange={e => setHandle(e.target.value)}
+          className="w-full h-10 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20"
+        />
+        {setFollowers && (
+          <input
+            placeholder={followersLabel || "Followers"}
+            value={followers}
+            onChange={e => setFollowers(e.target.value)}
+            type="number"
+            className="w-full h-10 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20"
+          />
+        )}
+      </div>
+    </div>
+  );
 
   const steps = [
     {
@@ -73,18 +106,14 @@ const CreatorOnboarding = () => {
       valid: formats.length > 0,
     },
     {
-      title: "Social handles",
-      subtitle: "Connect your platforms",
+      title: "Social platforms",
+      subtitle: "Add your handles and follower counts",
       content: (
-        <div className="space-y-4">
-          <div>
-            <label className="text-xs font-medium text-foreground mb-1.5 block">Instagram handle *</label>
-            <input placeholder="@yourhandle" value={instagramHandle} onChange={e => setInstagramHandle(e.target.value)} className="w-full h-11 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
-          </div>
-          <div>
-            <label className="text-xs font-medium text-foreground mb-1.5 block">YouTube channel (optional)</label>
-            <input placeholder="Channel URL" value={youtubeChannel} onChange={e => setYoutubeChannel(e.target.value)} className="w-full h-11 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
-          </div>
+        <div className="space-y-3">
+          <PlatformRow icon={Instagram} label="Instagram" color="bg-pink-500/10 text-pink-500" handle={instagramHandle} setHandle={setInstagramHandle} handlePlaceholder="@yourhandle" followers={instagramFollowers} setFollowers={setInstagramFollowers} followersLabel="Followers" />
+          <PlatformRow icon={Youtube} label="YouTube" color="bg-red-500/10 text-red-500" handle={youtubeChannel} setHandle={setYoutubeChannel} handlePlaceholder="Channel URL" followers={youtubeSubscribers} setFollowers={setYoutubeSubscribers} followersLabel="Subscribers" />
+          <PlatformRow icon={Twitter} label="Twitter / X" color="bg-blue-400/10 text-blue-400" handle={twitterHandle} setHandle={setTwitterHandle} handlePlaceholder="@handle" followers={twitterFollowers} setFollowers={setTwitterFollowers} followersLabel="Followers" />
+          <PlatformRow icon={Linkedin} label="LinkedIn" color="bg-indigo-500/10 text-indigo-500" handle={linkedinUrl} setHandle={setLinkedinUrl} handlePlaceholder="Profile URL (optional)" followers="" setFollowers={null} />
         </div>
       ),
       valid: !!instagramHandle,
@@ -124,7 +153,12 @@ const CreatorOnboarding = () => {
         secondary_niches: secondaryNiches,
         content_formats: formats,
         instagram_handle: instagramHandle,
+        instagram_followers: instagramFollowers ? parseInt(instagramFollowers) : 0,
         youtube_channel: youtubeChannel,
+        youtube_subscribers: youtubeSubscribers ? parseInt(youtubeSubscribers) : 0,
+        twitter_handle: twitterHandle,
+        tiktok_followers: twitterFollowers ? parseInt(twitterFollowers) : 0,
+        linkedin_url: linkedinUrl,
         onboarding_completed: true,
         onboarding_step: 5,
       });
@@ -154,7 +188,7 @@ const CreatorOnboarding = () => {
         <p className="text-xs text-muted-foreground mt-2">Step {step + 1} of {steps.length}</p>
       </div>
 
-      <div className="flex-1 px-5 pt-8">
+      <div className="flex-1 px-5 pt-8 overflow-y-auto">
         <h1 className="text-xl font-heading font-bold text-foreground">{currentStep.title}</h1>
         <p className="text-sm text-muted-foreground mt-1 mb-6">{currentStep.subtitle}</p>
         {currentStep.content}
