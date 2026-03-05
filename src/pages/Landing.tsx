@@ -25,16 +25,12 @@ const testimonials = [
   { name: "Kavya Nair", role: "Beauty · 780K followers", quote: "Escrow protection gives me peace of mind. No more chasing payments.", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face" },
 ];
 
-const experienceCategories = [
-  { label: "Breakfast & Cafés", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400" },
-  { label: "Dinners & Rooftops", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400" },
-  { label: "Staycations", img: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=400" },
-  { label: "Photoshoots", img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400" },
-  { label: "Beauty & Salons", img: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400" },
-  { label: "Fashion", img: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=400" },
-  { label: "Fitness", img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400" },
-  { label: "Shopping", img: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400" },
-];
+import { TOP_CATEGORIES } from "@/data/experienceCategories";
+
+const experienceCategories = TOP_CATEGORIES.map(c => ({
+  label: c.label,
+  img: c.img || "",
+}));
 
 const brandLogos = [
   { name: "boAt", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=60&h=60&fit=crop" },
