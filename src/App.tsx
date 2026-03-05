@@ -58,6 +58,7 @@ const App = () => (
               <Route path="/campaigns/create" element={<ProtectedRoute requiredRole="brand"><CreateCampaign /></ProtectedRoute>} />
               <Route path="/campaigns/:id" element={<ProtectedRoute><CampaignDetail /></ProtectedRoute>} />
               <Route path="/campaigns/:id/manage" element={<ProtectedRoute requiredRole="brand"><CampaignManage /></ProtectedRoute>} />
+              <Route path="/campaigns/:id/applications" element={<ProtectedRoute requiredRole="brand"><CampaignManage /></ProtectedRoute>} />
               <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
               <Route path="/messages/:id" element={<ProtectedRoute><ChatConversation /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />

@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import CampaignCard from "@/components/CampaignCard";
-import { ArrowLeft, Calendar, Users, MapPin, Share2, Bookmark, CheckCircle2, Clock, IndianRupee, Send, Utensils, Camera, Gift, FileText, ThumbsUp, ThumbsDown } from "lucide-react";
+import { ArrowLeft, Calendar, Users, MapPin, Share2, Bookmark, CheckCircle2, Clock, IndianRupee, Send, Utensils, Camera, Gift, FileText, ThumbsUp, ThumbsDown, Eye, TrendingUp, BarChart3, Pause, Play, Edit } from "lucide-react";
 import { toast } from "sonner";
 import {
   Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerTrigger, DrawerClose,
@@ -16,6 +16,8 @@ interface CampaignData {
   id: string; title: string; brand: string; logo: string; budget: string;
   category: string; deadline: string; slots: number; filled: number;
   description: string; platforms: string[]; isReal: boolean;
+  brand_user_id?: string; status?: string; end_date?: string;
+  applications_count?: number;
 }
 
 const experienceTypeMap: Record<string, string> = {
@@ -38,6 +40,9 @@ const CampaignDetail = () => {
   const [contentConcept, setContentConcept] = useState("");
   const [applying, setApplying] = useState(false);
   const [alreadyApplied, setAlreadyApplied] = useState(false);
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
+
+  const isOwner = user && campaign?.brand_user_id === user.id;
 
   useEffect(() => {
     if (!id) return;
@@ -57,10 +62,27 @@ const CampaignDetail = () => {
             deadline: c.end_date ? new Date(c.end_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—",
             slots: c.slots_total || 5, filled: c.slots_filled || 0,
             description: c.description || "", platforms: c.required_platforms || [], isReal: true,
+            brand_user_id: c.brand_user_id, status: c.status, end_date: c.end_date || undefined,
+            applications_count: c.applications_count || 0,
           });
           if (user) {
             const { data: existingApp } = await supabase.from("campaign_applications").select("id").eq("campaign_id", c.id).eq("creator_user_id", user.id).maybeSingle();
             setAlreadyApplied(!!existingApp);
+          }
+
+          // Load recent activity for brand owner
+          if (user && c.brand_user_id === user.id) {
+            const { data: apps } = await supabase.from("campaign_applications").select("id, creator_user_id, status, created_at").eq("campaign_id", c.id).order("created_at", { ascending: false }).limit(5);
+            if (apps && apps.length > 0) {
+              const creatorIds = apps.map(a => a.creator_user_id);
+              const { data: profiles } = await supabase.from("profiles").select("user_id, full_name, avatar_url").in("user_id", creatorIds);
+              const pMap = new Map((profiles || []).map(p => [p.user_id, p]));
+              setRecentActivity(apps.map(a => ({
+                ...a,
+                creatorName: pMap.get(a.creator_user_id)?.full_name || "Creator",
+                creatorAvatar: pMap.get(a.creator_user_id)?.avatar_url || `https://api.dicebear.com/9.x/initials/svg?seed=${a.creator_user_id.slice(0, 4)}`,
+              })));
+            }
           }
         }
         setLoading(false);
@@ -79,9 +101,9 @@ const CampaignDetail = () => {
   const progressPercent = campaign.slots > 0 ? (campaign.filled / campaign.slots) * 100 : 0;
   const slotsLeft = campaign.slots - campaign.filled;
   const experienceType = experienceTypeMap[campaign.category] || "Brand Experience";
-
-  // Similar campaigns
   const similarCampaigns = mockCampaigns.filter(c => c.category === campaign.category && c.id !== campaign.id).slice(0, 3);
+
+  const daysLeft = campaign.end_date ? Math.max(0, Math.ceil((new Date(campaign.end_date).getTime() - Date.now()) / 86400000)) : null;
 
   const handleApply = async () => {
     if (!user || !id) return;
@@ -103,15 +125,32 @@ const CampaignDetail = () => {
     setApplying(false);
   };
 
+  const handleTogglePause = async () => {
+    if (!id) return;
+    const newStatus = campaign.status === "active" ? "paused" : "active";
+    await supabase.from("campaigns").update({ status: newStatus }).eq("id", id);
+    setCampaign(prev => prev ? { ...prev, status: newStatus } : prev);
+    toast.success(newStatus === "paused" ? "Campaign paused" : "Campaign resumed");
+  };
+
+  const formatTimeAgo = (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    return `${Math.floor(hrs / 24)}d ago`;
+  };
+
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto pb-4">
       {/* Header */}
       <div className="px-4 pt-4 flex items-center justify-between">
         <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><ArrowLeft className="w-5 h-5 text-foreground" /></button>
-        <h1 className="font-heading font-semibold text-sm text-foreground">Campaign Details</h1>
+        <h1 className="font-heading font-semibold text-sm text-foreground">{isOwner ? "Your Campaign" : "Campaign Details"}</h1>
         <div className="flex gap-2">
           <button className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><Share2 className="w-4 h-4 text-muted-foreground" /></button>
-          <button className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><Bookmark className="w-4 h-4 text-muted-foreground" /></button>
+          {!isOwner && <button className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><Bookmark className="w-4 h-4 text-muted-foreground" /></button>}
         </div>
       </div>
 
@@ -125,10 +164,15 @@ const CampaignDetail = () => {
               <span className="text-lg font-heading font-bold text-primary">{campaign.brand.charAt(0)}</span>
             </div>
           )}
-          <div>
+          <div className="flex-1">
             <h2 className="font-heading font-bold text-lg text-foreground">{campaign.title}</h2>
             <p className="text-sm text-muted-foreground">by {campaign.brand}</p>
           </div>
+          {isOwner && campaign.status && (
+            <Badge className={`text-[10px] border-0 ${campaign.status === "active" ? "bg-primary/10 text-primary" : campaign.status === "paused" ? "bg-yellow-500/10 text-yellow-600" : "bg-secondary text-muted-foreground"}`}>
+              {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
+            </Badge>
+          )}
         </div>
       </div>
 
@@ -148,13 +192,76 @@ const CampaignDetail = () => {
         </div>
       </div>
 
+      {/* ═══════ BRAND OWNER SECTION ═══════ */}
+      {isOwner && (
+        <>
+          {/* Campaign Performance Stats */}
+          <div className="px-4 mt-4">
+            <h3 className="font-heading font-semibold text-sm text-foreground mb-2.5">Campaign Performance</h3>
+            <div className="grid grid-cols-4 gap-2">
+              <div className="border border-border rounded-xl p-2.5 text-center">
+                <Eye className="w-4 h-4 text-muted-foreground mx-auto mb-1" />
+                <p className="font-heading font-bold text-sm text-foreground">{campaign.applications_count || 0}</p>
+                <p className="text-[8px] text-muted-foreground">Views</p>
+              </div>
+              <div className="border border-border rounded-xl p-2.5 text-center">
+                <Users className="w-4 h-4 text-primary mx-auto mb-1" />
+                <p className="font-heading font-bold text-sm text-foreground">{campaign.filled}/{campaign.slots}</p>
+                <p className="text-[8px] text-muted-foreground">Accepted</p>
+                <div className="w-full h-1 bg-secondary rounded-full mt-1 overflow-hidden">
+                  <div className="h-full bg-primary rounded-full" style={{ width: `${progressPercent}%` }} />
+                </div>
+              </div>
+              <div className="border border-border rounded-xl p-2.5 text-center">
+                <FileText className="w-4 h-4 text-accent mx-auto mb-1" />
+                <p className="font-heading font-bold text-sm text-foreground">{recentActivity.length}</p>
+                <p className="text-[8px] text-muted-foreground">Applications</p>
+              </div>
+              <div className="border border-border rounded-xl p-2.5 text-center">
+                <Clock className={`w-4 h-4 mx-auto mb-1 ${daysLeft !== null && daysLeft < 7 ? "text-destructive" : daysLeft !== null && daysLeft < 14 ? "text-yellow-500" : "text-muted-foreground"}`} />
+                <p className={`font-heading font-bold text-sm ${daysLeft !== null && daysLeft < 7 ? "text-destructive" : "text-foreground"}`}>{daysLeft ?? "—"}</p>
+                <p className="text-[8px] text-muted-foreground">Days Left</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Activity Timeline */}
+          {recentActivity.length > 0 && (
+            <div className="px-4 mt-4">
+              <h3 className="font-heading font-semibold text-sm text-foreground mb-2.5">Recent Activity</h3>
+              <div className="space-y-2">
+                {recentActivity.map((activity, i) => (
+                  <div key={activity.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary/50 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
+                    <img src={activity.creatorAvatar} alt="" className="w-8 h-8 rounded-lg object-cover bg-secondary" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-foreground">
+                        <span className="font-medium">{activity.creatorName}</span>
+                        {activity.status === "pending" && " applied"}
+                        {activity.status === "shortlisted" && " was shortlisted"}
+                        {activity.status === "accepted" && " was accepted"}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground">{formatTimeAgo(activity.created_at)}</p>
+                    </div>
+                    <Badge className={`text-[8px] border-0 ${
+                      activity.status === "pending" ? "bg-yellow-500/10 text-yellow-600" :
+                      activity.status === "accepted" ? "bg-primary/10 text-primary" :
+                      "bg-secondary text-muted-foreground"
+                    }`}>{activity.status}</Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
       {/* About */}
       <div className="px-4 mt-4">
         <h3 className="font-heading font-semibold text-sm text-foreground mb-1.5">About this campaign</h3>
         <p className="text-sm text-muted-foreground leading-relaxed">{campaign.description}</p>
       </div>
 
-      {/* What's Included (for barter-style) */}
+      {/* What's Included */}
       <div className="px-4 mt-4">
         <h3 className="font-heading font-semibold text-sm text-foreground mb-2">What's included</h3>
         <div className="space-y-2">
@@ -263,8 +370,8 @@ const CampaignDetail = () => {
         </div>
       )}
 
-      {/* Similar Campaigns */}
-      {similarCampaigns.length > 0 && (
+      {/* Similar Campaigns - Only for non-owners */}
+      {!isOwner && similarCampaigns.length > 0 && (
         <div className="px-4 mt-6">
           <h3 className="font-heading font-semibold text-sm text-foreground mb-3">Similar campaigns</h3>
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
@@ -279,7 +386,21 @@ const CampaignDetail = () => {
 
       {/* CTA */}
       <div className="px-4 py-5">
-        {role === "creator" ? (
+        {isOwner ? (
+          <div className="space-y-2">
+            <Button variant="gradient" className="w-full h-12 rounded-xl font-heading text-base" onClick={() => navigate(`/campaigns/${id}/manage`)}>
+              <Users className="w-4 h-4" /> Manage Applications ({recentActivity.length})
+            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1 h-10 rounded-xl text-xs font-heading" onClick={() => navigate(`/campaigns/create?edit=${id}`)}>
+                <Edit className="w-3.5 h-3.5" /> Edit Campaign
+              </Button>
+              <Button variant="outline" className={`flex-1 h-10 rounded-xl text-xs font-heading ${campaign.status === "active" ? "border-yellow-500/30 text-yellow-600" : "border-primary/30 text-primary"}`} onClick={handleTogglePause}>
+                {campaign.status === "active" ? <><Pause className="w-3.5 h-3.5" /> Pause</> : <><Play className="w-3.5 h-3.5" /> Resume</>}
+              </Button>
+            </div>
+          </div>
+        ) : role === "creator" ? (
           alreadyApplied ? (
             <Button disabled className="w-full h-12 rounded-xl font-heading text-base">
               <CheckCircle2 className="w-4 h-4" /> Already Applied
