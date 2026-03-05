@@ -1,9 +1,11 @@
 import { Campaign } from "@/data/mockData";
-import { Calendar, Users, Flame, Sparkles, ArrowRight } from "lucide-react";
+import { Calendar, Users, Flame, Sparkles, ArrowRight, Lock, Star } from "lucide-react";
+import { CREATOR_LEVELS } from "@/lib/creatorLevels";
 
 interface CampaignCardProps {
-  campaign: Campaign & { compensationType?: string };
+  campaign: Campaign & { compensationType?: string; minCreatorLevel?: number };
   index?: number;
+  userLevel?: number;
 }
 
 const categoryColors: Record<string, string> = {
@@ -32,13 +34,16 @@ const platformColors: Record<string, string> = {
   Twitter: "bg-blue-400 text-white",
 };
 
-const CampaignCard = ({ campaign, index = 0 }: CampaignCardProps) => {
+const CampaignCard = ({ campaign, index = 0, userLevel = 1 }: CampaignCardProps) => {
   const slotsLeft = campaign.slots - campaign.filled;
   const progress = (campaign.filled / campaign.slots) * 100;
   const isHot = progress >= 70;
   const isNew = index === 0;
   const image = categoryImages[campaign.category] || categoryImages.Tech;
   const compType = (campaign as any).compensationType || "Paid";
+  const requiredLevel = (campaign as any).minCreatorLevel || 0;
+  const isLocked = requiredLevel > 0 && userLevel < requiredLevel;
+  const levelInfo = requiredLevel > 0 ? CREATOR_LEVELS[requiredLevel - 1] : null;
 
   // Deadline urgency
   const deadlineDays = (() => {
@@ -66,6 +71,12 @@ const CampaignCard = ({ campaign, index = 0 }: CampaignCardProps) => {
         {isNew && !isHot && (
           <span className="absolute top-2.5 left-2.5 badge-new text-[9px] px-2 py-0.5 rounded-full font-heading font-bold flex items-center gap-0.5">
             <Sparkles className="w-2.5 h-2.5" /> New
+          </span>
+        )}
+        {/* Level requirement badge */}
+        {requiredLevel > 0 && (
+          <span className={`absolute bottom-2.5 left-2.5 text-[9px] px-2 py-0.5 rounded-full font-heading font-bold flex items-center gap-0.5 ${isLocked ? "bg-foreground/80 text-background" : "bg-accent/90 text-accent-foreground"}`}>
+            <Star className="w-2.5 h-2.5" /> Level {requiredLevel}+
           </span>
         )}
         {/* Budget */}
@@ -126,9 +137,15 @@ const CampaignCard = ({ campaign, index = 0 }: CampaignCardProps) => {
         </div>
 
         {/* Apply CTA */}
-        <button className="w-full mt-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-heading font-semibold flex items-center justify-center gap-1 active:scale-95 transition-transform">
-          Apply Now <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+        {isLocked ? (
+          <button className="w-full mt-3 py-2 rounded-xl bg-muted text-muted-foreground text-xs font-heading font-semibold flex items-center justify-center gap-1 cursor-not-allowed" disabled>
+            <Lock className="w-3.5 h-3.5" /> Level {requiredLevel} Required
+          </button>
+        ) : (
+          <button className="w-full mt-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-heading font-semibold flex items-center justify-center gap-1 active:scale-95 transition-transform">
+            Apply Now <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
     </div>
   );

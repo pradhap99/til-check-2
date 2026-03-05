@@ -34,6 +34,8 @@ import Reviews from "./pages/Reviews";
 import SavedCreators from "./pages/SavedCreators";
 import Admin from "./pages/Admin";
 import CreatorMediaKit from "./pages/CreatorMediaKit";
+import ManagedServices from "./pages/ManagedServices";
+import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -77,6 +79,8 @@ const App = () => (
               <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><Admin /></ProtectedRoute>} />
               <Route path="/media-kit/:userId" element={<CreatorMediaKit />} />
               <Route path="/media-kit" element={<ProtectedRoute><CreatorMediaKit /></ProtectedRoute>} />
+              <Route path="/managed-services" element={<ManagedServices />} />
+              <Route path="/pricing" element={<Pricing />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </OnboardingProvider>

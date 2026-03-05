@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, ArrowRight, CheckCircle, Upload, Eye, Sparkles, Ban } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle, Upload, Eye, Sparkles, Ban, Lock, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import { EXPERIENCE_CATEGORIES, CATEGORY_GROUPS, CATEGORY_TEMPLATES } from "@/data/experienceCategories";
+import { CREATOR_LEVELS } from "@/lib/creatorLevels";
 
 const campaignTypes = [
   { label: "Product Launch", emoji: "🚀" },
@@ -19,12 +21,20 @@ const campaignTypes = [
   { label: "Barter", emoji: "🎁" },
 ];
 const platformOptions = ["Instagram", "YouTube", "Twitter", "TikTok"];
-const nicheOptions = ["Fashion", "Tech", "Beauty", "Food", "Fitness", "Travel", "Gaming", "Lifestyle", "Finance", "Comedy"];
 const cityOptions = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Pune", "Hyderabad", "Kolkata", "Jaipur"];
 const compensationTypes = ["Paid", "Barter", "Hybrid"];
 const followerRanges = ["1K-10K", "10K-50K", "50K-100K", "100K-500K", "500K+"];
 const ageRanges = ["18-24", "25-34", "35-44", "45+"];
 const genderOptions = ["All", "Male", "Female"];
+
+const levelOptions = [
+  { label: "Any Level", value: 0, desc: "All creators can apply" },
+  { label: "Level 2+ (50K+)", value: 2, desc: "Emerging creators with growing audience" },
+  { label: "Level 3+ (100K+)", value: 3, desc: "Established creators, min 3% engagement" },
+  { label: "Level 4+ (250K+)", value: 4, desc: "Top creators with proven track records" },
+  { label: "Level 5+ (500K+)", value: 5, desc: "Elite creators, premium partnerships" },
+  { label: "Level 6 Only (1M+)", value: 6, desc: "Celebrity creators, exclusive" },
+];
 
 interface Deliverable {
   type: string;
@@ -58,6 +68,7 @@ const CreateCampaign = () => {
   const [cities, setCities] = useState<string[]>([]);
   const [gender, setGender] = useState("All");
   const [ageRange, setAgeRange] = useState<string[]>([]);
+  const [minCreatorLevel, setMinCreatorLevel] = useState(0);
 
   // Step 4
   const [deliverables, setDeliverables] = useState<Deliverable[]>([
@@ -95,13 +106,29 @@ const CreateCampaign = () => {
             <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Campaign Name</label>
             <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="e.g. Summer Product Launch" className="h-11 rounded-xl" />
           </div>
-          <div>
+           <div>
             <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Category</label>
-            <div className="flex gap-2 flex-wrap">
-              {nicheOptions.slice(0, 6).map(n => (
-                <button key={n} onClick={() => setCategory(n)} className={`px-3 py-2 rounded-xl text-xs font-heading font-medium transition-all ${category === n ? "bg-accent text-accent-foreground shadow-md" : "bg-secondary text-secondary-foreground"}`}>{n}</button>
+            <select value={category} onChange={e => {
+              setCategory(e.target.value);
+              const tpl = CATEGORY_TEMPLATES[e.target.value];
+              if (tpl) {
+                setDos(tpl.dos);
+                setDonts(tpl.donts);
+                setDeliverables(prev => prev.map(d => {
+                  const match = tpl.deliverables.find(td => d.type.toLowerCase().includes(td.type.toLowerCase().split(" ")[0]));
+                  return match ? { ...d, enabled: true, quantity: match.quantity, duration: match.duration || d.duration } : d;
+                }));
+              }
+            }} className="w-full h-11 px-3 rounded-xl bg-secondary text-foreground text-sm border border-border">
+              <option value="">Select category</option>
+              {CATEGORY_GROUPS.map(group => (
+                <optgroup key={group} label={group}>
+                  {EXPERIENCE_CATEGORIES.filter(c => c.group === group).map(c => (
+                    <option key={c.id} value={c.label}>{c.emoji} {c.label}</option>
+                  ))}
+                </optgroup>
               ))}
-            </div>
+            </select>
           </div>
           <div>
             <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Campaign Type</label>
@@ -134,13 +161,23 @@ const CreateCampaign = () => {
               ))}
             </div>
           </div>
-          {!isBarter && (
+           {!isBarter && (
             <div>
               <label className="text-xs font-heading font-medium text-foreground mb-2 block">
                 Budget Range: ₹{budgetRange[0].toLocaleString()} — ₹{budgetRange[1].toLocaleString()}
               </label>
               <Slider value={budgetRange} onValueChange={setBudgetRange} min={1000} max={1000000} step={1000} className="w-full" />
               <div className="flex justify-between text-[9px] text-muted-foreground mt-1"><span>₹1K</span><span>₹10L</span></div>
+              {/* Budget warning for level */}
+              {minCreatorLevel >= 3 && budgetRange[1] < (CREATOR_LEVELS[minCreatorLevel - 1]?.minFollowers ? parseInt(CREATOR_LEVELS[minCreatorLevel - 1].basePay.replace(/[^\d]/g, "")) * 1000 : 35000) && (
+                <div className="mt-2 flex items-start gap-2 px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-[10px] font-medium text-amber-700 dark:text-amber-400">Level {minCreatorLevel} creators expect minimum {CREATOR_LEVELS[minCreatorLevel - 1]?.basePay}</p>
+                    <p className="text-[9px] text-amber-600/80">Your campaign may get fewer applications at this budget.</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
           {isBarter && (
@@ -169,6 +206,23 @@ const CreateCampaign = () => {
       content: (
         <div className="space-y-4">
           <div>
+            <label className="text-xs font-heading font-medium text-foreground mb-2 block">Minimum Creator Level</label>
+            <div className="space-y-1.5">
+              {levelOptions.map(opt => (
+                <button key={opt.value} onClick={() => setMinCreatorLevel(opt.value)} className={`w-full flex items-center gap-3 p-2.5 rounded-xl text-left transition-all border ${minCreatorLevel === opt.value ? "border-accent bg-accent/5" : "border-border"}`}>
+                  {opt.value > 0 ? <Lock className="w-3.5 h-3.5 text-accent shrink-0" /> : <Sparkles className="w-3.5 h-3.5 text-muted-foreground shrink-0" />}
+                  <div>
+                    <p className="text-xs font-heading font-semibold text-foreground">{opt.label}</p>
+                    <p className="text-[9px] text-muted-foreground">{opt.desc}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+            {minCreatorLevel >= 3 && (
+              <p className="text-[9px] text-muted-foreground mt-2 px-2">💡 Level {minCreatorLevel}+ creators have min 3% engagement and {minCreatorLevel >= 5 ? "15+" : "5+"} completed campaigns.</p>
+            )}
+          </div>
+          <div>
             <label className="text-xs font-heading font-medium text-foreground mb-2 block">Creator Follower Range</label>
             <div className="flex gap-1.5 flex-wrap">
               {followerRanges.map(r => (
@@ -179,8 +233,8 @@ const CreateCampaign = () => {
           <div>
             <label className="text-xs font-heading font-medium text-foreground mb-2 block">Preferred Niches</label>
             <div className="flex gap-1.5 flex-wrap">
-              {nicheOptions.map(n => (
-                <button key={n} onClick={() => toggleArray(niches, setNiches, n)} className={`px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${niches.includes(n) ? "bg-accent/20 text-accent border border-accent" : "bg-secondary text-muted-foreground"}`}>{n}</button>
+              {EXPERIENCE_CATEGORIES.slice(0, 12).map(c => (
+                <button key={c.id} onClick={() => toggleArray(niches, setNiches, c.label)} className={`px-3 py-1.5 rounded-full text-[11px] font-medium transition-all ${niches.includes(c.label) ? "bg-accent/20 text-accent border border-accent" : "bg-secondary text-muted-foreground"}`}>{c.emoji} {c.label.split(" ")[0]}</button>
               ))}
             </div>
           </div>
