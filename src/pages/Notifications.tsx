@@ -2,28 +2,28 @@ import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Bell, CheckCircle, Briefcase, MessageCircle, Star, TrendingUp, Trash2 } from "lucide-react";
+import { Bell, CheckCircle, Briefcase, MessageCircle, Star, TrendingUp, IndianRupee, Sparkles, Gift } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  type: string | null;
-  read: boolean | null;
-  created_at: string;
-  reference_id: string | null;
-  reference_type: string | null;
+  id: string; title: string; message: string; type: string | null;
+  read: boolean | null; created_at: string; reference_id: string | null; reference_type: string | null;
 }
 
 const typeIcons: Record<string, any> = {
-  campaign: Briefcase,
-  application: CheckCircle,
-  message: MessageCircle,
-  review: Star,
-  general: Bell,
-  profile: TrendingUp,
+  campaign: Briefcase, application: CheckCircle, message: MessageCircle,
+  review: Star, general: Bell, profile: TrendingUp, payment: IndianRupee,
 };
+
+// Mock notifications for empty state
+const mockNotifications = [
+  { id: "mock-1", title: "boAt shortlisted you", message: "You've been shortlisted for Summer Audio Launch campaign", type: "application", read: false, created_at: new Date(Date.now() - 3600000).toISOString(), reference_id: null, reference_type: "campaign" },
+  { id: "mock-2", title: "New campaign matches your profile", message: "Mamaearth Beauty Week — perfect for your niche", type: "campaign", read: false, created_at: new Date(Date.now() - 10800000).toISOString(), reference_id: null, reference_type: "campaign" },
+  { id: "mock-3", title: "₹3,500 deposited", message: "Payment received for Lenskart collab. Check earnings.", type: "payment", read: true, created_at: new Date(Date.now() - 86400000).toISOString(), reference_id: null, reference_type: null },
+  { id: "mock-4", title: "Application accepted", message: "Your application for Sugar Cosmetics Bold Everyday was accepted!", type: "application", read: true, created_at: new Date(Date.now() - 172800000).toISOString(), reference_id: null, reference_type: "application" },
+  { id: "mock-5", title: "Complete your media kit", message: "Add rate card and sample content to attract more brands", type: "profile", read: true, created_at: new Date(Date.now() - 259200000).toISOString(), reference_id: null, reference_type: null },
+  { id: "mock-6", title: "New message from Lenskart", message: "Regarding your SS'26 campaign deliverables", type: "message", read: true, created_at: new Date(Date.now() - 345600000).toISOString(), reference_id: null, reference_type: "message" },
+];
 
 const Notifications = () => {
   const { user } = useAuth();
@@ -33,33 +33,18 @@ const Notifications = () => {
 
   const fetchNotifications = async () => {
     if (!user) return;
-    const { data } = await supabase
-      .from("notifications")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(50);
-    setNotifications(data || []);
+    const { data } = await supabase.from("notifications").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(50);
+    setNotifications((data && data.length > 0) ? data : mockNotifications);
     setLoading(false);
   };
 
-  useEffect(() => {
-    fetchNotifications();
-  }, [user]);
+  useEffect(() => { fetchNotifications(); }, [user]);
 
-  // Realtime
   useEffect(() => {
     if (!user) return;
-    const channel = supabase
-      .channel("notifications-realtime")
-      .on("postgres_changes", {
-        event: "INSERT",
-        schema: "public",
-        table: "notifications",
-        filter: `user_id=eq.${user.id}`,
-      }, () => fetchNotifications())
+    const channel = supabase.channel("notifications-realtime")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, () => fetchNotifications())
       .subscribe();
-
     return () => { supabase.removeChannel(channel); };
   }, [user]);
 
@@ -70,25 +55,24 @@ const Notifications = () => {
   };
 
   const markRead = async (id: string) => {
+    if (id.startsWith("mock-")) {
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+      return;
+    }
     await supabase.from("notifications").update({ read: true }).eq("id", id);
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
   };
 
   const handleClick = (notif: Notification) => {
     markRead(notif.id);
-    if (notif.reference_type === "campaign" && notif.reference_id) {
-      navigate(`/campaigns/${notif.reference_id}`);
-    } else if (notif.reference_type === "application") {
-      navigate("/applications");
-    } else if (notif.reference_type === "message" && notif.reference_id) {
-      navigate(`/messages/${notif.reference_id}`);
-    }
+    if (notif.reference_type === "campaign" && notif.reference_id) navigate(`/campaigns/${notif.reference_id}`);
+    else if (notif.reference_type === "application") navigate("/applications");
+    else if (notif.reference_type === "message" && notif.reference_id) navigate(`/messages/${notif.reference_id}`);
   };
 
   const formatTime = (dateStr: string) => {
     const d = new Date(dateStr);
-    const now = new Date();
-    const diffMs = now.getTime() - d.getTime();
+    const diffMs = Date.now() - d.getTime();
     const diffMins = Math.floor(diffMs / 60000);
     if (diffMins < 1) return "now";
     if (diffMins < 60) return `${diffMins}m`;
@@ -101,61 +85,67 @@ const Notifications = () => {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  // Group by time
+  const today = new Date(); today.setHours(0,0,0,0);
+  const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+  const groups: { label: string; items: Notification[] }[] = [];
+  const todayItems = notifications.filter(n => new Date(n.created_at) >= today);
+  const yesterdayItems = notifications.filter(n => { const d = new Date(n.created_at); return d >= yesterday && d < today; });
+  const earlierItems = notifications.filter(n => new Date(n.created_at) < yesterday);
+  if (todayItems.length) groups.push({ label: "Today", items: todayItems });
+  if (yesterdayItems.length) groups.push({ label: "Yesterday", items: yesterdayItems });
+  if (earlierItems.length) groups.push({ label: "Earlier", items: earlierItems });
+
   return (
     <Layout>
       <header className="px-4 pt-6 pb-2 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-heading font-bold text-foreground">Notifications</h1>
-          {unreadCount > 0 && (
-            <p className="text-xs text-muted-foreground">{unreadCount} unread</p>
-          )}
+          {unreadCount > 0 && <p className="text-xs text-muted-foreground">{unreadCount} unread</p>}
         </div>
         {unreadCount > 0 && (
-          <button onClick={markAllRead} className="text-xs text-primary font-heading font-medium">
-            Mark all read
-          </button>
+          <button onClick={markAllRead} className="text-xs text-primary font-heading font-medium">Mark all read</button>
         )}
       </header>
 
       <div className="mt-2">
         {loading ? (
-          <div className="text-center py-16">
-            <div className="w-8 h-8 rounded-xl gradient-primary animate-pulse-glow mx-auto" />
-          </div>
-        ) : notifications.length === 0 ? (
+          <div className="text-center py-16"><div className="w-8 h-8 rounded-xl gradient-primary animate-pulse-glow mx-auto" /></div>
+        ) : groups.length === 0 ? (
           <div className="text-center py-16 px-4">
             <Bell className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
             <p className="font-heading font-medium text-muted-foreground">No notifications yet</p>
             <p className="text-xs text-muted-foreground mt-1">We'll notify you about campaigns, messages, and more</p>
           </div>
         ) : (
-          notifications.map((notif, i) => {
-            const Icon = typeIcons[notif.type || "general"] || Bell;
-            return (
-              <div
-                key={notif.id}
-                onClick={() => handleClick(notif)}
-                className={`px-4 py-3.5 flex items-start gap-3 cursor-pointer transition-colors opacity-0 animate-fade-up ${
-                  !notif.read ? "bg-primary/5" : "hover:bg-secondary/30"
-                }`}
-                style={{ animationDelay: `${i * 50}ms`, animationFillMode: "forwards" }}
-              >
-                <div className={`w-9 h-9 rounded-xl ${!notif.read ? "gradient-primary" : "bg-secondary"} flex items-center justify-center shrink-0`}>
-                  <Icon className={`w-4 h-4 ${!notif.read ? "text-primary-foreground" : "text-muted-foreground"}`} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h3 className={`text-sm font-heading ${!notif.read ? "font-semibold text-foreground" : "font-medium text-muted-foreground"}`}>{notif.title}</h3>
-                    <span className="text-[10px] text-muted-foreground shrink-0 ml-2">{formatTime(notif.created_at)}</span>
+          groups.map((group) => (
+            <div key={group.label}>
+              <p className="px-4 py-2 text-[10px] font-heading font-semibold text-muted-foreground uppercase tracking-widest bg-secondary/50">{group.label}</p>
+              {group.items.map((notif, i) => {
+                const Icon = typeIcons[notif.type || "general"] || Bell;
+                return (
+                  <div
+                    key={notif.id}
+                    onClick={() => handleClick(notif)}
+                    className={`px-4 py-3.5 flex items-start gap-3 cursor-pointer transition-colors opacity-0 animate-fade-up ${!notif.read ? "bg-primary/5" : "hover:bg-secondary/30"}`}
+                    style={{ animationDelay: `${i * 50}ms`, animationFillMode: "forwards" }}
+                  >
+                    <div className={`w-9 h-9 rounded-xl ${!notif.read ? "gradient-primary" : notif.type === "payment" ? "bg-emerald-500/10" : "bg-secondary"} flex items-center justify-center shrink-0`}>
+                      <Icon className={`w-4 h-4 ${!notif.read ? "text-primary-foreground" : notif.type === "payment" ? "text-emerald-500" : "text-muted-foreground"}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h3 className={`text-sm font-heading ${!notif.read ? "font-semibold text-foreground" : "font-medium text-muted-foreground"}`}>{notif.title}</h3>
+                        <span className="text-[10px] text-muted-foreground shrink-0 ml-2">{formatTime(notif.created_at)}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5">{notif.message}</p>
+                    </div>
+                    {!notif.read && <span className="w-2 h-2 rounded-full bg-accent mt-1.5 shrink-0" />}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5">{notif.message}</p>
-                </div>
-                {!notif.read && (
-                  <span className="w-2 h-2 rounded-full bg-accent mt-1.5 shrink-0" />
-                )}
-              </div>
-            );
-          })
+                );
+              })}
+            </div>
+          ))
         )}
       </div>
     </Layout>

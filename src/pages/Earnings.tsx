@@ -7,13 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Wallet, TrendingUp, Clock, Download, ArrowUpRight,
-  Shield, ChevronRight, ArrowDownLeft, ArrowUpFromLine
+  Shield, ChevronRight, ArrowDownLeft, ArrowUpFromLine,
+  CheckCircle, FileText, Users, IndianRupee
 } from "lucide-react";
 import {
   Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription,
   DrawerFooter, DrawerClose,
 } from "@/components/ui/drawer";
 import { toast } from "sonner";
+import { Slider } from "@/components/ui/slider";
 
 interface Transaction {
   id: string;
@@ -35,16 +37,14 @@ const Earnings = () => {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("upi");
   const [processing, setProcessing] = useState(false);
+  const [calcFollowers, setCalcFollowers] = useState([50000]);
+  const [calcCampaigns, setCalcCampaigns] = useState([3]);
 
   useEffect(() => {
     if (!user) return;
     const fetchTransactions = async () => {
       const column = role === "brand" ? "payer_user_id" : "payee_user_id";
-      const { data } = await supabase
-        .from("transactions")
-        .select("*")
-        .eq(column, user.id)
-        .order("created_at", { ascending: false });
+      const { data } = await supabase.from("transactions").select("*").eq(column, user.id).order("created_at", { ascending: false });
       setTransactions(data || []);
       setLoading(false);
     };
@@ -53,55 +53,41 @@ const Earnings = () => {
 
   const totalEarned = transactions.filter(t => t.status === "completed").reduce((s, t) => s + t.amount, 0);
   const pending = transactions.filter(t => t.status === "pending").reduce((s, t) => s + t.amount, 0);
-  const thisMonth = transactions
-    .filter(t => t.status === "completed" && new Date(t.created_at).getMonth() === new Date().getMonth())
-    .reduce((s, t) => s + t.amount, 0);
+  const thisMonth = transactions.filter(t => t.status === "completed" && new Date(t.created_at).getMonth() === new Date().getMonth()).reduce((s, t) => s + t.amount, 0);
 
   const statusConfig: Record<string, { color: string; label: string }> = {
     pending: { color: "bg-yellow-500/10 text-yellow-600", label: "Pending" },
     completed: { color: "bg-primary/10 text-primary", label: "Completed" },
     processing: { color: "bg-accent/10 text-accent", label: "Processing" },
     failed: { color: "bg-destructive/10 text-destructive", label: "Failed" },
-    withdrawal: { color: "bg-secondary text-muted-foreground", label: "Withdrawn" },
   };
 
   const handleWithdraw = async () => {
     if (!user) return;
     setProcessing(true);
-
-    // Create a withdrawal transaction (simulated)
     await supabase.from("transactions").insert({
-      amount: Number(withdrawAmount),
-      payer_user_id: user.id,
-      payee_user_id: user.id,
-      status: "completed",
-      description: `Withdrawal via ${paymentMethod.toUpperCase()}`,
-      payment_method: paymentMethod,
-      currency: "INR",
+      amount: Number(withdrawAmount), payer_user_id: user.id, payee_user_id: user.id,
+      status: "completed", description: `Withdrawal via ${paymentMethod.toUpperCase()}`,
+      payment_method: paymentMethod, currency: "INR",
     });
-
-    toast.success(`₹${Number(withdrawAmount).toLocaleString("en-IN")} withdrawal initiated via ${paymentMethod.toUpperCase()}`);
-    setWithdrawOpen(false);
-    setWithdrawAmount("");
-    setProcessing(false);
-
-    // Refresh
+    toast.success(`₹${Number(withdrawAmount).toLocaleString("en-IN")} withdrawal initiated`);
+    setWithdrawOpen(false); setWithdrawAmount(""); setProcessing(false);
     const column = role === "brand" ? "payer_user_id" : "payee_user_id";
-    const { data } = await supabase
-      .from("transactions").select("*")
-      .eq(column, user.id).order("created_at", { ascending: false });
+    const { data } = await supabase.from("transactions").select("*").eq(column, user.id).order("created_at", { ascending: false });
     setTransactions(data || []);
   };
+
+  // Earnings calculator
+  const ratePerFollower = calcFollowers[0] < 10000 ? 0.3 : calcFollowers[0] < 50000 ? 0.5 : calcFollowers[0] < 200000 ? 0.8 : 1.2;
+  const estEarnings = Math.round(calcFollowers[0] * ratePerFollower * calcCampaigns[0] / 1000) * 1000;
+  const estMin = Math.round(estEarnings * 0.7);
+  const estMax = Math.round(estEarnings * 1.3);
 
   return (
     <Layout>
       <header className="px-4 pt-6 pb-2">
-        <h1 className="text-xl font-heading font-bold text-foreground">
-          {role === "brand" ? "Payments" : "Earnings"}
-        </h1>
-        <p className="text-xs text-muted-foreground">
-          {role === "brand" ? "Track campaign payments & escrow" : "Your earnings, withdrawals & escrow"}
-        </p>
+        <h1 className="text-xl font-heading font-bold text-foreground">{role === "brand" ? "Payments" : "Earnings"}</h1>
+        <p className="text-xs text-muted-foreground">{role === "brand" ? "Track campaign payments & escrow" : "Your earnings, withdrawals & escrow"}</p>
       </header>
 
       {/* Balance Card */}
@@ -109,12 +95,8 @@ const Earnings = () => {
         <div className="bg-primary text-primary-foreground rounded-2xl p-5 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary-foreground/5 rounded-full -translate-y-8 translate-x-8" />
           <div className="relative z-10">
-            <p className="text-[10px] text-primary-foreground/70 font-heading uppercase tracking-wider">
-              {role === "brand" ? "Total Spent" : "Available Balance"}
-            </p>
-            <h2 className="text-3xl font-heading font-bold text-primary-foreground mt-1">
-              ₹{totalEarned.toLocaleString("en-IN")}
-            </h2>
+            <p className="text-[10px] text-primary-foreground/70 font-heading uppercase tracking-wider">{role === "brand" ? "Total Spent" : "Available Balance"}</p>
+            <h2 className="text-3xl font-heading font-bold text-primary-foreground mt-1">₹{totalEarned.toLocaleString("en-IN")}</h2>
             <div className="flex gap-2 mt-3">
               {role === "creator" && (
                 <Button size="sm" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-heading h-8 text-[10px] rounded-lg" onClick={() => setWithdrawOpen(true)}>
@@ -148,7 +130,7 @@ const Earnings = () => {
         </div>
       </div>
 
-      {/* Transactions */}
+      {/* Transactions or Empty State */}
       <div className="px-4 mt-5 mb-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-heading font-semibold text-sm text-foreground">Transaction History</h3>
@@ -158,24 +140,65 @@ const Earnings = () => {
         </div>
 
         {loading ? (
-          <div className="text-center py-16">
-            <div className="w-8 h-8 rounded-lg bg-primary/20 animate-pulse mx-auto" />
-          </div>
+          <div className="text-center py-16"><div className="w-8 h-8 rounded-lg bg-primary/20 animate-pulse mx-auto" /></div>
         ) : transactions.length === 0 ? (
-          <div className="text-center py-16">
-            <Wallet className="w-10 h-10 mx-auto text-muted-foreground/40 mb-3" />
-            <p className="font-heading font-medium text-muted-foreground">No transactions yet</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              {role === "brand" ? "Payments to creators will appear here" : "Complete campaigns to start earning"}
-            </p>
-          </div>
+          <>
+            {/* How You Get Paid */}
+            <div className="border border-border rounded-2xl p-5 mb-4">
+              <h4 className="font-heading font-semibold text-sm text-foreground mb-4">How You'll Get Paid</h4>
+              <div className="flex items-start gap-3">
+                {[
+                  { step: "1", icon: FileText, label: "Complete deliverables", desc: "Submit content for review" },
+                  { step: "2", icon: CheckCircle, label: "Brand approves", desc: "Content meets guidelines" },
+                  { step: "3", icon: IndianRupee, label: "Payment in 7 days", desc: "Instant UPI or bank transfer" },
+                ].map((s, i) => (
+                  <div key={i} className="flex-1 text-center">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 mx-auto flex items-center justify-center mb-2 shadow-md">
+                      <s.icon className="w-4 h-4 text-white" />
+                    </div>
+                    <p className="text-[10px] font-heading font-semibold text-foreground">{s.label}</p>
+                    <p className="text-[8px] text-muted-foreground mt-0.5">{s.desc}</p>
+                    {i < 2 && <ChevronRight className="w-3 h-3 text-muted-foreground mx-auto mt-1" />}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Earnings Calculator (GAP 24) */}
+            {role === "creator" && (
+              <div className="border border-border rounded-2xl p-5">
+                <h4 className="font-heading font-semibold text-sm text-foreground mb-1">Earnings Potential Calculator</h4>
+                <p className="text-[10px] text-muted-foreground mb-4">Estimate your monthly earnings based on your audience</p>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between mb-1.5">
+                      <span className="text-[10px] text-muted-foreground flex items-center gap-1"><Users className="w-3 h-3" /> Followers</span>
+                      <span className="text-xs font-heading font-bold text-foreground">{(calcFollowers[0] / 1000).toFixed(0)}K</span>
+                    </div>
+                    <Slider value={calcFollowers} onValueChange={setCalcFollowers} min={1000} max={1000000} step={5000} className="w-full" />
+                  </div>
+                  <div>
+                    <div className="flex justify-between mb-1.5">
+                      <span className="text-[10px] text-muted-foreground">Campaigns/month</span>
+                      <span className="text-xs font-heading font-bold text-foreground">{calcCampaigns[0]}</span>
+                    </div>
+                    <Slider value={calcCampaigns} onValueChange={setCalcCampaigns} min={1} max={10} step={1} className="w-full" />
+                  </div>
+                  <div className="bg-gradient-to-r from-accent/5 to-primary/5 border border-accent/20 rounded-xl p-4 text-center">
+                    <p className="text-[10px] text-muted-foreground">Potential Monthly Earnings</p>
+                    <p className="text-2xl font-heading font-bold text-foreground mt-1">₹{estMin.toLocaleString("en-IN")} – ₹{estMax.toLocaleString("en-IN")}</p>
+                    <p className="text-[9px] text-accent mt-1">Based on average rates for {(calcFollowers[0] / 1000).toFixed(0)}K followers</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <div className="space-y-2">
             {transactions.map((tx, i) => {
               const config = statusConfig[tx.status] || statusConfig.pending;
               const isWithdrawal = tx.description?.includes("Withdrawal");
               const isIncoming = role === "creator" && !isWithdrawal;
-
               return (
                 <div key={tx.id} className="border border-border rounded-xl p-3.5 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 40}ms`, animationFillMode: "forwards" }}>
                   <div className="flex items-center gap-3">
@@ -213,23 +236,13 @@ const Earnings = () => {
           <div className="px-4 space-y-4">
             <div>
               <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Amount (₹)</label>
-              <input
-                value={withdrawAmount}
-                onChange={e => setWithdrawAmount(e.target.value)}
-                placeholder="Enter amount"
-                type="number"
-                className="w-full h-11 px-3 rounded-lg bg-secondary text-foreground text-sm border border-border focus:outline-none focus:ring-2 focus:ring-primary/30"
-              />
+              <input value={withdrawAmount} onChange={e => setWithdrawAmount(e.target.value)} placeholder="Enter amount" type="number" className="w-full h-11 px-3 rounded-lg bg-secondary text-foreground text-sm border border-border focus:outline-none focus:ring-2 focus:ring-primary/30" />
               <p className="text-[10px] text-muted-foreground mt-1">Min ₹100 • Available: ₹{totalEarned.toLocaleString("en-IN")}</p>
             </div>
             <div>
               <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Payment Method</label>
               <div className="grid grid-cols-3 gap-2">
-                {[
-                  { id: "upi", label: "UPI", desc: "Instant" },
-                  { id: "bank", label: "Bank", desc: "1–2 days" },
-                  { id: "wallet", label: "Wallet", desc: "Instant" },
-                ].map(m => (
+                {[{ id: "upi", label: "UPI", desc: "Instant" }, { id: "bank", label: "Bank", desc: "1–2 days" }, { id: "wallet", label: "Wallet", desc: "Instant" }].map(m => (
                   <button key={m.id} onClick={() => setPaymentMethod(m.id)} className={`p-3 rounded-lg text-center transition-all border ${paymentMethod === m.id ? "border-primary bg-primary/5" : "border-border bg-secondary"}`}>
                     <p className="text-xs font-heading font-medium text-foreground">{m.label}</p>
                     <p className="text-[9px] mt-0.5 text-muted-foreground">{m.desc}</p>
@@ -242,9 +255,7 @@ const Earnings = () => {
             <Button variant="gradient" className="w-full h-12 rounded-xl font-heading" disabled={!withdrawAmount || Number(withdrawAmount) < 100 || processing} onClick={handleWithdraw}>
               {processing ? "Processing..." : "Confirm Withdrawal"}
             </Button>
-            <DrawerClose asChild>
-              <Button variant="outline" className="w-full rounded-xl">Cancel</Button>
-            </DrawerClose>
+            <DrawerClose asChild><Button variant="outline" className="w-full rounded-xl">Cancel</Button></DrawerClose>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
