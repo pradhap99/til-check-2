@@ -1,22 +1,35 @@
 import { Campaign } from "@/data/mockData";
-import { Calendar, Users, Flame, Sparkles } from "lucide-react";
+import { Calendar, Users, Flame, Sparkles, ArrowRight } from "lucide-react";
 
 interface CampaignCardProps {
-  campaign: Campaign;
+  campaign: Campaign & { compensationType?: string };
   index?: number;
 }
 
 const categoryColors: Record<string, string> = {
-  Tech: "category-strip-tech",
-  Fashion: "category-strip-fashion",
-  Beauty: "category-strip-beauty",
-  Food: "category-strip-food",
-  Fitness: "category-strip-fitness",
-  Travel: "category-strip-travel",
-  Gaming: "category-strip-gaming",
-  Finance: "category-strip-finance",
-  Comedy: "category-strip-comedy",
+  Tech: "category-strip-tech", Fashion: "category-strip-fashion", Beauty: "category-strip-beauty",
+  Food: "category-strip-food", Fitness: "category-strip-fitness", Travel: "category-strip-travel",
+  Gaming: "category-strip-gaming", Finance: "category-strip-finance", Comedy: "category-strip-comedy",
   Lifestyle: "category-strip-lifestyle",
+};
+
+const categoryImages: Record<string, string> = {
+  Tech: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=300&fit=crop",
+  Beauty: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=300&fit=crop",
+  Fashion: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=300&fit=crop",
+  Finance: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&h=300&fit=crop",
+  Food: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=300&fit=crop",
+  Fitness: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=300&fit=crop",
+  Travel: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&h=300&fit=crop",
+  Gaming: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&h=300&fit=crop",
+  Comedy: "https://images.unsplash.com/photo-1527224538127-2104bb71c51b?w=600&h=300&fit=crop",
+  Lifestyle: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=600&h=300&fit=crop",
+};
+
+const platformColors: Record<string, string> = {
+  Instagram: "bg-gradient-to-r from-pink-500 to-purple-500 text-white",
+  YouTube: "bg-red-500 text-white",
+  Twitter: "bg-blue-400 text-white",
 };
 
 const CampaignCard = ({ campaign, index = 0 }: CampaignCardProps) => {
@@ -24,61 +37,98 @@ const CampaignCard = ({ campaign, index = 0 }: CampaignCardProps) => {
   const progress = (campaign.filled / campaign.slots) * 100;
   const isHot = progress >= 70;
   const isNew = index === 0;
+  const image = categoryImages[campaign.category] || categoryImages.Tech;
+  const compType = (campaign as any).compensationType || "Paid";
+
+  // Deadline urgency
+  const deadlineDays = (() => {
+    const d = new Date(campaign.deadline);
+    if (isNaN(d.getTime())) return 30;
+    return Math.ceil((d.getTime() - Date.now()) / 86400000);
+  })();
+  const deadlineColor = deadlineDays < 7 ? "text-destructive" : deadlineDays < 14 ? "text-warning" : "text-muted-foreground";
 
   return (
     <div
-      className={`border border-border rounded-xl p-4 cursor-pointer hover-lift btn-micro opacity-0 animate-fade-up active:scale-[0.97] transition-transform duration-150 category-strip ${categoryColors[campaign.category] || ""}`}
+      className={`rounded-2xl overflow-hidden bg-card border border-border shadow-sm cursor-pointer active:scale-[0.97] transition-transform duration-150 opacity-0 animate-fade-up category-strip ${categoryColors[campaign.category] || ""}`}
       style={{ animationDelay: `${index * 50}ms`, animationFillMode: "forwards" }}
     >
-      <div className="flex items-start gap-3 pl-2">
-        <img
-          src={typeof campaign.logo === 'string' && campaign.logo.startsWith('http') ? campaign.logo : ''}
-          alt={campaign.brand}
-          className="w-10 h-10 rounded-lg object-cover bg-secondary shrink-0"
-          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-        />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5">
-            <h3 className="font-heading font-semibold text-sm text-foreground truncate">{campaign.title}</h3>
-            {isHot && (
-              <span className="badge-hot text-[8px] px-1.5 py-0.5 rounded-full font-heading font-bold flex items-center gap-0.5 shrink-0">
-                <Flame className="w-2.5 h-2.5" /> Hot
-              </span>
-            )}
-            {isNew && !isHot && (
-              <span className="badge-new text-[8px] px-1.5 py-0.5 rounded-full font-heading font-bold flex items-center gap-0.5 shrink-0">
-                <Sparkles className="w-2.5 h-2.5" /> New
-              </span>
+      {/* Image Header */}
+      <div className="relative h-[140px]">
+        <img src={image} alt={campaign.title} className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+        {/* Badges */}
+        {isHot && (
+          <span className="absolute top-2.5 left-2.5 badge-hot text-[9px] px-2 py-0.5 rounded-full font-heading font-bold flex items-center gap-0.5">
+            <Flame className="w-2.5 h-2.5" /> Hot
+          </span>
+        )}
+        {isNew && !isHot && (
+          <span className="absolute top-2.5 left-2.5 badge-new text-[9px] px-2 py-0.5 rounded-full font-heading font-bold flex items-center gap-0.5">
+            <Sparkles className="w-2.5 h-2.5" /> New
+          </span>
+        )}
+        {/* Budget */}
+        <span className="absolute top-2.5 right-2.5 bg-emerald-500 text-white text-[11px] font-heading font-bold px-2.5 py-1 rounded-lg shadow-md">
+          {campaign.budget}
+        </span>
+      </div>
+
+      {/* Content */}
+      <div className="p-4 pl-6">
+        {/* Brand row */}
+        <div className="flex items-center gap-2.5 mb-1.5">
+          <div className="w-7 h-7 rounded-lg bg-secondary overflow-hidden flex items-center justify-center shrink-0">
+            {campaign.logo?.startsWith("http") ? (
+              <img src={campaign.logo} alt="" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+            ) : (
+              <span className="text-xs font-heading font-bold text-primary">{campaign.brand.charAt(0)}</span>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">{campaign.brand}</p>
+          <span className="text-xs text-muted-foreground">{campaign.brand}</span>
         </div>
-        <span className="font-heading font-bold text-sm text-foreground shrink-0">{campaign.budget}</span>
-      </div>
 
-      <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground pl-2">
-        <span className="flex items-center gap-1">
-          <Calendar className="w-3 h-3" /> {campaign.deadline}
-        </span>
-        <span className="flex items-center gap-1">
-          <Users className="w-3 h-3" /> {slotsLeft} slots left
-        </span>
-      </div>
+        <h3 className="font-heading font-bold text-[15px] text-foreground leading-tight">{campaign.title}</h3>
 
-      <div className="mt-3 pl-2">
-        <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-500 ${isHot ? "bg-destructive" : "bg-foreground"}`}
-            style={{ width: `${progress}%` }}
-          />
+        {/* Deadline + Slots */}
+        <div className="flex items-center gap-4 mt-2 text-xs">
+          <span className={`flex items-center gap-1 font-medium ${deadlineColor}`}>
+            <Calendar className="w-3.5 h-3.5" /> {campaign.deadline}
+          </span>
+          <span className="flex items-center gap-1 text-muted-foreground">
+            <Users className="w-3.5 h-3.5" /> {slotsLeft} slots left
+          </span>
         </div>
-      </div>
 
-      <div className="flex gap-1.5 mt-2.5 flex-wrap pl-2">
-        {campaign.platforms.map((p) => (
-          <span key={p} className="text-[10px] px-2 py-0.5 rounded bg-secondary text-muted-foreground font-medium">{p}</span>
-        ))}
-        <span className="text-[10px] px-2 py-0.5 rounded bg-secondary text-muted-foreground font-medium">{campaign.category}</span>
+        {/* Progress */}
+        <div className="mt-3">
+          <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-700 ${
+                slotsLeft <= 2 ? "bg-destructive" : slotsLeft <= 4 ? "bg-warning" : "bg-accent"
+              }`}
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Tags */}
+        <div className="flex items-center gap-1.5 mt-3 flex-wrap">
+          {campaign.platforms.map((p) => (
+            <span key={p} className={`text-[9px] px-2 py-0.5 rounded-full font-semibold ${platformColors[p] || "bg-secondary text-muted-foreground"}`}>{p}</span>
+          ))}
+          <span className="text-[9px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground font-medium">{campaign.category}</span>
+          {compType !== "Paid" && (
+            <span className={`text-[9px] px-2 py-0.5 rounded-full font-semibold ${
+              compType === "Barter" ? "bg-accent/10 text-accent" : "bg-blue-500/10 text-blue-500"
+            }`}>{compType}</span>
+          )}
+        </div>
+
+        {/* Apply CTA */}
+        <button className="w-full mt-3 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-heading font-semibold flex items-center justify-center gap-1 active:scale-95 transition-transform">
+          Apply Now <ArrowRight className="w-3.5 h-3.5" />
+        </button>
       </div>
     </div>
   );

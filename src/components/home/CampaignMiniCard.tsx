@@ -24,7 +24,7 @@ const CampaignMiniCard = ({ campaign, index = 0 }: CampaignMiniCardProps) => {
   return (
     <div
       onClick={() => navigate(`/campaigns/${campaign.id}`)}
-      className="border border-border rounded-2xl p-3.5 cursor-pointer hover-lift btn-micro bg-background opacity-0 animate-fade-up"
+      className="border border-border rounded-2xl p-3.5 cursor-pointer hover-lift active:scale-[0.97] transition-transform duration-150 bg-card opacity-0 animate-fade-up"
       style={{ animationDelay: `${index * 60}ms`, animationFillMode: "forwards" }}
     >
       <div className="flex items-start gap-3">
@@ -43,14 +43,14 @@ const CampaignMiniCard = ({ campaign, index = 0 }: CampaignMiniCardProps) => {
           onClick={(e) => { e.stopPropagation(); setSaved(!saved); }}
           className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 hover:bg-secondary transition-colors"
         >
-          <Heart className={`w-4 h-4 ${saved ? "text-destructive fill-destructive" : "text-muted-foreground"}`} />
+          <Heart className={`w-4 h-4 transition-all duration-200 ${saved ? "text-red-500 fill-red-500 scale-110" : "text-muted-foreground"}`} />
         </button>
       </div>
       <div className="flex items-center gap-2 mt-2.5">
         <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
           compType === "Barter" ? "bg-accent/10 text-accent" :
           compType === "Hybrid" ? "bg-chart-4/10 text-chart-4" :
-          "bg-primary/10 text-primary"
+          "bg-emerald-500/10 text-emerald-600"
         }`}>
           {compType}
         </span>
