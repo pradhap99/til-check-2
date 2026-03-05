@@ -4,6 +4,7 @@ import { campaigns, creators } from "@/data/mockData";
 import HeroBannerCarousel from "./HeroBannerCarousel";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
+import CreatorLevelBadge from "@/components/CreatorLevelBadge";
 import { ArrowRight, Briefcase, FileText, Shield, Wallet, MapPin, Heart, TrendingUp, Star, Zap, Target, ChevronRight, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -143,21 +144,8 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
             <p className="text-[9px] text-muted-foreground leading-relaxed">Complete profile to unlock 2x more campaigns</p>
           </div>
         </div>
-        {/* Creator Level */}
-        <div className="border border-border rounded-2xl p-3.5 bg-card mt-2.5 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
-            <Award className="w-4 h-4 text-white" />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <p className="text-xs font-heading font-semibold text-foreground">Level 2 Creator</p>
-              <span className="text-[9px] text-muted-foreground">450/1000 XP to Level 3</span>
-            </div>
-            <div className="w-full h-1.5 bg-secondary rounded-full mt-1.5 overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full" style={{ width: "45%" }} />
-            </div>
-          </div>
-        </div>
+      {/* Creator Level */}
+        <CreatorLevelBadge followers={45000} engagementRate={5.2} completedCampaigns={3} size="lg" showProgress showBenefits />
       </section>
 
       {/* Browse by Experience */}
