@@ -5,15 +5,25 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import CreatorCard from "@/components/CreatorCard";
 import Layout from "@/components/Layout";
-import { Search, SlidersHorizontal, X, Users, Heart, MapPin } from "lucide-react";
+import CategoryTiles from "@/components/discover/CategoryTiles";
+import { Search, SlidersHorizontal, X, Users, Heart, MapPin, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 
+const segments = ["Experiences", "Products", "Services", "Events", "Long-term"];
 const locationOptions = ["All", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pune", "Kolkata", "Jaipur", "Ahmedabad", "Goa", "Kochi", "Lucknow"];
+
+const tileCategoryMap: Record<string, string[]> = {
+  cafes: ["Food"], dining: ["Food"], staycations: ["Travel"],
+  studios: ["Fashion", "Beauty"], salons: ["Beauty"],
+  fitness: ["Fitness"], events: ["Lifestyle", "Comedy"], retail: ["Fashion", "Lifestyle"],
+};
 
 const Creators = () => {
   const navigate = useNavigate();
   const { user, role } = useAuth();
   const [search, setSearch] = useState("");
+  const [selectedSegment, setSelectedSegment] = useState("Experiences");
+  const [selectedTile, setSelectedTile] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedPlatform, setSelectedPlatform] = useState("All");
   const [selectedLocation, setSelectedLocation] = useState("All");
@@ -54,9 +64,14 @@ const Creators = () => {
 
   const allCreators = [...dbCreators, ...mockCreators.map(c => ({ ...c, isReal: false, realUserId: null }))];
 
+  // When a tile is selected, filter by mapped categories
+  const tileFilteredCategories = selectedTile ? (tileCategoryMap[selectedTile] || []) : [];
+
   const filtered = allCreators.filter((c) => {
     const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.handle.toLowerCase().includes(search.toLowerCase()) || c.location.toLowerCase().includes(search.toLowerCase());
-    const matchCategory = selectedCategory === "All" || c.category === selectedCategory;
+    const matchCategory = selectedCategory === "All"
+      ? (tileFilteredCategories.length === 0 || tileFilteredCategories.includes(c.category))
+      : c.category === selectedCategory;
     const matchPlatform = selectedPlatform === "All" || c.platform === selectedPlatform;
     const matchLocation = selectedLocation === "All" || c.location.toLowerCase().includes(selectedLocation.toLowerCase());
     return matchSearch && matchCategory && matchPlatform && matchLocation;
@@ -78,13 +93,33 @@ const Creators = () => {
     }
   };
 
+  const showList = selectedTile !== null || search.length > 0;
+
   return (
     <Layout>
       <header className="px-5 pt-6 pb-2">
-        <h1 className="text-xl font-heading font-bold text-foreground">Discover Creators</h1>
-        <p className="text-xs text-muted-foreground">{allCreators.length} creators available</p>
+        <h1 className="text-xl font-heading font-bold text-foreground">Discover</h1>
+        <p className="text-xs text-muted-foreground">Find creators & opportunities</p>
       </header>
 
+      {/* Segmented Nav */}
+      <div className="px-5 mt-2">
+        <div className="flex gap-1 overflow-x-auto no-scrollbar bg-secondary/50 rounded-lg p-1">
+          {segments.map(seg => (
+            <button
+              key={seg}
+              onClick={() => { setSelectedSegment(seg); setSelectedTile(null); }}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-all ${
+                selectedSegment === seg ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+              }`}
+            >
+              {seg}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Search + Filter */}
       <div className="px-5 mt-3 flex gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -96,6 +131,7 @@ const Creators = () => {
         </button>
       </div>
 
+      {/* Filters Panel */}
       {showFilters && (
         <div className="px-5 mt-3 space-y-3 opacity-0 animate-fade-up" style={{ animationFillMode: "forwards" }}>
           <div>
@@ -132,31 +168,46 @@ const Creators = () => {
         </div>
       )}
 
-      <div className="px-5 mt-3 space-y-2 mb-4">
-        <p className="text-[10px] text-muted-foreground">{filtered.length} creators found</p>
-        {filtered.map((creator, i) => (
-          <div key={creator.id} className="relative">
-            <div onClick={() => {
-              if ((creator as any).isReal && (creator as any).realUserId) navigate(`/creators/${(creator as any).realUserId}`);
-              else navigate(`/creators/${creator.id}`);
-            }}>
-              <CreatorCard creator={creator as any} index={i} />
+      {/* Content Area */}
+      {!showList ? (
+        /* Category Tiles */
+        <div className="mt-4 mb-4">
+          <p className="px-5 text-[10px] text-muted-foreground uppercase tracking-widest mb-2">Browse by category</p>
+          <CategoryTiles onSelect={(id) => setSelectedTile(id)} />
+        </div>
+      ) : (
+        /* Creator List */
+        <div className="px-5 mt-3 space-y-2 mb-4">
+          {selectedTile && (
+            <button onClick={() => setSelectedTile(null)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-1 transition-colors">
+              <ArrowLeft className="w-3 h-3" /> Back to categories
+            </button>
+          )}
+          <p className="text-[10px] text-muted-foreground">{filtered.length} creators found</p>
+          {filtered.map((creator, i) => (
+            <div key={creator.id} className="relative">
+              <div onClick={() => {
+                if ((creator as any).isReal && (creator as any).realUserId) navigate(`/creators/${(creator as any).realUserId}`);
+                else navigate(`/creators/${creator.id}`);
+              }}>
+                <CreatorCard creator={creator as any} index={i} />
+              </div>
+              {role === "brand" && (creator as any).isReal && (creator as any).realUserId && (
+                <button onClick={(e) => handleSaveCreator((creator as any).realUserId, e)} className="absolute top-3 right-3 w-8 h-8 rounded-md bg-background/80 backdrop-blur-sm flex items-center justify-center z-10 border border-border">
+                  <Heart className={`w-4 h-4 ${savedIds.has((creator as any).realUserId) ? "text-destructive fill-destructive" : "text-muted-foreground"}`} />
+                </button>
+              )}
             </div>
-            {role === "brand" && (creator as any).isReal && (creator as any).realUserId && (
-              <button onClick={(e) => handleSaveCreator((creator as any).realUserId, e)} className="absolute top-3 right-3 w-8 h-8 rounded-md bg-background/80 backdrop-blur-sm flex items-center justify-center z-10 border border-border">
-                <Heart className={`w-4 h-4 ${savedIds.has((creator as any).realUserId) ? "text-destructive fill-destructive" : "text-muted-foreground"}`} />
-              </button>
-            )}
-          </div>
-        ))}
-        {filtered.length === 0 && (
-          <div className="text-center py-16 text-muted-foreground">
-            <Users className="w-8 h-8 mx-auto mb-3 opacity-40" />
-            <p className="font-medium text-sm">No creators found</p>
-            <p className="text-xs mt-1">Try adjusting your filters</p>
-          </div>
-        )}
-      </div>
+          ))}
+          {filtered.length === 0 && (
+            <div className="text-center py-16 text-muted-foreground">
+              <Users className="w-8 h-8 mx-auto mb-3 opacity-40" />
+              <p className="font-medium text-sm">No creators found</p>
+              <p className="text-xs mt-1">Try adjusting your filters</p>
+            </div>
+          )}
+        </div>
+      )}
     </Layout>
   );
 };

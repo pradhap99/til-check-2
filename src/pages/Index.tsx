@@ -1,28 +1,20 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { creators, campaigns } from "@/data/mockData";
-import CreatorCard from "@/components/CreatorCard";
-import CampaignCard from "@/components/CampaignCard";
 import Layout from "@/components/Layout";
-import RecommendationCarousel from "@/components/RecommendationCarousel";
-import SkeletonCard from "@/components/SkeletonCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  ArrowRight, Bell, Search, MessageCircle, Briefcase, Wallet,
-  Plus, TrendingUp, Users, Sparkles, FileText, Shield, IndianRupee,
-  CheckCircle, Clock
-} from "lucide-react";
+import CreatorHomeContent from "@/components/home/CreatorHomeContent";
+import BrandHomeContent from "@/components/home/BrandHomeContent";
+import { Bell, Search, MessageCircle } from "lucide-react";
 
 const Index = () => {
   const { user, role } = useAuth();
   const navigate = useNavigate();
-  const topCreators = creators.slice(0, 4);
-  const topCampaigns = campaigns.slice(0, 3);
   const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "there";
   const [unreadNotifs, setUnreadNotifs] = useState(0);
   const [unreadMsgs, setUnreadMsgs] = useState(0);
   const [statsLoading, setStatsLoading] = useState(true);
+  const [userCity, setUserCity] = useState<string | undefined>();
   const [stats, setStats] = useState({
     totalEarnings: 0,
     pendingPayments: 0,
@@ -39,6 +31,10 @@ const Index = () => {
     supabase.from("messages").select("*", { count: "exact", head: true })
       .neq("sender_id", user.id).is("read_at", null)
       .then(({ count }) => setUnreadMsgs(count || 0));
+
+    // Get user city
+    supabase.from("profiles").select("location_city").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => { if (data?.location_city) setUserCity(data.location_city); });
 
     const loadStats = async () => {
       if (role === "creator") {
@@ -100,100 +96,12 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Personal Stats */}
-        <section className="px-5 mt-5">
-          {statsLoading ? (
-            <div className="bg-primary rounded-xl p-4 h-28 skeleton-shimmer" />
-          ) : (
-            <div className="bg-primary text-primary-foreground rounded-xl p-4 relative overflow-hidden hover-lift transition-all animate-glow-pulse">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-primary-foreground/5 rounded-full -translate-y-6 translate-x-6" />
-              <div className="absolute bottom-0 left-0 w-16 h-16 bg-accent/10 rounded-full translate-y-4 -translate-x-4" />
-              <div className="relative z-10">
-                <p className="text-[10px] text-primary-foreground/70 uppercase tracking-wider font-heading">
-                  {role === "brand" ? "Total Spent" : "Total Earnings"}
-                </p>
-                <p className="text-2xl font-heading font-bold mt-1">₹{stats.totalEarnings.toLocaleString("en-IN")}</p>
-                <div className="flex gap-3 mt-3">
-                  <div>
-                    <p className="text-[9px] text-primary-foreground/60">{role === "brand" ? "Active Campaigns" : "Active Projects"}</p>
-                    <p className="text-sm font-heading font-bold">{stats.activeCampaigns}</p>
-                  </div>
-                  <div>
-                    <p className="text-[9px] text-primary-foreground/60">{role === "brand" ? "Pending Reviews" : "Applications"}</p>
-                    <p className="text-sm font-heading font-bold">{stats.applicationsCount}</p>
-                  </div>
-                  {role === "creator" && stats.pendingPayments > 0 && (
-                    <div>
-                      <p className="text-[9px] text-primary-foreground/60">Pending</p>
-                      <p className="text-sm font-heading font-bold">₹{stats.pendingPayments.toLocaleString("en-IN")}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-        </section>
-
-        {/* Quick Actions */}
-        <section className="px-5 mt-4">
-          <div className="grid grid-cols-4 gap-2">
-            {(role === "brand" ? [
-              { icon: Plus, label: "Create", to: "/campaigns/create" },
-              { icon: Sparkles, label: "Recommend", to: "/recommendations" },
-              { icon: Shield, label: "Escrow", to: "/escrow" },
-              { icon: Wallet, label: "Payments", to: "/earnings" },
-            ] : [
-              { icon: Briefcase, label: "Campaigns", to: "/campaigns" },
-              { icon: FileText, label: "Applications", to: "/applications" },
-              { icon: Shield, label: "Escrow", to: "/escrow" },
-              { icon: Wallet, label: "Earnings", to: "/earnings" },
-            ]).map((action, i) => (
-              <Link key={i} to={action.to} className="border border-border rounded-lg p-2.5 text-center hover:bg-secondary/50 hover:border-accent/20 transition-all btn-micro flex flex-col items-center gap-1.5 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
-                <div className="w-7 h-7 rounded-md bg-secondary flex items-center justify-center">
-                  <action.icon className="w-3.5 h-3.5 text-foreground" />
-                </div>
-                <p className="text-[9px] font-medium text-foreground">{action.label}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Recommendations Carousel */}
-        <RecommendationCarousel />
-
-        {/* Top Creators */}
-        <section className="px-5 mt-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-heading font-semibold text-sm text-foreground">Top Creators</h3>
-            <Link to="/creators" className="text-xs text-muted-foreground hover:text-foreground font-medium flex items-center gap-0.5 transition-colors">
-              View all <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <div className="space-y-2">
-            {topCreators.map((creator, i) => (
-              <div key={creator.id} onClick={() => navigate(`/creators/${creator.id}`)}>
-                <CreatorCard creator={creator} index={i} />
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Live Campaigns */}
-        <section className="px-5 mt-6 mb-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-heading font-semibold text-sm text-foreground">Live Campaigns</h3>
-            <Link to="/campaigns" className="text-xs text-muted-foreground hover:text-foreground font-medium flex items-center gap-0.5 transition-colors">
-              View all <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-          <div className="space-y-2">
-            {topCampaigns.map((campaign, i) => (
-              <div key={campaign.id} onClick={() => navigate(`/campaigns/${campaign.id}`)}>
-                <CampaignCard campaign={campaign} index={i} />
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* Role-specific content */}
+        {role === "brand" ? (
+          <BrandHomeContent stats={stats} statsLoading={statsLoading} />
+        ) : (
+          <CreatorHomeContent stats={stats} statsLoading={statsLoading} userCity={userCity} />
+        )}
       </div>
     </Layout>
   );
