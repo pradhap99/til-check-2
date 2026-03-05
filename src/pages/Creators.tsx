@@ -11,6 +11,8 @@ import { toast } from "sonner";
 
 const segments = ["Experiences", "Products", "Services", "Events", "Long-term"];
 const locationOptions = ["All", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pune", "Kolkata", "Jaipur", "Ahmedabad", "Goa", "Kochi", "Lucknow"];
+const followerRangeOptions = ["All", "1K-10K", "10K-50K", "50K-100K", "100K+"];
+const engagementOptions = ["All", "2%-5%", "5%-10%", "10%+"];
 const quickSearchPills = [
   { label: "Trending", icon: Flame },
   { label: "New Creators", icon: Sparkles },
@@ -51,6 +53,9 @@ const Creators = () => {
   const [dbCreators, setDbCreators] = useState<any[]>([]);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [selectedFollowerRange, setSelectedFollowerRange] = useState("All");
+  const [selectedEngagement, setSelectedEngagement] = useState("All");
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
 
   useEffect(() => {
     const fetchCreators = async () => {
@@ -101,7 +106,7 @@ const Creators = () => {
     return matchSearch && matchCategory && matchPlatform && matchLocation;
   });
 
-  const activeFilters = (selectedCategory !== "All" ? 1 : 0) + (selectedPlatform !== "All" ? 1 : 0) + (selectedLocation !== "All" ? 1 : 0);
+  const activeFilters = (selectedCategory !== "All" ? 1 : 0) + (selectedPlatform !== "All" ? 1 : 0) + (selectedLocation !== "All" ? 1 : 0) + (selectedFollowerRange !== "All" ? 1 : 0) + (selectedEngagement !== "All" ? 1 : 0) + (verifiedOnly ? 1 : 0);
 
   const handleSaveCreator = async (creatorUserId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -200,16 +205,37 @@ const Creators = () => {
             </div>
           </div>
           <div>
-            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> Location</p>
+            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1.5">Follower Range</p>
+            <div className="flex gap-1.5 flex-wrap">
+              {followerRangeOptions.map(fr => (
+                <button key={fr} onClick={() => setSelectedFollowerRange(fr)} className={`px-2.5 py-1 rounded-full text-[10px] font-medium transition-all border ${selectedFollowerRange === fr ? "border-accent text-accent bg-accent/5" : "border-border text-muted-foreground"}`}>{fr}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1.5">Engagement Rate</p>
+            <div className="flex gap-1.5 flex-wrap">
+              {engagementOptions.map(er => (
+                <button key={er} onClick={() => setSelectedEngagement(er)} className={`px-2.5 py-1 rounded-full text-[10px] font-medium transition-all border ${selectedEngagement === er ? "border-accent text-accent bg-accent/5" : "border-border text-muted-foreground"}`}>{er}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mb-1.5 flex items-center gap-1"><MapPin className="w-3 h-3" /> City</p>
             <div className="flex gap-1.5 flex-wrap">
               {locationOptions.map(loc => (
                 <button key={loc} onClick={() => setSelectedLocation(loc)} className={`px-2.5 py-1 rounded-full text-[10px] font-medium transition-all border ${selectedLocation === loc ? "border-foreground text-foreground bg-foreground/5" : "border-border text-muted-foreground"}`}>{loc}</button>
               ))}
             </div>
           </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setVerifiedOnly(!verifiedOnly)} className={`px-3 py-1.5 rounded-full text-[10px] font-medium transition-all flex items-center gap-1 ${verifiedOnly ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"}`}>
+              <CheckCircle className="w-3 h-3" /> Verified Only
+            </button>
+          </div>
           {activeFilters > 0 && (
-            <button onClick={() => { setSelectedCategory("All"); setSelectedPlatform("All"); setSelectedLocation("All"); }} className="text-xs text-destructive font-medium flex items-center gap-1">
-              <X className="w-3 h-3" /> Clear filters
+            <button onClick={() => { setSelectedCategory("All"); setSelectedPlatform("All"); setSelectedLocation("All"); setSelectedFollowerRange("All"); setSelectedEngagement("All"); setVerifiedOnly(false); }} className="text-xs text-destructive font-medium flex items-center gap-1">
+              <X className="w-3 h-3" /> Clear all filters
             </button>
           )}
         </div>

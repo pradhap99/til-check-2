@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowRight, TrendingUp, Users, Shield, CreditCard,
   ChevronDown, Star, CheckCircle, BarChart3, Zap, Lock, Globe,
-  IndianRupee, Clock, Award, Target
+  IndianRupee, Clock, Award, Target, Search, Handshake, Eye
 } from "lucide-react";
 import { useState } from "react";
 import CountUp from "@/components/CountUp";
@@ -36,8 +36,50 @@ const experienceCategories = [
   { label: "Shopping", img: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400" },
 ];
 
+const brandLogos = [
+  { name: "boAt", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=60&h=60&fit=crop" },
+  { name: "Mamaearth", img: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=60&h=60&fit=crop" },
+  { name: "Lenskart", img: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=60&h=60&fit=crop" },
+  { name: "Sugar", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=60&h=60&fit=crop" },
+  { name: "CRED", img: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=60&h=60&fit=crop" },
+];
+
 const Landing = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [audience, setAudience] = useState<"creator" | "brand">("creator");
+
+  const creatorHero = {
+    title: <>Where brands meet<br /><span className="gradient-text">India's best creators</span></>,
+    subtitle: "Performance-based collaborations with instant UPI payments, built-in content approval, and GST-compliant invoicing.",
+    cta: "Join as Creator",
+    ctaSecondary: "I'm a Brand",
+    stats: [
+      { label: "Verified Creators", value: 12400, suffix: "+" },
+      { label: "Campaigns Delivered", value: 8200, suffix: "+" },
+      { label: "Avg Engagement Rate", value: 58, suffix: "%" },
+      { label: "Paid to Creators", value: 25, prefix: "₹", suffix: "Cr+" },
+    ],
+  };
+  const brandHero = {
+    title: <>Find India's top creators<br /><span className="gradient-text">for your brand</span></>,
+    subtitle: "AI-powered creator matching, secure escrow payments, real-time analytics, and end-to-end campaign management.",
+    cta: "Get Started as Brand",
+    ctaSecondary: "I'm a Creator",
+    stats: [
+      { label: "Verified Creators", value: 26000, suffix: "+" },
+      { label: "Industries Covered", value: 12, suffix: "" },
+      { label: "Paid to Creators", value: 25, prefix: "₹", suffix: "Cr+" },
+      { label: "Verified Brands", value: 800, suffix: "+" },
+    ],
+  };
+  const hero = audience === "creator" ? creatorHero : brandHero;
+
+  const brandFeatures = [
+    { icon: Target, title: "AI-Powered Matching", desc: "Algorithm matches your brand with ideal creators by niche, audience, and engagement." },
+    { icon: Lock, title: "Secure Escrow", desc: "Payments held safely until deliverables approved. 7-day dispute window." },
+    { icon: BarChart3, title: "Real-Time Analytics", desc: "Track reach, engagement, CPE, and ROI across all campaigns." },
+    { icon: Handshake, title: "End-to-End Management", desc: "From brief to payment. Content approval, revisions, invoicing — all in one place." },
+  ];
 
   return (
     <div className="min-h-screen bg-background noise-overlay">
@@ -55,34 +97,53 @@ const Landing = () => {
         </div>
       </nav>
 
+      {/* Audience Toggle */}
+      <div className="flex justify-center mt-4">
+        <div className="inline-flex bg-secondary rounded-full p-1 gap-1">
+          <button onClick={() => setAudience("creator")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all ${audience === "creator" ? "bg-foreground text-background shadow-sm" : "text-muted-foreground"}`}>For Creators</button>
+          <button onClick={() => setAudience("brand")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all ${audience === "brand" ? "bg-foreground text-background shadow-sm" : "text-muted-foreground"}`}>For Brands</button>
+        </div>
+      </div>
+
       {/* Hero */}
-      <section className="px-5 pt-12 pb-16 max-w-3xl mx-auto text-center relative dot-grid-bg">
+      <section className="px-5 pt-10 pb-16 max-w-3xl mx-auto text-center relative dot-grid-bg">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-muted-foreground text-xs font-medium mb-6 animate-fade-up">
           <Zap className="w-3 h-3" /> India's #1 Creator-Brand Marketplace
         </div>
         <h1 className="text-4xl md:text-6xl font-heading font-extrabold leading-[1.08] tracking-tight animate-fade-up" style={{ animationDelay: "100ms" }}>
-          Where brands meet<br />
-          <span className="gradient-text">India's best creators</span>
+          {hero.title}
         </h1>
         <p className="text-muted-foreground text-base md:text-lg mt-5 max-w-xl mx-auto leading-relaxed opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
-          Performance-based collaborations with instant UPI payments, built-in content approval, and GST-compliant invoicing.
+          {hero.subtitle}
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8 opacity-0 animate-fade-up" style={{ animationDelay: "300ms" }}>
-          <Link to="/auth"><Button size="lg" className="font-medium w-full sm:w-auto h-12 px-8 text-sm btn-micro">Join as Creator <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
-          <Link to="/auth"><Button size="lg" variant="outline" className="font-medium w-full sm:w-auto h-12 px-8 text-sm btn-micro">I'm a Brand</Button></Link>
+          <Link to="/auth"><Button size="lg" className="font-medium w-full sm:w-auto h-12 px-8 text-sm btn-micro">{hero.cta} <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
+          <Link to="/auth"><Button size="lg" variant="outline" className="font-medium w-full sm:w-auto h-12 px-8 text-sm btn-micro" onClick={() => setAudience(audience === "creator" ? "brand" : "creator")}>{hero.ctaSecondary}</Button></Link>
         </div>
         <p className="text-xs text-muted-foreground mt-4">Free to join · No credit card required</p>
       </section>
 
+      {/* Brand Social Proof */}
+      {audience === "brand" && (
+        <section className="px-5 max-w-4xl mx-auto mb-8">
+          <p className="text-[10px] text-muted-foreground text-center uppercase tracking-widest mb-4">Trusted by leading brands</p>
+          <div className="flex justify-center gap-4 flex-wrap">
+            {brandLogos.map((b, i) => (
+              <div key={i} className="flex flex-col items-center gap-1">
+                <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary border border-border">
+                  <img src={b.img} alt={b.name} className="w-full h-full object-cover" />
+                </div>
+                <span className="text-[9px] text-muted-foreground font-medium">{b.name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Dark stats bar */}
       <section className="px-5 max-w-4xl mx-auto">
         <div className="bg-foreground rounded-2xl p-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { label: "Verified Creators", value: 12400, suffix: "+" },
-            { label: "Campaigns Delivered", value: 8200, suffix: "+" },
-            { label: "Avg Engagement Rate", value: 58, suffix: "%" },
-            { label: "Paid to Creators", value: 25, prefix: "₹", suffix: "Cr+" },
-          ].map((stat, i) => (
+          {hero.stats.map((stat, i) => (
             <div key={i} className="text-center opacity-0 animate-count-up" style={{ animationDelay: `${i * 150}ms`, animationFillMode: "forwards" }}>
               <p className="font-heading font-bold text-2xl text-primary-foreground">
                 <CountUp end={stat.value} duration={2000} prefix={stat.prefix} suffix={stat.suffix} />
@@ -93,11 +154,30 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Brand-specific features */}
+      {audience === "brand" && (
+        <section className="px-5 mt-16 max-w-4xl mx-auto">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">Why TIL</p>
+          <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight mb-10">Everything your brand needs</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {brandFeatures.map((f, i) => (
+              <div key={i} className="border border-border rounded-xl p-5 hover-lift-lg transition-all group">
+                <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center mb-3">
+                  <f.icon className="w-4 h-4 text-accent" />
+                </div>
+                <p className="font-heading font-semibold text-sm text-foreground">{f.title}</p>
+                <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Explore by Experience */}
       <section className="px-5 mt-20 max-w-4xl mx-auto">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">Browse</p>
         <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight">
-          Browse by what you love creating
+          Browse by what you love {audience === "brand" ? "promoting" : "creating"}
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10">
           {experienceCategories.map((cat, i) => (
@@ -113,9 +193,7 @@ const Landing = () => {
       {/* By the Numbers */}
       <section className="px-5 mt-20 max-w-4xl mx-auto">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">Impact</p>
-        <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight mb-10">
-          By the numbers
-        </h2>
+        <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight mb-10">By the numbers</h2>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="border border-border rounded-xl p-6">
             <p className="text-xs font-heading font-semibold text-accent uppercase tracking-widest mb-4">For Creators</p>
@@ -127,16 +205,14 @@ const Landing = () => {
                 { icon: Target, label: "1,200+ active campaigns" },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
-                    <item.icon className="w-4 h-4 text-accent" />
-                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center"><item.icon className="w-4 h-4 text-accent" /></div>
                   <span className="text-sm text-foreground font-medium">{item.label}</span>
                 </div>
               ))}
             </div>
           </div>
           <div className="border border-border rounded-xl p-6">
-            <p className="text-xs font-heading font-semibold text-primary uppercase tracking-widest mb-4">For Brands</p>
+            <p className="text-xs font-heading font-semibold text-accent uppercase tracking-widest mb-4">For Brands</p>
             <div className="space-y-3.5">
               {[
                 { icon: TrendingUp, label: "8.2% avg engagement" },
@@ -145,9 +221,7 @@ const Landing = () => {
                 { icon: Users, label: "12,400+ creators" },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <item.icon className="w-4 h-4 text-primary" />
-                  </div>
+                  <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center"><item.icon className="w-4 h-4 text-accent" /></div>
                   <span className="text-sm text-foreground font-medium">{item.label}</span>
                 </div>
               ))}
@@ -169,9 +243,7 @@ const Landing = () => {
       {/* Bento grid features */}
       <section className="px-5 mt-20 max-w-4xl mx-auto">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">Platform</p>
-        <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight">
-          Everything you need, nothing you don't
-        </h2>
+        <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight">Everything you need, nothing you don't</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-10">
           {[
             { icon: BarChart3, title: "Smart Matching", desc: "Algorithm-driven creator-brand matching based on niche, engagement, and audience.", span: "md:col-span-2" },
@@ -195,18 +267,16 @@ const Landing = () => {
       {/* How it works */}
       <section className="px-5 mt-20 max-w-4xl mx-auto">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">How it works</p>
-        <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight">
-          From signup to payout in four steps
-        </h2>
+        <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight">From signup to payout in four steps</h2>
         <div className="grid md:grid-cols-2 gap-4 mt-10">
           {[
-            { label: "For Creators", color: "text-accent", steps: [
+            { label: "For Creators", steps: [
               { step: "01", title: "Build your profile", desc: "Connect social accounts, set niche & rate card" },
               { step: "02", title: "Discover campaigns", desc: "AI-matched brand deals by niche, budget, location" },
               { step: "03", title: "Deliver content", desc: "Submit work for brand review through built-in tools" },
               { step: "04", title: "Get paid via UPI", desc: "Instant payments, zero fee, GST-ready invoices" },
             ]},
-            { label: "For Brands", color: "text-accent", steps: [
+            { label: "For Brands", steps: [
               { step: "01", title: "Post a campaign", desc: "Define budget, deliverables, and target audience" },
               { step: "02", title: "Review applications", desc: "Sort by match score, engagement rate, reach" },
               { step: "03", title: "Approve content", desc: "Review submissions with version tracking" },
@@ -214,7 +284,7 @@ const Landing = () => {
             ]},
           ].map((section, si) => (
             <div key={si} className="border border-border rounded-xl p-6 hover-lift">
-              <p className={`text-xs font-medium ${section.color} uppercase tracking-widest mb-4`}>{section.label}</p>
+              <p className="text-xs font-medium text-accent uppercase tracking-widest mb-4">{section.label}</p>
               <div className="space-y-5">
                 {section.steps.map((item) => (
                   <div key={item.step} className="flex items-start gap-4">
@@ -234,9 +304,7 @@ const Landing = () => {
       {/* Testimonials */}
       <section className="mt-20 max-w-full overflow-hidden">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2 px-5">Testimonials</p>
-        <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight px-5">
-          Trusted by 12,000+ creators & 800+ brands
-        </h2>
+        <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight px-5">Trusted by 12,000+ creators & 800+ brands</h2>
         <div className="mt-10 overflow-hidden">
           <div className="flex gap-4 animate-scroll-x" style={{ width: "max-content" }}>
             {[...testimonials, ...testimonials].map((t, i) => (
@@ -250,9 +318,7 @@ const Landing = () => {
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">"{t.quote}"</p>
                 <div className="flex gap-0.5 mt-3">
-                  {[...Array(5)].map((_, s) => (
-                    <Star key={s} className="w-3 h-3 text-foreground fill-foreground" />
-                  ))}
+                  {[...Array(5)].map((_, s) => <Star key={s} className="w-3 h-3 text-foreground fill-foreground" />)}
                 </div>
               </div>
             ))}
