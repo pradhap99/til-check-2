@@ -118,15 +118,15 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
           <div className="flex gap-2 mt-3">
             <div className="flex-1 bg-white/10 rounded-xl px-3 py-2 text-center">
               <p className="text-[10px] text-purple-200">Active</p>
-              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : stats.activeCampaigns}</p>
+              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : displayStats.activeCampaigns}</p>
             </div>
             <div className="flex-1 bg-white/10 rounded-xl px-3 py-2 text-center">
               <p className="text-[10px] text-purple-200">Applied</p>
-              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : stats.applicationsCount}</p>
+              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : displayStats.applicationsCount}</p>
             </div>
             <div className="flex-1 bg-white/10 rounded-xl px-3 py-2 text-center">
               <p className="text-[10px] text-purple-200">Pending</p>
-              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : `₹${stats.pendingPayments.toLocaleString("en-IN")}`}</p>
+              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : `₹${displayStats.pendingPayments.toLocaleString("en-IN")}`}</p>
             </div>
           </div>
         </div>

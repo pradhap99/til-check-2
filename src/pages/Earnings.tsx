@@ -187,7 +187,7 @@ const Earnings = () => {
 
         {loading ? (
           <div className="text-center py-16"><div className="w-8 h-8 rounded-lg bg-primary/20 animate-pulse mx-auto" /></div>
-        ) : transactions.length === 0 ? (
+        ) : displayTransactions.length === 0 ? (
           <>
             {/* How You Get Paid */}
             <div className="border border-border rounded-2xl p-5 mb-4">
