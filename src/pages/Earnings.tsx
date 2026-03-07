@@ -51,9 +51,21 @@ const Earnings = () => {
     fetchTransactions();
   }, [user, role]);
 
-  const totalEarned = transactions.filter(t => t.status === "completed").reduce((s, t) => s + t.amount, 0);
-  const pending = transactions.filter(t => t.status === "pending").reduce((s, t) => s + t.amount, 0);
-  const thisMonth = transactions.filter(t => t.status === "completed" && new Date(t.created_at).getMonth() === new Date().getMonth()).reduce((s, t) => s + t.amount, 0);
+  const mockTransactions: Transaction[] = [
+    { id: "mock-1", amount: 9000, status: "completed", description: "Zomato Food Stories", created_at: "2026-02-28T10:00:00Z", campaign_id: "4", currency: "INR", payment_method: "upi" },
+    { id: "mock-2", amount: 8500, status: "completed", description: "Mamaearth Vitamin C", created_at: "2026-02-15T10:00:00Z", campaign_id: "2", currency: "INR", payment_method: "bank" },
+    { id: "mock-3", amount: 7200, status: "completed", description: "Sugar Cosmetics Reel", created_at: "2026-01-30T10:00:00Z", campaign_id: null, currency: "INR", payment_method: "upi" },
+    { id: "mock-4", amount: 15000, status: "completed", description: "boAt Audio Review", created_at: "2026-01-12T10:00:00Z", campaign_id: "3", currency: "INR", payment_method: "bank" },
+    { id: "mock-5", amount: 7800, status: "completed", description: "Nykaa New Year", created_at: "2025-12-31T10:00:00Z", campaign_id: "5", currency: "INR", payment_method: "upi" },
+  ];
+
+  const displayTransactions = transactions.length > 0 ? transactions : mockTransactions;
+  const hasMockData = transactions.length === 0;
+
+  const totalEarned = hasMockData ? 47500 : transactions.filter(t => t.status === "completed").reduce((s, t) => s + t.amount, 0);
+  const pending = hasMockData ? 12500 : transactions.filter(t => t.status === "pending").reduce((s, t) => s + t.amount, 0);
+  const thisMonth = hasMockData ? 18200 : transactions.filter(t => t.status === "completed" && new Date(t.created_at).getMonth() === new Date().getMonth()).reduce((s, t) => s + t.amount, 0);
+  const lastMonth = hasMockData ? 14800 : 0;
 
   const statusConfig: Record<string, { color: string; label: string }> = {
     pending: { color: "bg-yellow-500/10 text-yellow-600", label: "Pending" },
@@ -112,7 +124,7 @@ const Earnings = () => {
       </div>
 
       {/* Stats */}
-      <div className="px-4 mt-3 grid grid-cols-3 gap-2">
+      <div className="px-4 mt-3 grid grid-cols-4 gap-2">
         <div className="border border-border rounded-xl p-3 text-center">
           <Clock className="w-3.5 h-3.5 text-yellow-600 mx-auto mb-1" />
           <p className="font-heading font-bold text-sm text-foreground">₹{pending.toLocaleString("en-IN")}</p>
@@ -124,11 +136,45 @@ const Earnings = () => {
           <p className="text-[9px] text-muted-foreground">This Month</p>
         </div>
         <div className="border border-border rounded-xl p-3 text-center">
+          <ArrowDownLeft className="w-3.5 h-3.5 text-muted-foreground mx-auto mb-1" />
+          <p className="font-heading font-bold text-sm text-foreground">₹{lastMonth.toLocaleString("en-IN")}</p>
+          <p className="text-[9px] text-muted-foreground">Last Month</p>
+        </div>
+        <div className="border border-border rounded-xl p-3 text-center">
           <Wallet className="w-3.5 h-3.5 text-accent mx-auto mb-1" />
-          <p className="font-heading font-bold text-sm text-foreground">{transactions.length}</p>
+          <p className="font-heading font-bold text-sm text-foreground">{displayTransactions.length}</p>
           <p className="text-[9px] text-muted-foreground">Transactions</p>
         </div>
       </div>
+
+      {/* Earnings Chart */}
+      {hasMockData && (
+        <div className="px-4 mt-4">
+          <div className="border border-border rounded-2xl p-4">
+            <h4 className="font-heading font-semibold text-sm text-foreground mb-3">Earnings Trend</h4>
+            <div className="flex items-end gap-2 h-[120px]">
+              {[
+                { month: "Sep", amount: 4200 },
+                { month: "Oct", amount: 6800 },
+                { month: "Nov", amount: 9500 },
+                { month: "Dec", amount: 11200 },
+                { month: "Jan", amount: 14800 },
+                { month: "Feb", amount: 18200 },
+              ].map((d, i) => {
+                const maxH = 18200;
+                const h = (d.amount / maxH) * 90;
+                return (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                    <span className="text-[8px] font-heading font-bold text-foreground">₹{(d.amount / 1000).toFixed(1)}K</span>
+                    <div className="w-full rounded-t-lg bg-gradient-to-t from-primary to-accent transition-all" style={{ height: `${h}px` }} />
+                    <span className="text-[9px] text-muted-foreground">{d.month}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Transactions or Empty State */}
       <div className="px-4 mt-5 mb-4">
@@ -195,7 +241,7 @@ const Earnings = () => {
           </>
         ) : (
           <div className="space-y-2">
-            {transactions.map((tx, i) => {
+            {displayTransactions.map((tx, i) => {
               const config = statusConfig[tx.status] || statusConfig.pending;
               const isWithdrawal = tx.description?.includes("Withdrawal");
               const isIncoming = role === "creator" && !isWithdrawal;

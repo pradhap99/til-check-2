@@ -4,25 +4,25 @@ import { useNavigate } from "react-router-dom";
 
 const slides = [
   {
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=400&fit=crop",
-    title: "Trending Now — boAt Audio",
-    subtitle: "Tech creators wanted for Summer Launch",
-    badge: "₹5L–10L",
-    campaignId: "1",
+    image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800",
+    title: "Lenskart SS'26 — Style Your Vision",
+    subtitle: "Fashion-forward eyewear styling creators wanted",
+    badge: "₹8L–15L",
+    campaignId: "3",
   },
   {
-    image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800",
     title: "Beauty Week — Mamaearth",
     subtitle: "Skincare creators for Vitamin C range",
     badge: "₹3L–7L",
     campaignId: "2",
   },
   {
-    image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=800&h=400&fit=crop",
-    title: "Big Fashion Drop — Lenskart SS'26",
-    subtitle: "Fashion-forward eyewear styling",
-    badge: "₹8L–15L",
-    campaignId: "3",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
+    title: "boAt Summer Audio Launch",
+    subtitle: "Tech creators wanted for Airdopes 500 ANC",
+    badge: "₹5L–10L",
+    campaignId: "1",
   },
 ];
 
