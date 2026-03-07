@@ -89,13 +89,40 @@ const MyApplications = () => {
     load();
   }, [user]);
 
-  const filtered = filter === "all" ? applications : applications.filter(a => a.status === filter);
+  // Mock applications when user has none
+  const mockApplications: Application[] = [
+    {
+      id: "mock-1", campaign_id: "1", pitch: "I'd love to create fashion-forward content featuring Lenskart's SS'26 collection with my signature styling approach.", proposed_rate: "12000", status: "shortlisted", brand_feedback: null, created_at: new Date(Date.now() - 2 * 86400000).toISOString(),
+      campaigns: { title: "Lenskart SS'26 — Style Your Vision", brand_user_id: "", status: "active" },
+    },
+    {
+      id: "mock-2", campaign_id: "2", pitch: "As a skincare enthusiast, I can create authentic before/after content for the Vitamin C range.", proposed_rate: "8500", status: "accepted", brand_feedback: null, created_at: new Date(Date.now() - 5 * 86400000).toISOString(),
+      campaigns: { title: "Mamaearth Vitamin C Range", brand_user_id: "", status: "active" },
+      deliverableCount: 4, submittedCount: 3, approvedCount: 2,
+    },
+    {
+      id: "mock-3", campaign_id: "3", pitch: "Tech reviews are my forte — I'll create engaging unboxing + review content for the Airdopes 500.", proposed_rate: "15000", status: "pending", brand_feedback: null, created_at: new Date(Date.now() - 1 * 86400000).toISOString(),
+      campaigns: { title: "boAt Summer Audio Launch", brand_user_id: "", status: "active" },
+    },
+    {
+      id: "mock-4", campaign_id: "5", pitch: "I specialize in festive beauty looks and have a loyal audience in the beauty niche.", proposed_rate: "6000", status: "rejected", brand_feedback: "Thank you for your interest. We've selected creators with a stronger focus on skincare tutorials.", created_at: new Date(Date.now() - 10 * 86400000).toISOString(),
+      campaigns: { title: "Nykaa Festive Glow", brand_user_id: "", status: "active" },
+    },
+    {
+      id: "mock-5", campaign_id: "4", pitch: "Food is my passion — I create cinematic street food and restaurant review content.", proposed_rate: "9000", status: "accepted", brand_feedback: null, created_at: new Date(Date.now() - 7 * 86400000).toISOString(),
+      campaigns: { title: "Zomato Food Stories", brand_user_id: "", status: "active" },
+      deliverableCount: 3, submittedCount: 3, approvedCount: 3,
+    },
+  ];
+
+  const displayApplications = applications.length > 0 ? applications : mockApplications;
+  const filtered = filter === "all" ? displayApplications : displayApplications.filter(a => a.status === filter);
   const counts = {
-    all: applications.length,
-    pending: applications.filter(a => a.status === "pending").length,
-    shortlisted: applications.filter(a => a.status === "shortlisted").length,
-    accepted: applications.filter(a => a.status === "accepted").length,
-    rejected: applications.filter(a => a.status === "rejected").length,
+    all: displayApplications.length,
+    pending: displayApplications.filter(a => a.status === "pending").length,
+    shortlisted: displayApplications.filter(a => a.status === "shortlisted").length,
+    accepted: displayApplications.filter(a => a.status === "accepted").length,
+    rejected: displayApplications.filter(a => a.status === "rejected").length,
   };
 
   return (
@@ -138,14 +165,7 @@ const MyApplications = () => {
             <p className="font-heading font-medium text-muted-foreground">
               {applications.length === 0 ? "No applications yet" : "No matching applications"}
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              {applications.length === 0 ? "Browse campaigns and start applying!" : "Try a different filter"}
-            </p>
-            {applications.length === 0 && (
-              <Button className="mt-4 rounded-lg btn-micro" onClick={() => navigate("/campaigns")}>
-                Browse Campaigns
-              </Button>
-            )}
+            <p className="text-xs text-muted-foreground mt-1">Try a different filter</p>
           </div>
         ) : (
           filtered.map((app, i) => {
@@ -162,18 +182,34 @@ const MyApplications = () => {
                 }`}
                 style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}
               >
-                <div className="flex items-start justify-between">
+                {/* Thumbnail + info */}
+                <div className="flex gap-3">
+                  <div className="w-14 h-14 rounded-xl overflow-hidden bg-secondary shrink-0">
+                    <img
+                      src={
+                        app.campaign_id === "1" ? "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=120" :
+                        app.campaign_id === "2" ? "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=120" :
+                        app.campaign_id === "3" ? "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=120" :
+                        app.campaign_id === "4" ? "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=120" :
+                        app.campaign_id === "5" ? "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=120" :
+                        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=120"
+                      }
+                      alt="" className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-heading font-semibold text-sm text-foreground truncate">
-                      {(app as any).campaigns?.title || "Campaign"}
-                    </h3>
+                    <div className="flex items-start justify-between">
+                      <h3 className="font-heading font-semibold text-sm text-foreground truncate">
+                        {(app as any).campaigns?.title || "Campaign"}
+                      </h3>
+                      <Badge className={`${config.color} border-0 text-[9px] font-heading shrink-0 ml-2`}>
+                        <StatusIcon className="w-3 h-3 mr-0.5" /> {config.label}
+                      </Badge>
+                    </div>
                     <p className="text-[10px] text-muted-foreground mt-0.5">
                       Applied {new Date(app.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                     </p>
                   </div>
-                  <Badge className={`${config.color} border-0 text-[9px] font-heading shrink-0`}>
-                    <StatusIcon className="w-3 h-3 mr-0.5" /> {config.label}
-                  </Badge>
                 </div>
 
                 {app.pitch && <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{app.pitch}</p>}

@@ -15,12 +15,23 @@ const categoryColors: Record<string, string> = {
   Lifestyle: "category-strip-lifestyle",
 };
 
+const campaignImageMap: Record<string, string> = {
+  "1": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400",
+  "2": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400",
+  "3": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
+  "4": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400",
+  "5": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400",
+  "6": "https://images.unsplash.com/photo-1445205170230-053b83016050?w=400",
+  "7": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400",
+  "8": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
+};
+
 const categoryImages: Record<string, string> = {
   Tech: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=300&fit=crop",
   Beauty: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=300&fit=crop",
-  Fashion: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=300&fit=crop",
+  Fashion: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=300&fit=crop",
   Finance: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&h=300&fit=crop",
-  Food: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=300&fit=crop",
+  Food: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=300&fit=crop",
   Fitness: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=300&fit=crop",
   Travel: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&h=300&fit=crop",
   Gaming: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&h=300&fit=crop",
@@ -39,7 +50,7 @@ const CampaignCard = ({ campaign, index = 0, userLevel = 1 }: CampaignCardProps)
   const progress = (campaign.filled / campaign.slots) * 100;
   const isHot = progress >= 70;
   const isNew = index === 0;
-  const image = categoryImages[campaign.category] || categoryImages.Tech;
+  const image = campaignImageMap[campaign.id] || categoryImages[campaign.category] || categoryImages.Tech;
   const compType = (campaign as any).compensationType || "Paid";
   const requiredLevel = (campaign as any).minCreatorLevel || 0;
   const isLocked = requiredLevel > 0 && userLevel < requiredLevel;

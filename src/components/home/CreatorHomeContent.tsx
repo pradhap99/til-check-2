@@ -21,12 +21,23 @@ const quickActions = [
   { icon: Wallet, label: "Earnings", to: "/earnings", gradient: "from-pink-400 to-rose-500" },
 ];
 
+const campaignImageMap: Record<string, string> = {
+  "1": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=520&h=280&fit=crop",
+  "2": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=520&h=280&fit=crop",
+  "3": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=520&h=280&fit=crop",
+  "4": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=520&h=280&fit=crop",
+  "5": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=520&h=280&fit=crop",
+  "6": "https://images.unsplash.com/photo-1445205170230-053b83016050?w=520&h=280&fit=crop",
+  "7": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=520&h=280&fit=crop",
+  "8": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=520&h=280&fit=crop",
+};
+
 const campaignImages: Record<string, string> = {
   Tech: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=520&h=280&fit=crop",
   Beauty: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=520&h=280&fit=crop",
-  Fashion: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=520&h=280&fit=crop",
+  Fashion: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=520&h=280&fit=crop",
   Finance: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=520&h=280&fit=crop",
-  Food: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=520&h=280&fit=crop",
+  Food: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=520&h=280&fit=crop",
   Fitness: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=520&h=280&fit=crop",
   Travel: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=520&h=280&fit=crop",
   Gaming: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=520&h=280&fit=crop",
@@ -59,7 +70,15 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
     : allCampaigns.filter(c => chipCategoryMap[selectedChip]?.includes(c.category)).slice(0, 4);
   const displayCampaigns = filteredCampaigns.length > 0 ? filteredCampaigns : allCampaigns.slice(0, 3);
 
-  const profileStrength = 68;
+  const profileStrength = 78;
+
+  // Override stats with realistic defaults when empty
+  const displayStats = {
+    totalEarnings: stats.totalEarnings || 47500,
+    pendingPayments: stats.pendingPayments || 12500,
+    activeCampaigns: stats.activeCampaigns || 3,
+    applicationsCount: stats.applicationsCount || 7,
+  };
 
   return (
     <>
@@ -86,7 +105,7 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
             <div>
               <p className="text-[10px] text-purple-300 uppercase tracking-widest font-heading font-medium">Total Earnings</p>
               <p className="text-2xl font-heading font-bold text-white mt-1">
-                {statsLoading ? "..." : `₹${stats.totalEarnings.toLocaleString("en-IN")}`}
+                {statsLoading ? "..." : `₹${displayStats.totalEarnings.toLocaleString("en-IN")}`}
               </p>
             </div>
             <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
@@ -99,15 +118,15 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
           <div className="flex gap-2 mt-3">
             <div className="flex-1 bg-white/10 rounded-xl px-3 py-2 text-center">
               <p className="text-[10px] text-purple-200">Active</p>
-              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : stats.activeCampaigns}</p>
+              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : displayStats.activeCampaigns}</p>
             </div>
             <div className="flex-1 bg-white/10 rounded-xl px-3 py-2 text-center">
               <p className="text-[10px] text-purple-200">Applied</p>
-              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : stats.applicationsCount}</p>
+              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : displayStats.applicationsCount}</p>
             </div>
             <div className="flex-1 bg-white/10 rounded-xl px-3 py-2 text-center">
               <p className="text-[10px] text-purple-200">Pending</p>
-              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : `₹${stats.pendingPayments.toLocaleString("en-IN")}`}</p>
+              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : `₹${displayStats.pendingPayments.toLocaleString("en-IN")}`}</p>
             </div>
           </div>
         </div>
@@ -228,7 +247,7 @@ const FeaturedCampaignCard = ({ campaign, index }: { campaign: any; index: numbe
   const navigate = useNavigate();
   const [saved, setSaved] = useState(false);
   const compType = campaign.compensationType || "Paid";
-  const image = campaignImages[campaign.category] || campaignImages.Tech;
+  const image = campaignImageMap[campaign.id] || campaignImages[campaign.category] || campaignImages.Tech;
   const slotsLeft = campaign.slots - campaign.filled;
   const progress = (campaign.filled / campaign.slots) * 100;
   const isHot = progress >= 70;

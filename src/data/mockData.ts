@@ -30,107 +30,97 @@ export interface Campaign {
 export const creators: Creator[] = [
   {
     id: "1", name: "Priya Sharma", handle: "@priyasharma",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face",
-    category: "Fashion", followers: "1.2M", engagement: "4.8%", platform: "Instagram", location: "Mumbai", rate: "₹50K–1L", verified: true,
-    bio: "Fashion & lifestyle creator. Worked with Myntra, Nykaa, H&M India. 3+ years in brand collaborations."
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300",
+    category: "Beauty", followers: "245K", engagement: "4.9%", platform: "Instagram", location: "Mumbai", rate: "₹40K–80K", verified: true,
+    bio: "Beauty & skincare creator. Worked with Nykaa, Mamaearth, L'Oreal India. Level 3 creator."
   },
   {
-    id: "2", name: "Arjun Reddy", handle: "@arjuntechtalks",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
-    category: "Tech", followers: "890K", engagement: "5.2%", platform: "YouTube", location: "Hyderabad", rate: "₹75K–1.5L", verified: true,
+    id: "2", name: "Arjun Mehta", handle: "@arjunmehta",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300",
+    category: "Tech", followers: "189K", engagement: "4.7%", platform: "YouTube", location: "Bangalore", rate: "₹50K–1L", verified: true,
     bio: "Tech reviewer & unboxer. Featured on T3 India. Specializes in smartphones, laptops, and audio gear."
   },
   {
-    id: "3", name: "Neha Kapoor", handle: "@nehakapoor.fit",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
-    category: "Fitness", followers: "650K", engagement: "6.1%", platform: "Instagram", location: "New Delhi", rate: "₹30K–60K", verified: true,
-    bio: "ACE-certified trainer & sports nutritionist. Brand ambassador for Decathlon India."
+    id: "3", name: "Sneha Kapoor", handle: "@snehakapoor",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300",
+    category: "Fashion", followers: "312K", engagement: "4.8%", platform: "Instagram", location: "Delhi", rate: "₹60K–1.2L", verified: true,
+    bio: "Fashion influencer & stylist. Collaborated with Myntra, H&M India, and Zara."
   },
   {
-    id: "4", name: "Vikram Singh", handle: "@vikramfoodie",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
-    category: "Food", followers: "2.1M", engagement: "3.9%", platform: "Instagram", location: "Jaipur", rate: "₹80K–2L", verified: true,
-    bio: "Food critic & street food explorer. Featured on NDTV Food, collaborations with Zomato & Swiggy."
+    id: "4", name: "Rahul Verma", handle: "@rahulverma",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300",
+    category: "Food", followers: "98K", engagement: "4.6%", platform: "Instagram", location: "Chennai", rate: "₹25K–50K", verified: false,
+    bio: "Food & travel creator. Street food explorer covering South India and Southeast Asia."
   },
   {
-    id: "5", name: "Aisha Khan", handle: "@aisha.travels",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face",
-    category: "Travel", followers: "430K", engagement: "7.3%", platform: "Instagram", location: "Goa", rate: "₹25K–50K", verified: false,
-    bio: "Solo travel blogger covering budget trips across India & Southeast Asia. MakeMyTrip partner creator."
+    id: "5", name: "Kavya Nair", handle: "@kavyanair",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300",
+    category: "Fitness", followers: "156K", engagement: "4.8%", platform: "Instagram", location: "Hyderabad", rate: "₹35K–70K", verified: true,
+    bio: "ACE-certified trainer & wellness coach. Brand ambassador for Decathlon India."
   },
   {
-    id: "6", name: "Rohit Mehta", handle: "@rohitmehta_",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
-    category: "Gaming", followers: "1.5M", engagement: "8.5%", platform: "YouTube", location: "Pune", rate: "₹1L–3L", verified: true,
-    bio: "Professional esports player & content creator. BGMI champion, streaming partner with Loco."
-  },
-  {
-    id: "7", name: "Kavya Nair", handle: "@kavyanairbeauty",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face",
-    category: "Beauty", followers: "780K", engagement: "5.7%", platform: "Instagram", location: "Kochi", rate: "₹40K–80K", verified: true,
-    bio: "Skincare specialist & beauty reviewer. Collaborated with Sugar Cosmetics, Plum, and L'Oreal India."
-  },
-  {
-    id: "8", name: "Saurabh Joshi", handle: "@saurabhjoshi",
-    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face",
-    category: "Lifestyle", followers: "3.2M", engagement: "4.2%", platform: "YouTube", location: "Lucknow", rate: "₹2L–5L", verified: true,
-    bio: "Daily vlogger with 3.2M subscribers. Known for authentic storytelling. Worked with Samsung, OnePlus."
-  },
-  {
-    id: "9", name: "Meera Patel", handle: "@meerapatel.fin",
-    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face",
-    category: "Finance", followers: "520K", engagement: "6.8%", platform: "Twitter", location: "Ahmedabad", rate: "₹35K–70K", verified: false,
-    bio: "SEBI-registered advisor simplifying personal finance. Collaborations with Groww, Zerodha, CRED."
-  },
-  {
-    id: "10", name: "Dev Malhotra", handle: "@devmalhotra",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop&crop=face",
-    category: "Comedy", followers: "1.8M", engagement: "9.1%", platform: "Instagram", location: "Bangalore", rate: "₹1.5L–4L", verified: true,
+    id: "6", name: "Dev Anand", handle: "@devanand",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300",
+    category: "Comedy", followers: "425K", engagement: "4.9%", platform: "Instagram", location: "Pune", rate: "₹1L–2.5L", verified: true,
     bio: "Stand-up comedian & content creator. Performed at Canvas Laugh Club. Brand partnerships with Swiggy, Dunzo."
   },
 ];
 
 export const campaigns: Campaign[] = [
   {
-    id: "1", brand: "boAt", logo: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop",
-    title: "Summer Audio Launch 2026",
-    budget: "₹5L–10L", category: "Tech", deadline: "Apr 15, 2026",
-    slots: 8, filled: 3, description: "Tech & lifestyle creators needed to review our new Airdopes 500 ANC range. Deliverables include 2 Reels + 1 YouTube Short.",
+    id: "1", brand: "Lenskart", logo: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=80&h=80&fit=crop",
+    title: "Lenskart SS'26 — Style Your Vision",
+    budget: "₹8L–15L", category: "Fashion", deadline: "Mar 20, 2026",
+    slots: 45, filled: 18, description: "Fashion-forward creators for our premium John Jacobs collection. Looking for outfit integration + eyewear styling content.",
     platforms: ["Instagram", "YouTube"]
   },
   {
-    id: "2", brand: "Mamaearth", logo: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=80&h=80&fit=crop",
-    title: "Toxin-Free Skincare Drive",
-    budget: "₹3L–7L", category: "Beauty", deadline: "Mar 30, 2026",
-    slots: 12, filled: 7, description: "Skincare & beauty creators for our new Vitamin C range launch. Must create before/after content with honest reviews.",
+    id: "2", brand: "Mamaearth", logo: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=80&h=80&fit=crop",
+    title: "Mamaearth Vitamin C Range",
+    budget: "₹3L–7L", category: "Beauty", deadline: "Mar 25, 2026",
+    slots: 80, filled: 32, description: "Skincare & beauty creators for our new Vitamin C range launch. Must create before/after content with honest reviews.",
     platforms: ["Instagram"]
   },
   {
-    id: "3", brand: "Lenskart", logo: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=80&h=80&fit=crop",
-    title: "Style Your Vision — SS'26",
-    budget: "₹8L–15L", category: "Fashion", deadline: "May 1, 2026",
-    slots: 15, filled: 5, description: "Fashion-forward creators for our premium John Jacobs collection. Looking for outfit integration + eyewear styling content.",
+    id: "3", brand: "boAt", logo: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop",
+    title: "boAt Summer Audio Launch",
+    budget: "₹5L–10L", category: "Tech", deadline: "Apr 1, 2026",
+    slots: 30, filled: 12, description: "Tech & lifestyle creators needed to review our new Airdopes 500 ANC range. Deliverables include 2 Reels + 1 YouTube Short.",
     platforms: ["Instagram", "YouTube"]
   },
   {
-    id: "4", brand: "CRED", logo: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=80&h=80&fit=crop",
-    title: "CRED Rewards Reloaded",
-    budget: "₹10L–20L", category: "Finance", deadline: "Apr 20, 2026",
-    slots: 6, filled: 2, description: "Creative storytellers to showcase CRED's new rewards ecosystem. High-concept, cinematic-style content preferred.",
-    platforms: ["Instagram", "Twitter", "YouTube"]
+    id: "4", brand: "Zomato", logo: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=80&h=80&fit=crop",
+    title: "Zomato Food Stories",
+    budget: "₹4L–8L", category: "Food", deadline: "Mar 28, 2026",
+    slots: 60, filled: 25, description: "Food creators for authentic street food and restaurant reviews across India. Video-first content preferred.",
+    platforms: ["Instagram", "YouTube"]
   },
   {
-    id: "5", brand: "Sugar Cosmetics", logo: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=80&h=80&fit=crop",
-    title: "Bold Everyday Collection",
-    budget: "₹4L–8L", category: "Beauty", deadline: "Mar 25, 2026",
-    slots: 10, filled: 8, description: "Beauty creators for our festive-to-daily makeup transition campaign. GRWM format preferred. Product seeding included.",
+    id: "5", brand: "Nykaa", logo: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=80&h=80&fit=crop",
+    title: "Nykaa Festive Glow",
+    budget: "₹2L–5L", category: "Beauty", deadline: "Apr 5, 2026",
+    slots: 100, filled: 45, description: "Beauty creators for festive makeup looks and skincare routines. GRWM format preferred.",
     platforms: ["Instagram"]
   },
   {
-    id: "6", brand: "Noise", logo: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop",
-    title: "NoiseFit Evolve X Launch",
-    budget: "₹6L–12L", category: "Tech", deadline: "Apr 10, 2026",
-    slots: 10, filled: 4, description: "Tech reviewers & fitness creators for our latest smartwatch. Unboxing + 7-day review format. Comparison content welcome.",
+    id: "6", brand: "Myntra", logo: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=80&h=80&fit=crop",
+    title: "Myntra Style Drop",
+    budget: "₹6L–12L", category: "Fashion", deadline: "Mar 18, 2026",
+    slots: 20, filled: 8, description: "Premium fashion creators for exclusive designer collaboration. High-end styling content required.",
+    platforms: ["Instagram", "YouTube"]
+  },
+  {
+    id: "7", brand: "Swiggy", logo: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=80&h=80&fit=crop",
+    title: "Swiggy Dine Out",
+    budget: "₹3L–6L", category: "Food", deadline: "Apr 10, 2026",
+    slots: 75, filled: 30, description: "Food and lifestyle creators for restaurant discovery content. Focus on ambiance and dining experience.",
+    platforms: ["Instagram"]
+  },
+  {
+    id: "8", brand: "Noise", logo: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop",
+    title: "Noise Smartwatch Launch",
+    budget: "₹4L–9L", category: "Tech", deadline: "Apr 8, 2026",
+    slots: 40, filled: 15, description: "Tech reviewers & fitness creators for our latest smartwatch. Unboxing + 7-day review format.",
     platforms: ["YouTube", "Instagram"]
   },
 ];

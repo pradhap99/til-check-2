@@ -22,30 +22,33 @@ interface Conversation {
 const mockConversations = [
   {
     id: "example-1",
-    otherName: "boAt Audio",
-    otherAvatar: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop",
-    lastMessage: "About Summer Audio Launch...",
+    otherName: "Lenskart Brand Team",
+    otherAvatar: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=80&h=80&fit=crop",
+    lastMessage: "Your application is under review. We'll get back...",
     timeAgo: "2h",
-    campaignTag: "Summer Audio Launch",
+    campaignTag: "Lenskart SS'26",
     isExample: true,
+    unread: true,
   },
   {
     id: "example-2",
-    otherName: "Priya Sharma",
-    otherAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop",
-    lastMessage: "Revised version uploaded! Check deliverables section.",
-    timeAgo: "Yesterday",
-    campaignTag: "Skincare Review",
+    otherName: "Mamaearth Collab",
+    otherAvatar: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=80&h=80&fit=crop",
+    lastMessage: "Congratulations! You've been selected for...",
+    timeAgo: "1d",
+    campaignTag: "Mamaearth Vitamin C",
     isExample: true,
+    unread: false,
   },
   {
     id: "example-3",
-    otherName: "Mamaearth",
-    otherAvatar: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=80&h=80&fit=crop",
-    lastMessage: "We'd love to collaborate! Check your inbox.",
+    otherName: "boAt Partnerships",
+    otherAvatar: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop",
+    lastMessage: "Please share your media kit to proceed...",
     timeAgo: "3d",
-    campaignTag: "Beauty Week",
+    campaignTag: "boAt Summer Audio",
     isExample: true,
+    unread: false,
   },
 ];
 
@@ -178,7 +181,7 @@ const Messages = () => {
                   >
                     <div className="relative shrink-0">
                       <img src={conv.otherAvatar} alt={conv.otherName} className="w-12 h-12 rounded-2xl object-cover bg-secondary" />
-                      <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-primary border-2 border-background" />
+                      {(conv as any).unread && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-primary border-2 border-background" />}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
