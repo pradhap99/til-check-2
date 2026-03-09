@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, ChevronRight, Shield, HelpCircle, FileText, BarChart3, Wallet, Instagram, Youtube, Twitter, Linkedin, CheckCircle } from "lucide-react";
+import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, ChevronRight, Shield, HelpCircle, FileText, BarChart3, Wallet, Instagram, Youtube, Twitter, Linkedin, CheckCircle, Users, Radio, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
@@ -26,21 +26,15 @@ const Profile = () => {
         const { data: bp } = await supabase.from("brand_profiles").select("*").eq("user_id", user.id).maybeSingle();
         setBrandProfile(bp);
       }
-      // Check admin
       const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", user.id);
       if (roles?.some(r => r.role === "admin")) setIsAdmin(true);
     };
     fetchProfiles();
   }, [user, role]);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
-  };
-
+  const handleSignOut = async () => { await signOut(); navigate("/"); };
   const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email;
 
-  // Social platforms for creator
   const socialPlatforms = creatorProfile ? [
     { icon: Instagram, label: "IG", value: creatorProfile.instagram_followers, color: "text-pink-500" },
     { icon: Youtube, label: "YT", value: creatorProfile.youtube_subscribers, color: "text-red-500" },
@@ -54,30 +48,18 @@ const Profile = () => {
         <div className="flex items-center gap-4">
           <div className="relative">
             <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center text-xl font-heading font-bold text-muted-foreground">
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="" className="w-full h-full rounded-full object-cover" />
-              ) : (
-                displayName?.charAt(0)?.toUpperCase() || <User className="w-6 h-6" />
-              )}
+              {profile?.avatar_url ? <img src={profile.avatar_url} alt="" className="w-full h-full rounded-full object-cover" /> : displayName?.charAt(0)?.toUpperCase() || <User className="w-6 h-6" />}
             </div>
           </div>
           <div className="flex-1">
             <h1 className="font-heading font-bold text-lg text-foreground">{displayName}</h1>
             <p className="text-xs text-muted-foreground">{user?.email}</p>
             <div className="flex items-center gap-2 mt-1.5">
-              <span className="text-[10px] px-2 py-0.5 rounded bg-foreground text-background font-medium">
-                {role === "creator" ? "Creator" : "Brand"}
-              </span>
-              {profile?.location_city && (
-                <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
-                  <MapPin className="w-2.5 h-2.5" /> {profile.location_city}
-                </span>
-              )}
+              <span className="text-[10px] px-2 py-0.5 rounded bg-foreground text-background font-medium">{role === "creator" ? "Creator" : "Brand"}</span>
+              {profile?.location_city && <span className="text-[10px] text-muted-foreground flex items-center gap-0.5"><MapPin className="w-2.5 h-2.5" /> {profile.location_city}</span>}
             </div>
           </div>
-          <button onClick={() => navigate("/profile/edit")} className="w-9 h-9 rounded-lg border border-border flex items-center justify-center hover:bg-secondary transition-colors">
-            <Edit3 className="w-4 h-4 text-muted-foreground" />
-          </button>
+          <button onClick={() => navigate("/profile/edit")} className="w-9 h-9 rounded-lg border border-border flex items-center justify-center hover:bg-secondary transition-colors"><Edit3 className="w-4 h-4 text-muted-foreground" /></button>
         </div>
         {profile?.bio && <p className="text-sm text-muted-foreground mt-3 leading-relaxed">{profile.bio}</p>}
       </div>
@@ -98,16 +80,14 @@ const Profile = () => {
         </div>
       )}
 
-      {/* Social Platforms Compact */}
+      {/* Social Platforms */}
       {role === "creator" && socialPlatforms.length > 0 && (
         <div className="px-5 mt-3">
           <div className="border border-border rounded-lg p-3 flex items-center gap-3">
             {socialPlatforms.map((p, i) => (
               <div key={i} className="flex items-center gap-1.5">
                 <p.icon className={`w-3.5 h-3.5 ${p.color}`} />
-                <span className="text-xs font-heading font-semibold text-foreground">
-                  {p.value > 999999 ? `${(p.value / 1000000).toFixed(1)}M` : `${(p.value / 1000).toFixed(0)}K`}
-                </span>
+                <span className="text-xs font-heading font-semibold text-foreground">{p.value > 999999 ? `${(p.value / 1000000).toFixed(1)}M` : `${(p.value / 1000).toFixed(0)}K`}</span>
               </div>
             ))}
           </div>
@@ -158,23 +138,32 @@ const Profile = () => {
           { icon: Heart, label: role === "brand" ? "Saved Creators" : "Saved", to: role === "brand" ? "/saved" : "/campaigns" },
           { icon: FileText, label: "Applications", to: "/applications" },
           { icon: Bell, label: "Notifications", to: "/notifications" },
-          ...(isAdmin ? [{ icon: Shield, label: "Admin Panel", to: "/admin" }] : []),
         ].map((item, i) => (
-          <button
-            key={i}
-            onClick={() => navigate(item.to)}
-            className="w-full rounded-lg p-3 flex items-center gap-3 hover:bg-secondary transition-colors"
-          >
+          <button key={i} onClick={() => navigate(item.to)} className="w-full rounded-lg p-3 flex items-center gap-3 hover:bg-secondary transition-colors">
             <item.icon className="w-4 h-4 text-muted-foreground" />
             <span className="flex-1 text-left text-sm font-medium text-foreground">{item.label}</span>
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </button>
         ))}
 
-        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mt-4 mb-2 px-1">Preferences</p>
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mt-4 mb-2 px-1">Explore</p>
+        {[
+          { icon: Users, label: "Community", to: "/community" },
+          { icon: Radio, label: "Channels", to: "/channels" },
+          { icon: Sparkles, label: "Managed Services", to: "/managed-services" },
+          { icon: HelpCircle, label: "Help & Support", to: "/support" },
+          ...(isAdmin ? [{ icon: Shield, label: "Admin Panel", to: "/admin" }] : []),
+        ].map((item, i) => (
+          <button key={i} onClick={() => navigate(item.to)} className="w-full rounded-lg p-3 flex items-center gap-3 hover:bg-secondary transition-colors">
+            <item.icon className="w-4 h-4 text-muted-foreground" />
+            <span className="flex-1 text-left text-sm font-medium text-foreground">{item.label}</span>
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          </button>
+        ))}
+
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest mt-4 mb-2 px-1">Settings</p>
         {[
           { icon: Settings, label: "Settings", to: "/settings" },
-          { icon: HelpCircle, label: "Help & Support", to: "/support" },
           { icon: Shield, label: "Privacy", to: "/settings" },
         ].map((item, i) => (
           <button key={i} onClick={() => navigate(item.to)} className="w-full rounded-lg p-3 flex items-center gap-3 hover:bg-secondary transition-colors">

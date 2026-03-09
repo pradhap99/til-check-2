@@ -17,12 +17,12 @@ const faqs = [
 ];
 
 const testimonials = [
-  { name: "Priya Sharma", role: "Fashion · 1.2M followers", quote: "Earned ₹3.5L in my first quarter. Campaign matching is incredibly accurate.", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" },
-  { name: "boAt Audio", role: "D2C Electronics", quote: "8.2% average engagement across 15 creators. 3X better ROI than advertising.", avatar: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop" },
-  { name: "Vikram Singh", role: "Food · 2.1M followers", quote: "The content approval workflow saves hours. UPI payments hit same day.", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face" },
-  { name: "Neha Kapoor", role: "Fitness · 650K followers", quote: "Found 3 brand deals in my first week. The matching algorithm is spot on.", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face" },
-  { name: "Lenskart", role: "Eyewear Brand", quote: "Managed 15 creator campaigns simultaneously. Content quality exceeded expectations.", avatar: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=80&h=80&fit=crop" },
-  { name: "Kavya Nair", role: "Beauty · 780K followers", quote: "Escrow protection gives me peace of mind. No more chasing payments.", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face" },
+  { name: "Priya Sharma", role: "Fashion · 1.2M followers", quote: "Delivered 5 Reels for Lenskart with 2.3M total impressions. Brand partnership renewed for next season!", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" },
+  { name: "boAt Audio", role: "D2C Electronics", quote: "8.2% average engagement across 15 creators. 3X better ROI than traditional advertising.", avatar: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop" },
+  { name: "Vikram Singh", role: "Food · 2.1M followers", quote: "Created 12 restaurant review videos reaching 4.5M viewers. Got 3 long-term brand partnerships.", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face" },
+  { name: "Neha Kapoor", role: "Fitness · 650K followers", quote: "Completed 8 campaigns in 3 months. 1.8M impressions across platforms. Renewed 3 brand deals.", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face" },
+  { name: "Lenskart", role: "Eyewear Brand", quote: "Managed 15 creator campaigns simultaneously. Content quality exceeded expectations. 5M+ reach.", avatar: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=80&h=80&fit=crop" },
+  { name: "Kavya Nair", role: "Beauty · 780K followers", quote: "10 Reels, 25 Stories, 3 brand deals renewed. Escrow protection gives complete peace of mind.", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face" },
 ];
 
 import { TOP_CATEGORIES } from "@/data/experienceCategories";

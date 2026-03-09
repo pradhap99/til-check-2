@@ -25,7 +25,7 @@ const cityOptions = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Pune", "Hyderab
 const compensationTypes = ["Paid", "Barter", "Hybrid"];
 const followerRanges = ["1K-10K", "10K-50K", "50K-100K", "100K-500K", "500K+"];
 const ageRanges = ["18-24", "25-34", "35-44", "45+"];
-const genderOptions = ["All", "Male", "Female"];
+const genderOptions = ["All", "Male", "Female", "Transgender", "Non-binary"];
 
 const levelOptions = [
   { label: "Any Level", value: 0, desc: "All creators can apply" },
