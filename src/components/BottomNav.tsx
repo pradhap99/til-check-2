@@ -1,5 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
-import { Home, Search, Briefcase, MessageCircle, User } from "lucide-react";
+import { Home, Search, Briefcase, MessageCircle, User, Users, Radio, HelpCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const BottomNav = () => {
