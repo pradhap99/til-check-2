@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { campaigns, creators } from "@/data/mockData";
 import HeroBannerCarousel from "./HeroBannerCarousel";
 import BrandCirclesRow from "./BrandCirclesRow";
-import ExploreBanner from "./ExploreBanner";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
 import CreatorLevelBadge from "@/components/CreatorLevelBadge";
@@ -54,6 +53,13 @@ const successStories = [
   { name: "Arjun R.", earned: "₹5.2L", campaigns: 15, niche: "Tech", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=160&fit=crop&crop=face", quote: "Tech reviews that actually pay well" },
 ];
 
+// Map carousel slide index to brand name
+const carouselBrandMap: Record<number, string> = {
+  0: "Lenskart",
+  1: "Mamaearth",
+  2: "boAt",
+};
+
 interface CreatorHomeContentProps {
   stats: { totalEarnings: number; pendingPayments: number; activeCampaigns: number; applicationsCount: number };
   statsLoading: boolean;
@@ -65,13 +71,15 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
   const [selectedChip, setSelectedChip] = useState("all");
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
+  const activeBrand = carouselBrandMap[carouselIndex] || null;
 
   const allCampaigns = campaigns.map(c => ({
     ...c, compensationType: c.budget.includes("L") ? "Paid" : "Barter",
     tagline: c.description?.slice(0, 60),
   }));
 
-  // Apply brand filter if selected
   const brandFiltered = selectedBrand
     ? allCampaigns.filter(c => c.brand === selectedBrand)
     : allCampaigns;
@@ -83,7 +91,6 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
 
   const profileStrength = 78;
 
-  // Override stats with realistic defaults when empty
   const displayStats = {
     totalEarnings: stats.totalEarnings || 47500,
     pendingPayments: stats.pendingPayments || 12500,
@@ -93,9 +100,8 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
 
   return (
     <>
-      <BrandCirclesRow selectedBrand={selectedBrand} onSelectBrand={setSelectedBrand} />
-      <ExploreBanner />
-      <HeroBannerCarousel />
+      <BrandCirclesRow selectedBrand={selectedBrand} onSelectBrand={setSelectedBrand} activeBrand={activeBrand} />
+      <HeroBannerCarousel onSlideChange={setCarouselIndex} />
 
       {/* Quick Actions */}
       <section className="px-5 mt-5">
@@ -145,10 +151,9 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
         </div>
       </section>
 
-      {/* This Week + Profile Strength (GAP 16) */}
+      {/* This Week + Profile Strength */}
       <section className="px-5 mt-4">
         <div className="grid grid-cols-2 gap-2.5">
-          {/* This Week */}
           <div className="border border-border rounded-2xl p-3.5 bg-card">
             <div className="flex items-center gap-1.5 mb-2">
               <Zap className="w-3.5 h-3.5 text-accent" />
@@ -161,7 +166,6 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> View matches
             </span>
           </div>
-          {/* Profile Strength */}
           <div className="border border-border rounded-2xl p-3.5 bg-card">
             <div className="flex items-center justify-between mb-2">
               <p className="text-[10px] font-heading font-semibold text-foreground">Profile Strength</p>
@@ -176,7 +180,6 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
             <p className="text-[9px] text-muted-foreground leading-relaxed">Complete profile to unlock 2x more campaigns</p>
           </div>
         </div>
-      {/* Creator Level */}
         <CreatorLevelBadge followers={45000} engagementRate={5.2} completedCampaigns={3} size="lg" showProgress showBenefits />
       </section>
 
@@ -216,8 +219,11 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
         ) : (
           <div className="px-5">
             <Suspense fallback={<div className="h-[320px] rounded-2xl bg-secondary animate-pulse" />}>
-              <CampaignMapView campaigns={allCampaigns} />
+              <CampaignMapView key="campaign-map" campaigns={allCampaigns} />
             </Suspense>
+            <p className="text-[11px] text-accent font-heading font-medium mt-2 px-1">
+              {allCampaigns.length} campaigns near you
+            </p>
           </div>
         )}
       </section>
@@ -239,7 +245,7 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
         </section>
       )}
 
-      {/* Success Stories (GAP 15) */}
+      {/* Success Stories */}
       <section className="mt-5 mb-6">
         <div className="flex items-center justify-between px-5 mb-3">
           <h3 className="font-heading font-bold text-[15px] text-foreground">Success Stories</h3>

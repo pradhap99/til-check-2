@@ -26,7 +26,11 @@ const slides = [
   },
 ];
 
-const HeroBannerCarousel = () => {
+interface HeroBannerCarouselProps {
+  onSlideChange?: (index: number) => void;
+}
+
+const HeroBannerCarousel = ({ onSlideChange }: HeroBannerCarouselProps) => {
   const [current, setCurrent] = useState(0);
   const navigate = useNavigate();
 
@@ -38,6 +42,10 @@ const HeroBannerCarousel = () => {
     const timer = setInterval(next, 3000);
     return () => clearInterval(timer);
   }, [next]);
+
+  useEffect(() => {
+    onSlideChange?.(current);
+  }, [current, onSlideChange]);
 
   return (
     <div className="px-4 mt-3">
@@ -59,12 +67,10 @@ const HeroBannerCarousel = () => {
           </div>
         ))}
 
-        {/* Badge */}
         <div className="absolute top-3 right-3 bg-accent/90 backdrop-blur-sm text-accent-foreground text-[11px] font-heading font-bold px-2.5 py-1 rounded-lg z-10">
           {slides[current].badge}
         </div>
 
-        {/* Text */}
         <div className="absolute bottom-4 left-4 right-4 z-10">
           <h3 className="text-white font-heading font-bold text-base leading-tight">
             {slides[current].title}
@@ -74,7 +80,6 @@ const HeroBannerCarousel = () => {
           </p>
         </div>
 
-        {/* Dots */}
         <div className="absolute bottom-2 right-4 flex gap-1.5 z-10">
           {slides.map((_, i) => (
             <button
