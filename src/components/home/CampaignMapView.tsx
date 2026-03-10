@@ -1,49 +1,37 @@
-import { useState, useRef } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { useNavigate } from "react-router-dom";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useNavigate } from "react-router-dom";
-import { Crosshair } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Indian city coordinates for campaigns
-const campaignLocations: Record<string, { lat: number; lng: number; city: string }> = {
-  "1": { lat: 28.6139, lng: 77.209, city: "Delhi" },       // Lenskart
-  "2": { lat: 19.076, lng: 72.8777, city: "Mumbai" },       // Mamaearth
-  "3": { lat: 28.4595, lng: 77.0266, city: "Gurugram" },    // boAt
-  "4": { lat: 12.9716, lng: 77.5946, city: "Bangalore" },   // Zomato
-  "5": { lat: 19.076, lng: 72.8777, city: "Mumbai" },       // Nykaa
-  "6": { lat: 12.9716, lng: 77.5946, city: "Bangalore" },   // Myntra
-  "7": { lat: 12.9716, lng: 77.5946, city: "Bangalore" },   // Swiggy
-  "8": { lat: 28.6139, lng: 77.209, city: "Delhi" },        // Noise
+// Fix default marker icon issue
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+});
+
+const brandLocations: Record<string, [number, number]> = {
+  Lenskart: [28.6139, 77.209],
+  Mamaearth: [19.076, 72.8777],
+  boAt: [12.9716, 77.5946],
+  CRED: [17.385, 78.4867],
+  Sugar: [22.5726, 88.3639],
+  Nykaa: [19.076, 72.8777],
+  Myntra: [12.9716, 77.5946],
+  Swiggy: [12.9716, 77.5946],
+  Noise: [28.6139, 77.209],
+  Zomato: [28.6139, 77.209],
 };
 
-const INDIA_CENTER = { lat: 20.5937, lng: 78.9629 };
-
-function createBrandIcon(logoUrl: string) {
-  return L.divIcon({
-    className: "brand-map-pin",
-    html: `<div style="width:44px;height:44px;border-radius:50%;border:3px solid hsl(45,93%,58%);overflow:hidden;background:#1a1a2e;box-shadow:0 2px 12px rgba(0,0,0,0.5);">
-      <img src="${logoUrl}" style="width:100%;height:100%;object-fit:cover;" />
-    </div>`,
-    iconSize: [44, 44],
-    iconAnchor: [22, 22],
-    popupAnchor: [0, -26],
+const customIcon = (brandName: string) =>
+  L.divIcon({
+    className: "",
+    html: `<div style="width:40px;height:40px;border-radius:50%;background:#1a1a2e;border:2px solid #f59e0b;display:flex;align-items:center;justify-content:center;color:#f59e0b;font-weight:bold;font-size:14px;box-shadow:0 0 8px rgba(245,158,11,0.4)">${brandName[0]}</div>`,
+    iconSize: [40, 40],
+    iconAnchor: [20, 20],
+    popupAnchor: [0, -20],
   });
-}
-
-function RecenterButton() {
-  const map = useMap();
-  return (
-    <button
-      onClick={() => map.setView([INDIA_CENTER.lat, INDIA_CENTER.lng], 5, { animate: true })}
-      className="absolute bottom-4 right-4 z-[1000] w-10 h-10 rounded-xl bg-card/90 backdrop-blur-sm border border-border flex items-center justify-center shadow-lg hover:bg-secondary transition-colors"
-      title="Re-center map"
-    >
-      <Crosshair className="w-5 h-5 text-accent" />
-    </button>
-  );
-}
 
 interface CampaignMapViewProps {
   campaigns: Array<{
@@ -60,37 +48,28 @@ const CampaignMapView = ({ campaigns }: CampaignMapViewProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative rounded-2xl overflow-hidden border border-border h-[320px] opacity-0 animate-fade-up" style={{ animationFillMode: "forwards" }}>
+    <div style={{ height: "300px", width: "100%", position: "relative" }} className="rounded-2xl overflow-hidden border border-border">
       <MapContainer
-        center={[INDIA_CENTER.lat, INDIA_CENTER.lng]}
+        key="campaign-map"
+        center={[20.5937, 78.9629]}
         zoom={5}
         scrollWheelZoom={false}
-        className="h-full w-full"
-        style={{ background: "hsl(var(--background))" }}
+        style={{ height: "300px", width: "100%" }}
         attributionControl={false}
       >
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-        />
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {campaigns.map((campaign) => {
-          const loc = campaignLocations[campaign.id];
-          if (!loc) return null;
+          const pos = brandLocations[campaign.brand] || [20.5937, 78.9629];
           return (
-            <Marker
-              key={campaign.id}
-              position={[loc.lat, loc.lng]}
-              icon={createBrandIcon(campaign.logo)}
-            >
-              <Popup className="brand-map-popup">
-                <div className="flex flex-col gap-2 min-w-[180px] p-1">
-                  <p className="font-heading font-bold text-sm text-foreground leading-tight">{campaign.title}</p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-muted-foreground">{loc.city}</span>
-                    <span className="text-[10px] font-semibold text-accent">{campaign.budget}</span>
-                  </div>
+            <Marker key={campaign.id} position={pos} icon={customIcon(campaign.brand)}>
+              <Popup>
+                <div className="flex flex-col gap-2 min-w-[160px] p-1">
+                  <p className="font-bold text-sm">{campaign.brand}</p>
+                  <p className="text-xs">{campaign.title}</p>
+                  <span className="text-xs font-semibold text-amber-600">{campaign.budget}</span>
                   <Button
                     size="sm"
-                    className="h-7 text-[11px] rounded-lg bg-accent hover:bg-accent/90 text-accent-foreground"
+                    className="h-7 text-[11px] rounded-lg"
                     onClick={() => navigate(`/campaigns/${campaign.id}`)}
                   >
                     Apply Now
@@ -100,7 +79,6 @@ const CampaignMapView = ({ campaigns }: CampaignMapViewProps) => {
             </Marker>
           );
         })}
-        <RecenterButton />
       </MapContainer>
     </div>
   );

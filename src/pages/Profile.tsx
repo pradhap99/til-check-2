@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, ChevronRight, Shield, HelpCircle, FileText, BarChart3, Wallet, Instagram, Youtube, Twitter, Linkedin, CheckCircle, Users, Radio, Sparkles } from "lucide-react";
+import CreatorLevelBadge from "@/components/CreatorLevelBadge";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
@@ -77,6 +78,13 @@ const Profile = () => {
               <p className="text-[10px] text-muted-foreground mt-0.5">{stat.label}</p>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Creator Level Badge */}
+      {role === "creator" && (
+        <div className="px-5 mt-4">
+          <CreatorLevelBadge followers={45000} engagementRate={5.2} completedCampaigns={3} size="lg" showProgress showBenefits />
         </div>
       )}
 

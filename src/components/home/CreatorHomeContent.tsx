@@ -5,8 +5,7 @@ import HeroBannerCarousel from "./HeroBannerCarousel";
 import BrandCirclesRow from "./BrandCirclesRow";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
-import CreatorLevelBadge from "@/components/CreatorLevelBadge";
-import { ArrowRight, Briefcase, FileText, Shield, Wallet, MapPin, Heart, TrendingUp, Star, Zap, Target, ChevronRight, Award, List, Map } from "lucide-react";
+import { ArrowRight, Briefcase, FileText, Shield, Wallet, MapPin, Heart, TrendingUp, Star, Target, ChevronRight, List, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CampaignMapView = lazy(() => import("./CampaignMapView"));
@@ -89,14 +88,8 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
     : brandFiltered.filter(c => chipCategoryMap[selectedChip]?.includes(c.category)).slice(0, 4);
   const displayCampaigns = filteredCampaigns.length > 0 ? filteredCampaigns : brandFiltered.slice(0, 3);
 
-  const profileStrength = 78;
 
-  const displayStats = {
-    totalEarnings: stats.totalEarnings || 47500,
-    pendingPayments: stats.pendingPayments || 12500,
-    activeCampaigns: stats.activeCampaigns || 3,
-    applicationsCount: stats.applicationsCount || 7,
-  };
+
 
   return (
     <>
@@ -115,72 +108,6 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
             </Link>
           ))}
         </div>
-      </section>
-
-      {/* Stats Widget */}
-      <section className="px-5 mt-4">
-        <div className="rounded-2xl p-5 bg-[hsl(222,47%,11%)] border border-accent/20 shadow-[0_0_30px_-10px_hsl(262,83%,58%,0.2)]">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-[10px] text-purple-300 uppercase tracking-widest font-heading font-medium">Total Earnings</p>
-              <p className="text-2xl font-heading font-bold text-white mt-1">
-                {statsLoading ? "..." : `₹${displayStats.totalEarnings.toLocaleString("en-IN")}`}
-              </p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-accent" />
-            </div>
-          </div>
-          <svg className="w-full h-8 mt-3" viewBox="0 0 200 30">
-            <polyline fill="none" stroke="hsl(262, 83%, 58%)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points="0,25 20,20 40,22 60,15 80,18 100,10 120,12 140,8 160,5 180,7 200,3" opacity="0.6" />
-          </svg>
-          <div className="flex gap-2 mt-3">
-            <div className="flex-1 bg-white/10 rounded-xl px-3 py-2 text-center">
-              <p className="text-[10px] text-purple-200">Active</p>
-              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : displayStats.activeCampaigns}</p>
-            </div>
-            <div className="flex-1 bg-white/10 rounded-xl px-3 py-2 text-center">
-              <p className="text-[10px] text-purple-200">Applied</p>
-              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : displayStats.applicationsCount}</p>
-            </div>
-            <div className="flex-1 bg-white/10 rounded-xl px-3 py-2 text-center">
-              <p className="text-[10px] text-purple-200">Pending</p>
-              <p className="text-sm font-heading font-bold text-white">{statsLoading ? "—" : `₹${displayStats.pendingPayments.toLocaleString("en-IN")}`}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* This Week + Profile Strength */}
-      <section className="px-5 mt-4">
-        <div className="grid grid-cols-2 gap-2.5">
-          <div className="border border-border rounded-2xl p-3.5 bg-card">
-            <div className="flex items-center gap-1.5 mb-2">
-              <Zap className="w-3.5 h-3.5 text-accent" />
-              <p className="text-[10px] font-heading font-semibold text-foreground">This Week</p>
-            </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              <span className="text-foreground font-medium">3 new campaigns</span> matched to your profile
-            </p>
-            <span className="inline-flex items-center gap-1 mt-2 text-[9px] text-accent font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> View matches
-            </span>
-          </div>
-          <div className="border border-border rounded-2xl p-3.5 bg-card">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-[10px] font-heading font-semibold text-foreground">Profile Strength</p>
-              <div className="relative w-10 h-10">
-                <svg className="w-10 h-10 -rotate-90" viewBox="0 0 36 36">
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="hsl(var(--secondary))" strokeWidth="3" />
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="hsl(var(--accent))" strokeWidth="3" strokeDasharray={`${profileStrength} ${100 - profileStrength}`} strokeLinecap="round" />
-                </svg>
-                <span className="absolute inset-0 flex items-center justify-center text-[9px] font-heading font-bold text-foreground">{profileStrength}%</span>
-              </div>
-            </div>
-            <p className="text-[9px] text-muted-foreground leading-relaxed">Complete profile to unlock 2x more campaigns</p>
-          </div>
-        </div>
-        <CreatorLevelBadge followers={45000} engagementRate={5.2} completedCampaigns={3} size="lg" showProgress showBenefits />
       </section>
 
       {/* Browse by Experience */}
