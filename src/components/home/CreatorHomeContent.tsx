@@ -93,6 +93,8 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
 
   return (
     <>
+      <BrandCirclesRow selectedBrand={selectedBrand} onSelectBrand={setSelectedBrand} />
+      <ExploreBanner />
       <HeroBannerCarousel />
 
       {/* Quick Actions */}
