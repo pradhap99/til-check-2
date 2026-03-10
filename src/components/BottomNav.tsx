@@ -1,5 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
-import { Home, Search, Briefcase, MessageCircle, User, CalendarDays } from "lucide-react";
+import { Home, Bell, Briefcase, User, CalendarDays } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const BottomNav = () => {
@@ -7,10 +7,10 @@ const BottomNav = () => {
   const { role } = useAuth();
 
   const tabs = [
-    { icon: Home, label: "Home", to: "/home" },
+    { icon: Bell, label: "Alerts", to: "/alerts" },
     { icon: CalendarDays, label: "Calendar", to: "/calendar" },
+    { icon: Home, label: "Home", to: "/home" },
     { icon: Briefcase, label: "Campaigns", to: "/campaigns" },
-    { icon: MessageCircle, label: "Messages", to: "/messages" },
     { icon: User, label: "Profile", to: "/profile" },
   ];
 

@@ -2,6 +2,8 @@ import { useState, lazy, Suspense } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { campaigns, creators } from "@/data/mockData";
 import HeroBannerCarousel from "./HeroBannerCarousel";
+import BrandCirclesRow from "./BrandCirclesRow";
+import ExploreBanner from "./ExploreBanner";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
 import CreatorLevelBadge from "@/components/CreatorLevelBadge";
@@ -62,16 +64,22 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
   const navigate = useNavigate();
   const [selectedChip, setSelectedChip] = useState("all");
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
 
   const allCampaigns = campaigns.map(c => ({
     ...c, compensationType: c.budget.includes("L") ? "Paid" : "Barter",
     tagline: c.description?.slice(0, 60),
   }));
 
+  // Apply brand filter if selected
+  const brandFiltered = selectedBrand
+    ? allCampaigns.filter(c => c.brand === selectedBrand)
+    : allCampaigns;
+
   const filteredCampaigns = selectedChip === "all"
-    ? allCampaigns.slice(0, 4)
-    : allCampaigns.filter(c => chipCategoryMap[selectedChip]?.includes(c.category)).slice(0, 4);
-  const displayCampaigns = filteredCampaigns.length > 0 ? filteredCampaigns : allCampaigns.slice(0, 3);
+    ? brandFiltered.slice(0, 4)
+    : brandFiltered.filter(c => chipCategoryMap[selectedChip]?.includes(c.category)).slice(0, 4);
+  const displayCampaigns = filteredCampaigns.length > 0 ? filteredCampaigns : brandFiltered.slice(0, 3);
 
   const profileStrength = 78;
 
@@ -85,6 +93,8 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
 
   return (
     <>
+      <BrandCirclesRow selectedBrand={selectedBrand} onSelectBrand={setSelectedBrand} />
+      <ExploreBanner />
       <HeroBannerCarousel />
 
       {/* Quick Actions */}
