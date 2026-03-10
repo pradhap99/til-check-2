@@ -60,6 +60,7 @@ interface CreatorHomeContentProps {
 
 const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeContentProps) => {
   const navigate = useNavigate();
+  const [selectedChip, setSelectedChip] = useState("all");
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
 
   const allCampaigns = campaigns.map(c => ({
