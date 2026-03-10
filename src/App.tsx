@@ -39,6 +39,7 @@ import Pricing from "./pages/Pricing";
 import Community from "./pages/Community";
 import Channels from "./pages/Channels";
 import CalendarEvents from "./pages/CalendarEvents";
+import Alerts from "./pages/Alerts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
