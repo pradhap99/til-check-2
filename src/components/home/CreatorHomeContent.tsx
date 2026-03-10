@@ -6,7 +6,7 @@ import BrandCirclesRow from "./BrandCirclesRow";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
 import CreatorLevelBadge from "@/components/CreatorLevelBadge";
-import { ArrowRight, Briefcase, FileText, Shield, Wallet, MapPin, Heart, TrendingUp, Star, Zap, Target, ChevronRight, Award, List, Map } from "lucide-react";
+import { ArrowRight, Briefcase, FileText, Shield, Wallet, MapPin, Heart, TrendingUp, Star, Target, ChevronRight, List, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CampaignMapView = lazy(() => import("./CampaignMapView"));
