@@ -88,14 +88,8 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
     : brandFiltered.filter(c => chipCategoryMap[selectedChip]?.includes(c.category)).slice(0, 4);
   const displayCampaigns = filteredCampaigns.length > 0 ? filteredCampaigns : brandFiltered.slice(0, 3);
 
-  const profileStrength = 78;
 
-  const displayStats = {
-    totalEarnings: stats.totalEarnings || 47500,
-    pendingPayments: stats.pendingPayments || 12500,
-    activeCampaigns: stats.activeCampaigns || 3,
-    applicationsCount: stats.applicationsCount || 7,
-  };
+
 
   return (
     <>
