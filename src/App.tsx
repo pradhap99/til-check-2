@@ -88,7 +88,7 @@ const App = () => (
               <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
               <Route path="/channels" element={<ProtectedRoute><Channels /></ProtectedRoute>} />
               <Route path="/calendar" element={<ProtectedRoute><CalendarEvents /></ProtectedRoute>} />
-              <Route path="*" element={<NotFound />} />
+              <Route path="/alerts" element={<ProtectedRoute><Alerts /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </OnboardingProvider>
