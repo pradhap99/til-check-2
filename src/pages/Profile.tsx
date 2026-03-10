@@ -81,6 +81,13 @@ const Profile = () => {
         </div>
       )}
 
+      {/* Creator Level Badge */}
+      {role === "creator" && (
+        <div className="px-5 mt-4">
+          <CreatorLevelBadge followers={45000} engagementRate={5.2} completedCampaigns={3} size="lg" showProgress showBenefits />
+        </div>
+      )}
+
       {/* Social Platforms */}
       {role === "creator" && socialPlatforms.length > 0 && (
         <div className="px-5 mt-3">

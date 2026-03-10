@@ -5,7 +5,6 @@ import HeroBannerCarousel from "./HeroBannerCarousel";
 import BrandCirclesRow from "./BrandCirclesRow";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
-import CreatorLevelBadge from "@/components/CreatorLevelBadge";
 import { ArrowRight, Briefcase, FileText, Shield, Wallet, MapPin, Heart, TrendingUp, Star, Target, ChevronRight, List, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
