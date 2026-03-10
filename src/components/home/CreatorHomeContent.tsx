@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { campaigns, creators } from "@/data/mockData";
 import HeroBannerCarousel from "./HeroBannerCarousel";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
 import CreatorLevelBadge from "@/components/CreatorLevelBadge";
-import { ArrowRight, Briefcase, FileText, Shield, Wallet, MapPin, Heart, TrendingUp, Star, Zap, Target, ChevronRight, Award } from "lucide-react";
+import { ArrowRight, Briefcase, FileText, Shield, Wallet, MapPin, Heart, TrendingUp, Star, Zap, Target, ChevronRight, Award, List, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const CampaignMapView = lazy(() => import("./CampaignMapView"));
 
 const chipCategoryMap: Record<string, string[]> = {
   all: [], cafes: ["Food"], dining: ["Food"], staycations: ["Travel"],

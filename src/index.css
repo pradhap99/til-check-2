@@ -317,4 +317,20 @@
     background: linear-gradient(135deg, hsl(142 71% 45%), hsl(180 60% 45%));
     color: white;
   }
+
+  /* Leaflet map popup overrides */
+  .leaflet-popup-content-wrapper {
+    background: hsl(var(--card)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 8px 30px -10px rgba(0, 0, 0, 0.4) !important;
+    color: hsl(var(--foreground)) !important;
+  }
+  .leaflet-popup-tip {
+    background: hsl(var(--card)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+  }
+  .leaflet-popup-close-button {
+    color: hsl(var(--muted-foreground)) !important;
+  }
 }
