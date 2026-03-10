@@ -342,4 +342,16 @@
     0%, 100% { box-shadow: 0 0 8px hsl(45, 93%, 58%, 0.3); }
     50% { box-shadow: 0 0 20px hsl(45, 93%, 58%, 0.5), 0 0 40px hsl(45, 93%, 58%, 0.15); }
   }
+
+  /* Premium search bar animated border */
+  .search-bar-premium {
+    background: linear-gradient(90deg, hsl(45,93%,58%), hsl(262,83%,58%), hsl(45,93%,58%));
+    background-size: 200% 100%;
+    animation: searchShimmer 3s linear infinite;
+    box-shadow: inset 0 0 12px hsl(262,83%,58%,0.1), 0 0 8px hsl(45,93%,58%,0.08);
+  }
+  @keyframes searchShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
 }
