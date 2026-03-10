@@ -2,6 +2,8 @@ import { useState, lazy, Suspense } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { campaigns, creators } from "@/data/mockData";
 import HeroBannerCarousel from "./HeroBannerCarousel";
+import BrandCirclesRow from "./BrandCirclesRow";
+import ExploreBanner from "./ExploreBanner";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
 import CreatorLevelBadge from "@/components/CreatorLevelBadge";
