@@ -177,15 +177,39 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
       <section className="mt-5">
         <div className="flex items-center justify-between px-5 mb-3">
           <h3 className="font-heading font-bold text-[15px] text-foreground">Featured Opportunities</h3>
-          <Link to="/campaigns" className="text-xs text-muted-foreground hover:text-foreground font-medium flex items-center gap-0.5 transition-colors">
-            View all <ArrowRight className="w-3 h-3" />
-          </Link>
+          <div className="flex items-center gap-2">
+            <div className="flex bg-secondary rounded-lg p-0.5">
+              <button
+                onClick={() => setViewMode("list")}
+                className={`w-7 h-7 rounded-md flex items-center justify-center transition-all ${viewMode === "list" ? "bg-accent text-accent-foreground shadow-sm" : "text-muted-foreground"}`}
+              >
+                <List className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setViewMode("map")}
+                className={`w-7 h-7 rounded-md flex items-center justify-center transition-all ${viewMode === "map" ? "bg-accent text-accent-foreground shadow-sm" : "text-muted-foreground"}`}
+              >
+                <Map className="w-3.5 h-3.5" />
+              </button>
+            </div>
+            <Link to="/campaigns" className="text-xs text-muted-foreground hover:text-foreground font-medium flex items-center gap-0.5 transition-colors">
+              View all <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
         </div>
-        <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 pb-2">
-          {displayCampaigns.map((campaign, i) => (
-            <FeaturedCampaignCard key={campaign.id} campaign={campaign} index={i} />
-          ))}
-        </div>
+        {viewMode === "list" ? (
+          <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 pb-2">
+            {displayCampaigns.map((campaign, i) => (
+              <FeaturedCampaignCard key={campaign.id} campaign={campaign} index={i} />
+            ))}
+          </div>
+        ) : (
+          <div className="px-5">
+            <Suspense fallback={<div className="h-[320px] rounded-2xl bg-secondary animate-pulse" />}>
+              <CampaignMapView campaigns={allCampaigns} />
+            </Suspense>
+          </div>
+        )}
       </section>
 
       <RecommendationCarousel />
