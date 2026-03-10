@@ -38,6 +38,7 @@ import ManagedServices from "./pages/ManagedServices";
 import Pricing from "./pages/Pricing";
 import Community from "./pages/Community";
 import Channels from "./pages/Channels";
+import CalendarEvents from "./pages/CalendarEvents";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -85,6 +86,8 @@ const App = () => (
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/community" element={<ProtectedRoute><Community /></ProtectedRoute>} />
               <Route path="/channels" element={<ProtectedRoute><Channels /></ProtectedRoute>} />
+              <Route path="/calendar" element={<ProtectedRoute><CalendarEvents /></ProtectedRoute>} />
+              <Route path="*" element={<NotFound />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </OnboardingProvider>
