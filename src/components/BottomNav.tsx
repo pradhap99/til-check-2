@@ -8,7 +8,7 @@ const BottomNav = () => {
 
   const tabs = [
     { icon: Home, label: "Home", to: "/home" },
-    { icon: Search, label: role === "brand" ? "Creators" : "Discover", to: "/creators" },
+    { icon: CalendarDays, label: "Calendar", to: "/calendar" },
     { icon: Briefcase, label: "Campaigns", to: "/campaigns" },
     { icon: MessageCircle, label: "Messages", to: "/messages" },
     { icon: User, label: "Profile", to: "/profile" },
