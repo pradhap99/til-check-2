@@ -19,7 +19,9 @@ const floatingAvatars = [
 
 const Auth = () => {
   const [mode, setMode] = useState<Mode>("login");
-  const [role, setRole] = useState<Role>("creator");
+  const searchParams = new URLSearchParams(window.location.search);
+  const initialRole = searchParams.get("role") === "brand" ? "brand" : "creator";
+  const [role, setRole] = useState<Role>(initialRole);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -51,7 +53,7 @@ const Auth = () => {
       if (error) {
         toast({ title: "Login failed", description: error.message, variant: "destructive" });
       } else {
-        navigate("/home");
+        navigate(role === "brand" ? "/brand/dashboard" : "/home");
       }
     } else {
       const { error } = await signUp(email, password, fullName, role);
@@ -61,7 +63,7 @@ const Auth = () => {
         toast({ title: "Account created", description: "Signing you in..." });
         const { error: loginErr } = await signIn(email, password);
         if (!loginErr) {
-          navigate("/home");
+          navigate(role === "brand" ? "/brand/dashboard" : "/home");
         }
       }
     }
@@ -119,11 +121,13 @@ const Auth = () => {
             {mode === "login" ? "Welcome back" : mode === "signup" ? "Create account" : "Reset password"}
           </h2>
           <p className="text-sm text-white/50 mt-1 mb-6">
-            {mode === "login" ? "Sign in to continue" : mode === "signup" ? "Get started with TIL" : "We'll send you a reset link"}
+            {mode === "login"
+              ? (role === "brand" ? "Sign in to manage your campaigns" : "Sign in to continue")
+              : mode === "signup" ? "Get started with TIL" : "We'll send you a reset link"}
           </p>
 
-          {mode === "signup" && (
-            <div className="flex gap-1 mb-6 p-1 rounded-lg" style={{ background: "rgba(255,255,255,0.08)" }}>
+          {mode !== "forgot" && (
+            <div className="flex gap-1 mb-4 p-1 rounded-lg" style={{ background: "rgba(255,255,255,0.08)" }}>
               {(["creator", "brand"] as Role[]).map((r) => (
                 <button
                   key={r}
@@ -138,6 +142,9 @@ const Auth = () => {
               ))}
             </div>
           )}
+
+
+
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "signup" && (

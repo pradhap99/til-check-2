@@ -1,15 +1,15 @@
 import { useLocation, Link } from "react-router-dom";
-import { LayoutDashboard, Megaphone, Users, IndianRupee, User } from "lucide-react";
+import { LayoutDashboard, Megaphone, Users, Wallet, Building2 } from "lucide-react";
 
 const BrandBottomNav = () => {
   const location = useLocation();
 
   const tabs = [
     { icon: LayoutDashboard, label: "Dashboard", to: "/brand/dashboard" },
-    { icon: Megaphone, label: "Campaigns", to: "/campaigns" },
-    { icon: Users, label: "Applicants", to: "/brand/applications" },
-    { icon: IndianRupee, label: "Payments", to: "/earnings" },
-    { icon: User, label: "Profile", to: "/profile" },
+    { icon: Megaphone, label: "Campaigns", to: "/brand/campaigns" },
+    { icon: Users, label: "Creators", to: "/brand/creators" },
+    { icon: Wallet, label: "Payments", to: "/brand/payments" },
+    { icon: Building2, label: "Account", to: "/brand/account" },
   ];
 
   return (
