@@ -19,7 +19,9 @@ const floatingAvatars = [
 
 const Auth = () => {
   const [mode, setMode] = useState<Mode>("login");
-  const [role, setRole] = useState<Role>("creator");
+  const searchParams = new URLSearchParams(window.location.search);
+  const initialRole = searchParams.get("role") === "brand" ? "brand" : "creator";
+  const [role, setRole] = useState<Role>(initialRole);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
