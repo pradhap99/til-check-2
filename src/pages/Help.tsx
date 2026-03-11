@@ -76,6 +76,12 @@ const Help = () => {
               </AccordionItem>
             ))}
           </Accordion>
+
+          <div className="mt-4">
+            <Button variant="outline" size="sm" className="w-full h-10 rounded-xl text-xs" onClick={() => navigate("/docs")}>
+              <BookOpen className="w-3.5 h-3.5" /> Platform Documentation
+            </Button>
+          </div>
         </div>
       </div>
     </Layout>

@@ -249,9 +249,24 @@ const Earnings = () => {
 
         {/* Escrow link */}
         <div className="px-4 mb-6">
-          <Button variant="outline" size="sm" className="w-full h-10 rounded-xl text-xs" onClick={() => navigate("/escrow")}>
-            <Shield className="w-3.5 h-3.5" /> View Escrow <ChevronRight className="w-3 h-3" />
-          </Button>
+          <div className="border border-border rounded-xl p-4">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center">
+                <Shield className="w-4 h-4 text-accent" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-heading font-semibold text-foreground">Escrow & Payments</p>
+                <p className="text-[10px] text-muted-foreground">Track your milestone-based payments</p>
+              </div>
+            </div>
+            <p className="text-[10px] text-muted-foreground mb-2">In Escrow: ₹0 | Released: ₹0</p>
+            <Button
+              className="w-full h-9 rounded-xl text-xs bg-accent hover:bg-accent/90 text-accent-foreground font-heading"
+              onClick={() => navigate("/escrow")}
+            >
+              View Escrow <ChevronRight className="w-3 h-3" />
+            </Button>
+          </div>
         </div>
       </div>
     </Layout>
