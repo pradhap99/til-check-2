@@ -70,6 +70,11 @@ const Auth = () => {
     setSubmitting(false);
   };
 
+  const handleDemoLogin = (persona: typeof demoPersonas[0]) => {
+    demoLogin(persona.name, persona.role);
+    navigate(persona.role === "brand" ? "/brand/dashboard" : "/home");
+  };
+
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "hsl(222 47% 6%)" }}>
       {/* Animated drifting orbs */}
