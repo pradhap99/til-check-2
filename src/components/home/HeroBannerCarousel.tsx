@@ -67,7 +67,7 @@ const HeroBannerCarousel = ({ onSlideChange }: HeroBannerCarouselProps) => {
           </div>
         ))}
 
-        <div className="absolute top-3 right-3 bg-accent/90 backdrop-blur-sm text-accent-foreground text-[11px] font-heading font-bold px-2.5 py-1 rounded-lg z-10">
+        <div className="absolute top-3 right-3 bg-emerald-500 text-white text-[11px] font-heading font-bold px-2.5 py-1 rounded-lg z-10">
           {slides[current].badge}
         </div>
 
@@ -75,8 +75,8 @@ const HeroBannerCarousel = ({ onSlideChange }: HeroBannerCarouselProps) => {
           <h3 className="text-white font-heading font-bold text-base leading-tight">
             {slides[current].title}
           </h3>
-          <p className="text-white/70 text-xs mt-0.5 flex items-center gap-1">
-            {slides[current].subtitle} <ChevronRight className="w-3 h-3" />
+          <p className="text-[#E5E7EB] text-xs mt-0.5 flex items-center gap-1">
+            {slides[current].subtitle} <ChevronRight className="w-3 h-3 text-amber-500" />
           </p>
         </div>
 

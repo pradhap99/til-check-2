@@ -81,7 +81,7 @@ const Index = () => {
               <h1 className="text-base font-heading font-bold text-foreground tracking-tight leading-tight mt-0.5">{firstName} 👋</h1>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <div className="w-20 h-1 rounded-full bg-secondary overflow-hidden">
-                  <div className="h-full rounded-full bg-accent transition-all duration-500" style={{ width: `${levelProgress}%` }} />
+                  <div className="h-full rounded-full transition-all duration-500" style={{ width: `${levelProgress}%`, background: "linear-gradient(90deg, #f59e0b, #d97706)" }} />
                 </div>
                 <span className="text-[9px] text-muted-foreground font-medium">Lv1 · {levelProgress}%</span>
               </div>

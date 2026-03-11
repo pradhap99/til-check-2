@@ -5,13 +5,13 @@ import HeroBannerCarousel from "./HeroBannerCarousel";
 import BrandCirclesRow from "./BrandCirclesRow";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
-import { ArrowRight, MapPin, Heart, TrendingUp, Star, Target, ChevronRight, List, Map, Flame } from "lucide-react";
+import { ArrowRight, MapPin, Heart, TrendingUp, Star, Target, ChevronRight, List, Map, Flame, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CampaignMapView = lazy(() => import("./CampaignMapView"));
 
 const chipCategoryMap: Record<string, string[]> = {
-  all: [], cafes: ["Food"], dining: ["Food"], staycations: ["Travel"],
+  all: [], cafes: ["Food", "Cafe"], dining: ["Food", "Dining"], staycations: ["Travel", "Staycation"],
   photoshoots: ["Fashion", "Beauty"], beauty: ["Beauty"], fashion: ["Fashion"],
   fitness: ["Fitness"], shopping: ["Lifestyle"], events: ["Lifestyle", "Comedy"],
 };
@@ -25,6 +25,10 @@ const campaignImageMap: Record<string, string> = {
   "6": "https://images.unsplash.com/photo-1445205170230-053b83016050?w=520&h=280&fit=crop",
   "7": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=520&h=280&fit=crop",
   "8": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=520&h=280&fit=crop",
+  "cafe-001": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=520&h=280&fit=crop",
+  "cafe-002": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=520&h=280&fit=crop",
+  "dining-001": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=520&h=280&fit=crop",
+  "staycation-001": "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=520&h=280&fit=crop",
 };
 
 const campaignImages: Record<string, string> = {
@@ -36,6 +40,9 @@ const campaignImages: Record<string, string> = {
   Fitness: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=520&h=280&fit=crop",
   Travel: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=520&h=280&fit=crop",
   Gaming: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=520&h=280&fit=crop",
+  Cafe: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=520&h=280&fit=crop",
+  Dining: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=520&h=280&fit=crop",
+  Staycation: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=520&h=280&fit=crop",
 };
 
 const successStories = [
@@ -82,12 +89,12 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
       <div className="px-5 mt-4">
         <button
           onClick={() => navigate("/offers")}
-          className="w-full rounded-xl p-3 flex items-center gap-2.5 border border-amber-500/20 btn-micro animate-fade-slide-up"
+          className="w-full rounded-xl p-3 flex items-center gap-2.5 border border-accent/20 btn-micro animate-fade-slide-up"
           style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02))" }}
         >
-          <Flame className="w-4 h-4 text-amber-500 shrink-0" />
+          <Flame className="w-4 h-4 text-accent shrink-0" />
           <span className="text-xs font-heading font-medium text-foreground flex-1 text-left">New Affiliate Offers Available → Earn commissions</span>
-          <ChevronRight className="w-3.5 h-3.5 text-amber-500" />
+          <ChevronRight className="w-3.5 h-3.5 text-accent" />
         </button>
       </div>
 
@@ -113,7 +120,7 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
                 <Map className="w-3.5 h-3.5" />
               </button>
             </div>
-            <Link to="/campaigns" className="text-xs text-muted-foreground hover:text-foreground font-medium flex items-center gap-0.5 transition-colors">
+            <Link to="/campaigns" className="text-xs text-accent hover:text-accent/80 font-medium flex items-center gap-0.5 transition-colors">
               View all <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
@@ -219,13 +226,27 @@ const FeaturedCampaignCard = ({ campaign, index }: { campaign: any; index: numbe
         </button>
       </div>
       <div className="p-3">
-        <div className="flex items-center gap-2 mb-1.5">
+        <div className="flex items-center gap-2 mb-1">
           <div className="w-6 h-6 rounded-lg bg-secondary overflow-hidden flex items-center justify-center shrink-0">
-            {campaign.logo?.startsWith("http") ? <img src={campaign.logo} alt="" className="w-full h-full object-cover" /> : <span className="text-[10px] font-heading font-bold text-primary">{campaign.brand.charAt(0)}</span>}
+            {campaign.logo?.startsWith("http") ? <img src={campaign.logo} alt="" className="w-full h-full object-cover" /> : <span className="text-[10px] font-heading font-bold text-foreground">{campaign.brand.charAt(0)}</span>}
           </div>
-          <span className="text-[11px] text-muted-foreground truncate">{campaign.brand}</span>
+          <span className="text-[11px] text-foreground font-medium truncate">{campaign.brand}</span>
         </div>
-        <h4 className="text-[13px] font-heading font-semibold text-foreground leading-tight line-clamp-2">{campaign.title}</h4>
+        <h4 className="text-[13px] font-heading font-bold text-foreground leading-tight line-clamp-2">{campaign.title}</h4>
+        {/* Location */}
+        {campaign.location && (
+          <div className="flex items-center gap-1 mt-1.5">
+            <MapPin className="w-3.5 h-3.5 text-accent shrink-0" />
+            <span className="text-[11px] text-muted-foreground truncate">{campaign.location}</span>
+          </div>
+        )}
+        {/* Date */}
+        {campaign.date && (
+          <div className="flex items-center gap-1 mt-0.5">
+            <Calendar className="w-3.5 h-3.5 text-accent shrink-0" />
+            <span className="text-[11px] text-muted-foreground truncate">{campaign.date}</span>
+          </div>
+        )}
         <div className="flex items-center gap-1.5 mt-2">
           <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full ${compType === "Barter" ? "bg-accent/10 text-accent" : "bg-emerald-500/10 text-emerald-600"}`}>{compType}</span>
           <span className="text-[10px] text-muted-foreground">{slotsLeft} slots left</span>
