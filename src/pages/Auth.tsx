@@ -11,10 +11,10 @@ import { ArrowLeft, Mail, Lock, User, CheckCircle } from "lucide-react";
 type Mode = "login" | "signup" | "forgot";
 type Role = "creator" | "brand";
 
-const floatingAvatars = [
-  { initials: "PS", color: "from-pink-500 to-rose-600", delay: "0s" },
-  { initials: "VK", color: "from-blue-500 to-indigo-600", delay: "1.2s" },
-  { initials: "AJ", color: "from-amber-500 to-orange-600", delay: "2.4s" },
+const demoPersonas = [
+  { initials: "PS", name: "Priya Sharma", color: "from-pink-500 to-rose-600", delay: "0s", role: "creator" as const },
+  { initials: "VK", name: "Vikram Kumar", color: "from-blue-500 to-indigo-600", delay: "1.2s", role: "creator" as const },
+  { initials: "AJ", name: "Ajay Jain", color: "from-amber-500 to-orange-600", delay: "2.4s", role: "brand" as const },
 ];
 
 const Auth = () => {
@@ -26,7 +26,7 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, demoLogin } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -70,6 +70,11 @@ const Auth = () => {
     setSubmitting(false);
   };
 
+  const handleDemoLogin = (persona: typeof demoPersonas[0]) => {
+    demoLogin(persona.name, persona.role);
+    navigate(persona.role === "brand" ? "/brand/dashboard" : "/home");
+  };
+
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "hsl(222 47% 6%)" }}>
       {/* Animated drifting orbs */}
@@ -92,20 +97,24 @@ const Auth = () => {
           <p className="text-sm text-white/60 mt-1 font-medium">India's Creator Economy Platform</p>
         </div>
 
-        {/* Floating Avatars */}
-        <div className="flex items-center gap-4 mb-8">
-          {floatingAvatars.map((av, i) => (
-            <div
+        {/* Demo Avatar Buttons */}
+        <div className="flex items-center gap-4 mb-4">
+          {demoPersonas.map((av, i) => (
+            <button
               key={i}
-              className="animate-float-avatar"
+              className="animate-float-avatar flex flex-col items-center gap-1 group"
               style={{ animationDelay: av.delay }}
+              onClick={() => handleDemoLogin(av)}
             >
-              <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${av.color} flex items-center justify-center shadow-lg`}>
+              <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${av.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
                 <span className="text-white font-heading font-bold text-sm">{av.initials}</span>
               </div>
-            </div>
+              <span className="text-[8px] text-white/40 font-medium">{av.name.split(" ")[0]}</span>
+              <span className="text-[7px] text-white/25">{av.role === "brand" ? "Brand" : "Creator"}</span>
+            </button>
           ))}
         </div>
+        <p className="text-[10px] text-white/30 mb-4">↑ Tap an avatar for instant demo login</p>
 
         {/* Glass Form Card */}
         <div
