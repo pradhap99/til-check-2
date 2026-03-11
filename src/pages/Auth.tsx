@@ -143,22 +143,8 @@ const Auth = () => {
             </div>
           )}
 
-          {mode === "signup" && (
-            <div className="flex gap-1 mb-6 p-1 rounded-lg" style={{ background: "rgba(255,255,255,0.08)" }}>
-              {(["creator", "brand"] as Role[]).map((r) => (
-                <button
-                  key={r}
-                  onClick={() => setRole(r)}
-                  className={`flex-1 py-2.5 rounded-md text-sm font-medium transition-all btn-micro ${
-                    role === r ? "text-black shadow-sm" : "text-white/60 hover:text-white"
-                  }`}
-                  style={role === r ? { background: "#f59e0b" } : {}}
-                >
-                  {r === "creator" ? "Creator" : "Brand"}
-                </button>
-              ))}
-            </div>
-          )}
+
+
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "signup" && (
