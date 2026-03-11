@@ -121,8 +121,27 @@ const Auth = () => {
             {mode === "login" ? "Welcome back" : mode === "signup" ? "Create account" : "Reset password"}
           </h2>
           <p className="text-sm text-white/50 mt-1 mb-6">
-            {mode === "login" ? "Sign in to continue" : mode === "signup" ? "Get started with TIL" : "We'll send you a reset link"}
+            {mode === "login"
+              ? (role === "brand" ? "Sign in to manage your campaigns" : "Sign in to continue")
+              : mode === "signup" ? "Get started with TIL" : "We'll send you a reset link"}
           </p>
+
+          {mode !== "forgot" && (
+            <div className="flex gap-1 mb-4 p-1 rounded-lg" style={{ background: "rgba(255,255,255,0.08)" }}>
+              {(["creator", "brand"] as Role[]).map((r) => (
+                <button
+                  key={r}
+                  onClick={() => setRole(r)}
+                  className={`flex-1 py-2.5 rounded-md text-sm font-medium transition-all btn-micro ${
+                    role === r ? "text-black shadow-sm" : "text-white/60 hover:text-white"
+                  }`}
+                  style={role === r ? { background: "#f59e0b" } : {}}
+                >
+                  {r === "creator" ? "Creator" : "Brand"}
+                </button>
+              ))}
+            </div>
+          )}
 
           {mode === "signup" && (
             <div className="flex gap-1 mb-6 p-1 rounded-lg" style={{ background: "rgba(255,255,255,0.08)" }}>
