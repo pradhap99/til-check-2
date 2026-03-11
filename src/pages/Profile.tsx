@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, ChevronRight, Shield, HelpCircle, FileText, BarChart3, Wallet, Instagram, Youtube, Twitter, Linkedin, CheckCircle, Users, Radio, Sparkles, Sun, Moon } from "lucide-react";
+import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, ChevronRight, Shield, HelpCircle, FileText, BarChart3, Wallet, Instagram, Youtube, Twitter, Linkedin, CheckCircle, Users, Radio, Sparkles, Sun, Moon, BookOpen } from "lucide-react";
 import CreatorLevelBadge from "@/components/CreatorLevelBadge";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/contexts/ThemeContext";
