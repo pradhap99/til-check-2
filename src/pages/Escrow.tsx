@@ -26,30 +26,39 @@ const escrowStatusConfig: Record<string, { color: string; label: string; icon: a
   locked: { color: "bg-secondary text-muted-foreground", label: "Locked", icon: Lock },
 };
 
+const smartReleaseSteps = [
+  { emoji: "🎯", label: "Brand Posts Campaign" },
+  { emoji: "💰", label: "Brand Funds Escrow (100% held)" },
+  { emoji: "✅", label: "Creator Accepted" },
+  { emoji: "📊", label: "Creator Posts Content" },
+  { emoji: "🔄", label: "Engagement Tracked (7 days)" },
+  { emoji: "💸", label: "Milestone 1 Released" },
+  { emoji: "🏆", label: "Milestone 2 Released" },
+  { emoji: "⚠", label: "7-day Dispute Window" },
+];
+
+const releaseTiers = [
+  { tier: "Tier 1", pct: "0%", trigger: "On Acceptance", status: "locked" },
+  { tier: "Tier 2", pct: "30%", trigger: "On Content Published + 500 engagements", status: "pending" },
+  { tier: "Tier 3", pct: "40%", trigger: "On 2,000 engagements within 7 days", status: "pending" },
+  { tier: "Tier 4", pct: "30%", trigger: "On Campaign Completion + Brand Approval", status: "locked" },
+];
+
 const exampleEscrows = [
   {
-    id: "ex-1",
-    title: "Summer Audio Launch 2026",
-    creator: "Priya Sharma (@priyafashion)",
-    total: 60000,
-    upfront: 30000, upfrontStatus: "released" as const, upfrontDate: "Mar 1, 2026",
+    id: "ex-1", title: "Summer Audio Launch 2026", creator: "Priya Sharma (@priyafashion)",
+    total: 60000, upfront: 30000, upfrontStatus: "released" as const, upfrontDate: "Mar 1, 2026",
     completion: 30000, completionStatus: "held" as const,
     progress: 75, totalDels: 4, approvedDels: 3,
     remaining: "Instagram Stories (x3) - Submitted, under review",
-    disputeWindow: "Active until Mar 15, 2026",
-    isActive: true,
+    disputeWindow: "Active until Mar 15, 2026", isActive: true,
   },
   {
-    id: "ex-2",
-    title: "Mamaearth Skincare Review",
-    creator: "Neha Kapoor (@nehabeauty)",
-    total: 45000,
-    upfront: 22500, upfrontStatus: "released" as const, upfrontDate: "Feb 28, 2026",
+    id: "ex-2", title: "Mamaearth Skincare Review", creator: "Neha Kapoor (@nehabeauty)",
+    total: 45000, upfront: 22500, upfrontStatus: "released" as const, upfrontDate: "Feb 28, 2026",
     completion: 22500, completionStatus: "released" as const,
     progress: 100, totalDels: 3, approvedDels: 3,
-    remaining: null,
-    disputeWindow: null,
-    isActive: false,
+    remaining: null, disputeWindow: null, isActive: false,
   },
 ];
 
@@ -170,37 +179,50 @@ const Escrow = () => {
         </div>
       </div>
 
-      {/* How Escrow Works - Visual Timeline */}
+      {/* How Smart Escrow Works - Updated timeline */}
       <div className="px-4 mt-4">
         <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <Shield className="w-4 h-4 text-primary" />
-            <p className="text-xs font-heading font-semibold text-foreground">How Escrow Protects Both Parties</p>
+            <p className="text-xs font-heading font-semibold text-foreground">Smart Escrow Flow</p>
           </div>
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
-            {[
-              { step: "1", label: "Accept\nCreator", icon: "✅" },
-              { step: "", label: "", icon: "→" },
-              { step: "2", label: "50%\nReleased", icon: "💰" },
-              { step: "", label: "", icon: "→" },
-              { step: "3", label: "Creator\nDelivers", icon: "📦" },
-              { step: "", label: "", icon: "→" },
-              { step: "4", label: "You\nApprove", icon: "👍" },
-              { step: "", label: "", icon: "→" },
-              { step: "5", label: "50%\nAuto-Released", icon: "🎉" },
-              { step: "", label: "", icon: "→" },
-              { step: "6", label: "7-day\nDispute", icon: "🛡️" },
-            ].map((s, i) => (
-              s.step ? (
-                <div key={i} className="flex flex-col items-center shrink-0 min-w-[48px]">
-                  <span className="text-sm">{s.icon}</span>
-                  <p className="text-[8px] text-muted-foreground text-center mt-0.5 whitespace-pre-line leading-tight">{s.label}</p>
+            {smartReleaseSteps.map((s, i) => (
+              <div key={i} className="flex items-center shrink-0">
+                <div className="flex flex-col items-center min-w-[48px]">
+                  <span className="text-sm">{s.emoji}</span>
+                  <p className="text-[7px] text-muted-foreground text-center mt-0.5 leading-tight max-w-[52px]">{s.label}</p>
                 </div>
-              ) : (
-                <span key={i} className="text-muted-foreground text-xs shrink-0">→</span>
-              )
+                {i < smartReleaseSteps.length - 1 && <span className="text-muted-foreground text-[8px] shrink-0 mx-0.5">→</span>}
+              </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Smart Release System Card */}
+      <div className="px-4 mt-3">
+        <div className="border border-accent/20 rounded-xl p-4" style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.05), transparent)" }}>
+          <div className="flex items-center gap-2 mb-1">
+            <Shield className="w-4 h-4 text-accent" />
+            <p className="text-xs font-heading font-bold text-foreground">Smart Release System</p>
+          </div>
+          <p className="text-[9px] text-muted-foreground mb-3">Powered by TIL Smart Contracts</p>
+          <div className="space-y-2">
+            {releaseTiers.map((tier, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <span className="text-[10px] font-heading font-bold text-accent w-8 shrink-0">{tier.pct}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-heading font-medium text-foreground">{tier.tier}</p>
+                  <p className="text-[9px] text-muted-foreground truncate">{tier.trigger}</p>
+                </div>
+                <Badge className={`text-[8px] border-0 font-heading shrink-0 ${tier.status === "locked" ? "bg-secondary text-muted-foreground" : "bg-yellow-500/10 text-yellow-600"}`}>
+                  {tier.status === "locked" ? "🔒 Locked" : "⏳ Pending"}
+                </Badge>
+              </div>
+            ))}
+          </div>
+          <p className="text-[8px] text-muted-foreground mt-2 italic">Auto-release after 14 days if no dispute</p>
         </div>
       </div>
 
@@ -212,7 +234,6 @@ const Escrow = () => {
           <div className="text-center py-16"><div className="w-8 h-8 rounded-xl bg-primary/20 animate-pulse mx-auto" /></div>
         ) : (
           <>
-            {/* Real escrows */}
             {escrows.map((escrow, i) => {
               const progress = escrow.deliverables_total > 0 ? Math.round((escrow.deliverables_approved / escrow.deliverables_total) * 100) : 0;
               return (
@@ -242,7 +263,6 @@ const Escrow = () => {
               );
             })}
 
-            {/* Example escrows when no real ones */}
             {!hasRealEscrows && (
               <>
                 <div className="flex items-center gap-2 mt-1">
@@ -267,14 +287,10 @@ const Escrow = () => {
                         </div>
                       </div>
                     </div>
-
                     <div className="border-t border-border">
-                      {/* Upfront */}
                       <div className="px-4 py-3 flex items-center justify-between border-b border-border">
                         <div className="flex items-center gap-3">
-                          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
-                            <Unlock className="w-3.5 h-3.5" />
-                          </div>
+                          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-primary/10 text-primary"><Unlock className="w-3.5 h-3.5" /></div>
                           <div>
                             <p className="text-xs font-heading font-medium text-foreground">Upfront (50%)</p>
                             <p className="text-[10px] text-muted-foreground">₹{ex.upfront.toLocaleString("en-IN")} • {ex.upfrontDate}</p>
@@ -282,7 +298,6 @@ const Escrow = () => {
                         </div>
                         <Badge className="bg-primary/10 text-primary border-0 text-[9px]">✅ Released</Badge>
                       </div>
-                      {/* Completion */}
                       <div className="px-4 py-3 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${ex.completionStatus === "released" ? "bg-primary/10 text-primary" : "bg-accent/10 text-accent"}`}>
@@ -298,8 +313,6 @@ const Escrow = () => {
                         </Badge>
                       </div>
                     </div>
-
-                    {/* Bottom info */}
                     {ex.remaining && (
                       <div className="px-4 py-2.5 bg-secondary/30 border-t border-border">
                         <p className="text-[10px] text-muted-foreground">Remaining: {ex.remaining}</p>
@@ -311,8 +324,6 @@ const Escrow = () => {
                         <p className="text-[10px] text-primary font-medium">✅ Campaign Completed Successfully</p>
                       </div>
                     )}
-
-                    {/* Action buttons */}
                     <div className="px-4 py-2.5 border-t border-border flex gap-2">
                       {ex.isActive ? (
                         <>
@@ -333,6 +344,13 @@ const Escrow = () => {
           </>
         )}
       </div>
+
+      {/* Help link */}
+      <div className="px-4 mb-6">
+        <Button variant="outline" size="sm" className="w-full h-10 rounded-xl text-xs" onClick={() => navigate("/help")}>
+          <Info className="w-3.5 h-3.5" /> How TIL Works <ChevronRight className="w-3 h-3" />
+        </Button>
+      </div>
     </Layout>
   );
 };
@@ -352,7 +370,7 @@ const MilestoneRow = ({ label, amount, status, canRelease, onRelease, isLast }: 
         </div>
       </div>
       {canRelease ? (
-        <Button size="sm" variant="gradient" className="h-7 text-[10px] rounded-lg px-3" onClick={onRelease}>Release</Button>
+        <Button size="sm" className="h-7 text-[10px] rounded-lg px-3 bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onRelease}>Release</Button>
       ) : (
         <Badge className={`${config.color} border-0 text-[9px] font-heading`}>{config.label}</Badge>
       )}

@@ -1,5 +1,4 @@
 import { campaigns } from "@/data/mockData";
-import { Sparkles } from "lucide-react";
 
 const brands = [
   { name: "Lenskart", color: "from-blue-500 to-blue-700", logo: campaigns.find(c => c.brand === "Lenskart")?.logo },
@@ -21,12 +20,8 @@ interface BrandCirclesRowProps {
 const BrandCirclesRow = ({ selectedBrand, onSelectBrand, activeBrand }: BrandCirclesRowProps) => {
   return (
     <section className="mt-4 px-5">
-      <p className="text-[11px] font-heading font-semibold text-accent mb-2.5 flex items-center gap-1">
-        <Sparkles className="w-3 h-3" /> Top Brands
-      </p>
-      {/* overflow-hidden prevents scale from pushing layout */}
       <div className="overflow-hidden">
-        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 px-1">
+        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 px-1">
           {brands.map((brand, i) => {
             const isSelected = selectedBrand === brand.name;
             const isCarouselActive = activeBrand === brand.name && !selectedBrand;
@@ -35,7 +30,7 @@ const BrandCirclesRow = ({ selectedBrand, onSelectBrand, activeBrand }: BrandCir
               <button
                 key={brand.name}
                 onClick={() => onSelectBrand(isSelected ? null : brand.name)}
-                className="flex flex-col items-center gap-1.5 shrink-0 opacity-0 animate-fade-up"
+                className="flex flex-col items-center gap-1 shrink-0 opacity-0 animate-fade-up"
                 style={{
                   animationDelay: `${i * 40}ms`,
                   animationFillMode: "forwards",
@@ -43,9 +38,9 @@ const BrandCirclesRow = ({ selectedBrand, onSelectBrand, activeBrand }: BrandCir
                 }}
               >
                 <div
-                  className={`w-14 h-14 rounded-full transition-transform duration-300 ease-out ${isHighlighted ? "animate-pulse-glow-gold" : ""}`}
+                  className={`w-11 h-11 rounded-full transition-transform duration-300 ease-out ${isHighlighted ? "animate-pulse-glow-gold" : ""}`}
                   style={{
-                    padding: 2.5,
+                    padding: 1.5,
                     background: isHighlighted
                       ? "linear-gradient(135deg, hsl(45,93%,58%), hsl(262,83%,58%))"
                       : "linear-gradient(135deg, hsl(45,93%,47%), hsl(45,93%,62%))",
@@ -58,13 +53,13 @@ const BrandCirclesRow = ({ selectedBrand, onSelectBrand, activeBrand }: BrandCir
                       <img src={brand.logo} alt={brand.name} className="w-full h-full object-cover" />
                     ) : (
                       <div className={`w-full h-full bg-gradient-to-br ${brand.color} flex items-center justify-center`}>
-                        <span className="text-white font-heading font-bold text-sm">{brand.name.charAt(0)}</span>
+                        <span className="text-white font-heading font-bold text-[11px]">{brand.name.charAt(0)}</span>
                       </div>
                     )}
                   </div>
                 </div>
                 <span
-                  className={`text-[10px] max-w-[60px] truncate text-center transition-all duration-300 ${
+                  className={`text-[9px] max-w-[48px] truncate text-center transition-all duration-300 ${
                     isHighlighted ? "font-bold text-accent" : "font-medium text-muted-foreground"
                   }`}
                 >

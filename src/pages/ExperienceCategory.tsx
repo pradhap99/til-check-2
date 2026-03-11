@@ -2,8 +2,11 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { campaigns } from "@/data/mockData";
-import { ArrowLeft, MapPin, Calendar, Heart, Users } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, Heart, Users, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
+const LEVEL_EMOJIS: Record<number, string> = { 1: "✨", 2: "🌟", 3: "🔥", 4: "💫", 5: "👑", 6: "🥇" };
 
 const categoryConfig: Record<string, { label: string; emoji: string; tags: string[] }> = {
   cafes: { label: "Cafés", emoji: "☕", tags: ["Cafe", "Food"] },
@@ -29,7 +32,10 @@ const campaignImages: Record<string, string> = {
   "8": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=520&h=320&fit=crop",
   "cafe-001": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=520&h=320&fit=crop",
   "cafe-002": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=520&h=320&fit=crop",
+  "cafe-perks-001": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=520&h=320&fit=crop",
+  "cafe-perks-002": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=520&h=320&fit=crop",
   "dining-001": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=520&h=320&fit=crop",
+  "dining-perks-001": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=520&h=320&fit=crop",
   "staycation-001": "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=520&h=320&fit=crop",
 };
 
@@ -47,6 +53,7 @@ const ExperienceCategory = () => {
   const { category } = useParams<{ category: string }>();
   const navigate = useNavigate();
   const [visibleCount, setVisibleCount] = useState(4);
+  const userLevel = 1; // hardcoded for now
 
   const config = categoryConfig[category || ""] || { label: category || "", emoji: "📋", tags: [] };
 
@@ -74,12 +81,16 @@ const ExperienceCategory = () => {
           {visible.map((campaign, i) => {
             const image = campaignImages[campaign.id] || categoryImages[campaign.category] || categoryImages.Food;
             const slotsLeft = campaign.slots - campaign.filled;
+            const isPerks = campaign.type === "Perks";
+            const isLocked = campaign.minLevel && userLevel < campaign.minLevel;
+            const levelEmoji = campaign.minLevel ? LEVEL_EMOJIS[campaign.minLevel] || "✨" : null;
+
             return (
               <div
                 key={campaign.id}
                 className="rounded-2xl overflow-hidden bg-card border border-border animate-fade-slide-up cursor-pointer active:scale-[0.98] transition-transform"
                 style={{ animationDelay: `${i * 80}ms` }}
-                onClick={() => navigate(`/campaigns/${campaign.id}`)}
+                onClick={() => !isLocked && navigate(`/campaigns/${campaign.id}`)}
               >
                 <div className="relative h-[160px]">
                   <img src={image} alt={campaign.title} className="w-full h-full object-cover" />
@@ -87,9 +98,20 @@ const ExperienceCategory = () => {
                   <div className="absolute bottom-0 inset-x-0 p-3">
                     <h3 className="text-white font-heading font-bold text-[15px] leading-tight">{campaign.title}</h3>
                   </div>
-                  <span className="absolute top-2.5 right-2.5 bg-emerald-500 text-white text-[10px] font-heading font-bold px-2 py-0.5 rounded-lg">
-                    {campaign.budget}
-                  </span>
+                  {isPerks ? (
+                    <span className="absolute top-2.5 right-2.5 bg-emerald-500 text-white text-[10px] font-heading font-bold px-2 py-0.5 rounded-lg flex items-center gap-1">
+                      <Gift className="w-3 h-3" /> Perks
+                    </span>
+                  ) : (
+                    <span className="absolute top-2.5 right-2.5 bg-emerald-500 text-white text-[10px] font-heading font-bold px-2 py-0.5 rounded-lg">
+                      {campaign.budget}
+                    </span>
+                  )}
+                  {levelEmoji && (
+                    <Badge className="absolute top-2.5 left-2.5 bg-secondary/80 backdrop-blur-sm border-0 text-[9px] font-heading">
+                      Min Level {levelEmoji} {campaign.minLevel}
+                    </Badge>
+                  )}
                 </div>
                 <div className="p-3.5">
                   <div className="flex items-center gap-2 mb-2">
@@ -98,6 +120,14 @@ const ExperienceCategory = () => {
                     </div>
                     <span className="text-xs text-foreground font-medium">{campaign.brand}</span>
                   </div>
+                  {/* Perks pills */}
+                  {isPerks && campaign.perks && (
+                    <div className="flex gap-1.5 flex-wrap mb-2">
+                      {campaign.perks.slice(0, 2).map((perk, pi) => (
+                        <span key={pi} className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-heading">{perk}</span>
+                      ))}
+                    </div>
+                  )}
                   {campaign.location && (
                     <div className="flex items-center gap-1.5 mt-1">
                       <MapPin className="w-3.5 h-3.5 text-accent shrink-0" />
@@ -112,17 +142,20 @@ const ExperienceCategory = () => {
                   )}
                   <div className="flex items-center justify-between mt-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600">Paid</span>
+                      <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full ${isPerks ? "bg-emerald-500/10 text-emerald-500" : "bg-emerald-500/10 text-emerald-600"}`}>
+                        {isPerks ? "Perks" : "Paid"}
+                      </span>
                       <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
                         <Users className="w-3 h-3" /> {slotsLeft} slots left
                       </span>
                     </div>
                     <Button
                       size="sm"
-                      className="h-8 rounded-xl text-[11px] font-heading bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift"
-                      onClick={(e) => { e.stopPropagation(); navigate(`/campaigns/${campaign.id}`); }}
+                      className={`h-8 rounded-xl text-[11px] font-heading ${isLocked ? "bg-secondary text-muted-foreground" : "bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift"}`}
+                      disabled={!!isLocked}
+                      onClick={(e) => { e.stopPropagation(); if (!isLocked) navigate(`/campaigns/${campaign.id}`); }}
                     >
-                      Apply
+                      {isLocked ? `Reach Level ${campaign.minLevel}` : "Apply"}
                     </Button>
                   </div>
                 </div>

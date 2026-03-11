@@ -27,6 +27,9 @@ export interface Campaign {
   platforms: string[];
   location?: string;
   date?: string;
+  type?: "Paid" | "Barter" | "Perks";
+  perks?: string[];
+  minLevel?: number;
 }
 
 export const creators: Creator[] = [
@@ -73,7 +76,7 @@ export const campaigns: Campaign[] = [
     id: "1", brand: "Lenskart", logo: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=80&h=80&fit=crop",
     title: "Lenskart SS'26 — Style Your Vision",
     budget: "₹8L–15L", category: "Fashion", deadline: "Mar 20, 2026",
-    slots: 45, filled: 18, description: "Fashion-forward creators for our premium John Jacobs collection. Looking for outfit integration + eyewear styling content.",
+    slots: 45, filled: 18, description: "Fashion-forward creators for our premium John Jacobs collection.",
     platforms: ["Instagram", "YouTube"],
     location: "Select Citywalk, Delhi", date: "Apr 1 — Apr 20, 2026"
   },
@@ -81,7 +84,7 @@ export const campaigns: Campaign[] = [
     id: "2", brand: "Mamaearth", logo: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=80&h=80&fit=crop",
     title: "Mamaearth Vitamin C Range",
     budget: "₹3L–7L", category: "Beauty", deadline: "Mar 25, 2026",
-    slots: 80, filled: 32, description: "Skincare & beauty creators for our new Vitamin C range launch. Must create before/after content with honest reviews.",
+    slots: 80, filled: 32, description: "Skincare & beauty creators for our new Vitamin C range launch.",
     platforms: ["Instagram"],
     location: "Phoenix Marketcity, Mumbai", date: "Mar 28 — Apr 12, 2026"
   },
@@ -89,7 +92,7 @@ export const campaigns: Campaign[] = [
     id: "3", brand: "boAt", logo: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop",
     title: "boAt Summer Audio Launch",
     budget: "₹5L–10L", category: "Tech", deadline: "Apr 1, 2026",
-    slots: 30, filled: 12, description: "Tech & lifestyle creators needed to review our new Airdopes 500 ANC range. Deliverables include 2 Reels + 1 YouTube Short.",
+    slots: 30, filled: 12, description: "Tech & lifestyle creators needed to review our new Airdopes 500 ANC range.",
     platforms: ["Instagram", "YouTube"],
     location: "Forum Mall, Bangalore", date: "Apr 5 — Apr 25, 2026"
   },
@@ -97,7 +100,7 @@ export const campaigns: Campaign[] = [
     id: "4", brand: "Zomato", logo: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=80&h=80&fit=crop",
     title: "Zomato Food Stories",
     budget: "₹4L–8L", category: "Food", deadline: "Mar 28, 2026",
-    slots: 60, filled: 25, description: "Food creators for authentic street food and restaurant reviews across India. Video-first content preferred.",
+    slots: 60, filled: 25, description: "Food creators for authentic street food and restaurant reviews across India.",
     platforms: ["Instagram", "YouTube"],
     location: "DLF Cyber City, Gurgaon", date: "Apr 8 — Apr 22, 2026"
   },
@@ -105,7 +108,7 @@ export const campaigns: Campaign[] = [
     id: "5", brand: "Nykaa", logo: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=80&h=80&fit=crop",
     title: "Nykaa Festive Glow",
     budget: "₹2L–5L", category: "Beauty", deadline: "Apr 5, 2026",
-    slots: 100, filled: 45, description: "Beauty creators for festive makeup looks and skincare routines. GRWM format preferred.",
+    slots: 100, filled: 45, description: "Beauty creators for festive makeup looks and skincare routines.",
     platforms: ["Instagram"],
     location: "Phoenix Palassio, Lucknow", date: "Apr 3 — Apr 18, 2026"
   },
@@ -113,7 +116,7 @@ export const campaigns: Campaign[] = [
     id: "6", brand: "Myntra", logo: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=80&h=80&fit=crop",
     title: "Myntra Style Drop",
     budget: "₹6L–12L", category: "Fashion", deadline: "Mar 18, 2026",
-    slots: 20, filled: 8, description: "Premium fashion creators for exclusive designer collaboration. High-end styling content required.",
+    slots: 20, filled: 8, description: "Premium fashion creators for exclusive designer collaboration.",
     platforms: ["Instagram", "YouTube"],
     location: "Indiranagar, Bangalore", date: "Mar 22 — Apr 2, 2026"
   },
@@ -121,7 +124,7 @@ export const campaigns: Campaign[] = [
     id: "7", brand: "Swiggy", logo: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=80&h=80&fit=crop",
     title: "Swiggy Dine Out",
     budget: "₹3L–6L", category: "Food", deadline: "Apr 10, 2026",
-    slots: 75, filled: 30, description: "Food and lifestyle creators for restaurant discovery content. Focus on ambiance and dining experience.",
+    slots: 75, filled: 30, description: "Food and lifestyle creators for restaurant discovery content.",
     platforms: ["Instagram"],
     location: "Connaught Place, Delhi", date: "Apr 5 — Apr 20, 2026"
   },
@@ -129,7 +132,7 @@ export const campaigns: Campaign[] = [
     id: "8", brand: "Noise", logo: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop",
     title: "Noise Smartwatch Launch",
     budget: "₹4L–9L", category: "Tech", deadline: "Apr 8, 2026",
-    slots: 40, filled: 15, description: "Tech reviewers & fitness creators for our latest smartwatch. Unboxing + 7-day review format.",
+    slots: 40, filled: 15, description: "Tech reviewers & fitness creators for our latest smartwatch.",
     platforms: ["YouTube", "Instagram"],
     location: "Sector 29, Gurgaon", date: "Apr 10 — Apr 28, 2026"
   },
@@ -137,7 +140,7 @@ export const campaigns: Campaign[] = [
     id: "cafe-001", brand: "Blue Tokai Coffee", logo: "",
     title: "Blue Tokai — Coffee Culture Campaign",
     budget: "₹3L–5L", category: "Cafe", deadline: "Apr 5, 2026",
-    slots: 20, filled: 8, description: "Coffee culture content creators for in-cafe experience shoots and lifestyle reels.",
+    slots: 20, filled: 8, description: "Coffee culture content creators for in-cafe experience shoots.",
     platforms: ["Instagram"],
     location: "Koramangala, Bangalore", date: "Mar 20 — Apr 5, 2026"
   },
@@ -145,7 +148,7 @@ export const campaigns: Campaign[] = [
     id: "cafe-002", brand: "Third Wave Coffee", logo: "",
     title: "Third Wave — Morning Ritual Series",
     budget: "₹2L–4L", category: "Cafe", deadline: "Apr 15, 2026",
-    slots: 16, filled: 8, description: "Morning routine content featuring Third Wave cafes. Focus on aesthetic lifestyle content.",
+    slots: 16, filled: 8, description: "Morning routine content featuring Third Wave cafes.",
     platforms: ["Instagram"],
     location: "Bandra West, Mumbai", date: "Apr 1 — Apr 15, 2026"
   },
@@ -153,7 +156,7 @@ export const campaigns: Campaign[] = [
     id: "dining-001", brand: "Social (by Impresario)", logo: "",
     title: "SOCIAL — Urban Dining Experience",
     budget: "₹4L–8L", category: "Dining", deadline: "Apr 10, 2026",
-    slots: 25, filled: 10, description: "Urban dining experience content for SOCIAL outlets. Ambiance, food, and lifestyle content.",
+    slots: 25, filled: 10, description: "Urban dining experience content for SOCIAL outlets.",
     platforms: ["Instagram", "YouTube"],
     location: "Hauz Khas Village, Delhi", date: "Mar 25 — Apr 10, 2026"
   },
@@ -161,9 +164,37 @@ export const campaigns: Campaign[] = [
     id: "staycation-001", brand: "Zostel", logo: "",
     title: "Zostel — Backpacker Stories",
     budget: "₹5L–10L", category: "Staycation", deadline: "Apr 30, 2026",
-    slots: 12, filled: 6, description: "Backpacker and travel vlog content from Zostel locations across India.",
+    slots: 12, filled: 6, description: "Backpacker and travel vlog content from Zostel locations.",
     platforms: ["Instagram", "YouTube"],
     location: "Manali, Himachal Pradesh", date: "Apr 10 — Apr 30, 2026"
+  },
+  // Perks campaigns
+  {
+    id: "cafe-perks-001", brand: "Third Wave Coffee", logo: "",
+    title: "Coffee Content Creator — Meal Collab",
+    budget: "Perks", category: "Cafe", deadline: "Apr 30, 2026",
+    slots: 20, filled: 0, description: "Coffee culture content with complimentary meals and subscriptions.",
+    platforms: ["Instagram"],
+    location: "Indiranagar, Bangalore", date: "Apr 1 — Apr 30, 2026",
+    type: "Perks", perks: ["Free meal for 2", "Monthly coffee subscription", "₹500 voucher"], minLevel: 1,
+  },
+  {
+    id: "cafe-perks-002", brand: "Blue Tokai Coffee", logo: "",
+    title: "Lifestyle Creator — Coffee & Content",
+    budget: "Perks", category: "Cafe", deadline: "May 5, 2026",
+    slots: 10, filled: 0, description: "Lifestyle content featuring Blue Tokai cafes and products.",
+    platforms: ["Instagram"],
+    location: "Koramangala, Bangalore", date: "Apr 5 — May 5, 2026",
+    type: "Perks", perks: ["Free coffee for a month", "Launch event invite", "Merchandise kit"], minLevel: 2,
+  },
+  {
+    id: "dining-perks-001", brand: "Social (by Impresario)", logo: "",
+    title: "Food Creator — Dining Experience Pass",
+    budget: "Perks", category: "Dining", deadline: "Apr 30, 2026",
+    slots: 8, filled: 0, description: "Premium dining experience content for SOCIAL outlets.",
+    platforms: ["Instagram"],
+    location: "Hauz Khas Village, Delhi", date: "Every weekend, Apr 2026",
+    type: "Perks", perks: ["Dinner for 2", "Creator evening event invite", "₹1,000 voucher"], minLevel: 2,
   },
 ];
 
