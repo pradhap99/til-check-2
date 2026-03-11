@@ -5,7 +5,7 @@ import HeroBannerCarousel from "./HeroBannerCarousel";
 import BrandCirclesRow from "./BrandCirclesRow";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
-import { ArrowRight, Briefcase, FileText, Shield, Wallet, MapPin, Heart, TrendingUp, Star, Target, ChevronRight, List, Map } from "lucide-react";
+import { ArrowRight, MapPin, Heart, TrendingUp, Star, Target, ChevronRight, List, Map, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CampaignMapView = lazy(() => import("./CampaignMapView"));
@@ -15,13 +15,6 @@ const chipCategoryMap: Record<string, string[]> = {
   photoshoots: ["Fashion", "Beauty"], beauty: ["Beauty"], fashion: ["Fashion"],
   fitness: ["Fitness"], shopping: ["Lifestyle"], events: ["Lifestyle", "Comedy"],
 };
-
-const quickActions = [
-  { icon: Briefcase, label: "Campaigns", to: "/campaigns", gradient: "from-violet-500 to-purple-600" },
-  { icon: FileText, label: "Applications", to: "/applications", gradient: "from-amber-400 to-orange-500" },
-  { icon: Shield, label: "Escrow", to: "/escrow", gradient: "from-teal-400 to-emerald-500" },
-  { icon: Wallet, label: "Earnings", to: "/earnings", gradient: "from-pink-400 to-rose-500" },
-];
 
 const campaignImageMap: Record<string, string> = {
   "1": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=520&h=280&fit=crop",
@@ -46,18 +39,13 @@ const campaignImages: Record<string, string> = {
 };
 
 const successStories = [
-  { name: "Priya S.", earned: "₹2.4L", campaigns: 12, niche: "Fashion", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=160&fit=crop&crop=face", quote: "Earned ₹2.4L in just 2 months" },
-  { name: "Vikram S.", earned: "₹3.8L", campaigns: 8, niche: "Food", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=160&fit=crop&crop=face", quote: "Quit my day job, full-time creator now" },
-  { name: "Kavya N.", earned: "₹1.6L", campaigns: 6, niche: "Beauty", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=160&fit=crop&crop=face", quote: "Best platform for beauty collabs" },
-  { name: "Arjun R.", earned: "₹5.2L", campaigns: 15, niche: "Tech", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=160&fit=crop&crop=face", quote: "Tech reviews that actually pay well" },
+  { name: "Priya S.", campaigns: 12, niche: "Fashion", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=160&fit=crop&crop=face", quote: "TIL got me my first brand deal in just 3 days!" },
+  { name: "Vikram S.", campaigns: 8, niche: "Food", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=160&fit=crop&crop=face", quote: "Best platform for serious creators." },
+  { name: "Kavya N.", campaigns: 6, niche: "Beauty", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=160&fit=crop&crop=face", quote: "I earned more than my salary through TIL." },
+  { name: "Arjun T.", campaigns: 15, niche: "Tech", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=160&fit=crop&crop=face", quote: "The escrow system gives me full trust." },
 ];
 
-// Map carousel slide index to brand name
-const carouselBrandMap: Record<number, string> = {
-  0: "Lenskart",
-  1: "Mamaearth",
-  2: "boAt",
-};
+const carouselBrandMap: Record<number, string> = { 0: "Lenskart", 1: "Mamaearth", 2: "boAt" };
 
 interface CreatorHomeContentProps {
   stats: { totalEarnings: number; pendingPayments: number; activeCampaigns: number; applicationsCount: number };
@@ -79,36 +67,29 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
     tagline: c.description?.slice(0, 60),
   }));
 
-  const brandFiltered = selectedBrand
-    ? allCampaigns.filter(c => c.brand === selectedBrand)
-    : allCampaigns;
-
+  const brandFiltered = selectedBrand ? allCampaigns.filter(c => c.brand === selectedBrand) : allCampaigns;
   const filteredCampaigns = selectedChip === "all"
     ? brandFiltered.slice(0, 4)
     : brandFiltered.filter(c => chipCategoryMap[selectedChip]?.includes(c.category)).slice(0, 4);
   const displayCampaigns = filteredCampaigns.length > 0 ? filteredCampaigns : brandFiltered.slice(0, 3);
-
-
-
 
   return (
     <>
       <BrandCirclesRow selectedBrand={selectedBrand} onSelectBrand={setSelectedBrand} activeBrand={activeBrand} />
       <HeroBannerCarousel onSlideChange={setCarouselIndex} />
 
-      {/* Quick Actions */}
-      <section className="px-5 mt-5">
-        <div className="grid grid-cols-4 gap-2.5">
-          {quickActions.map((action, i) => (
-            <Link key={i} to={action.to} className="rounded-2xl p-3 text-center active:scale-90 transition-all duration-150 flex flex-col items-center gap-2 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
-              <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center shadow-lg`}>
-                <action.icon className="w-5 h-5 text-white" />
-              </div>
-              <p className="text-[10px] font-heading font-semibold text-foreground">{action.label}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* Offers Banner */}
+      <div className="px-5 mt-4">
+        <button
+          onClick={() => navigate("/offers")}
+          className="w-full rounded-xl p-3 flex items-center gap-2.5 border border-amber-500/20 btn-micro animate-fade-slide-up"
+          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02))" }}
+        >
+          <Flame className="w-4 h-4 text-amber-500 shrink-0" />
+          <span className="text-xs font-heading font-medium text-foreground flex-1 text-left">New Affiliate Offers Available → Earn commissions</span>
+          <ChevronRight className="w-3.5 h-3.5 text-amber-500" />
+        </button>
+      </div>
 
       {/* Browse by Experience */}
       <ExperienceCards selected={selectedChip} onSelect={setSelectedChip} />
@@ -184,15 +165,14 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
           {successStories.map((story, i) => (
             <div
               key={i}
-              className="min-w-[140px] max-w-[140px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border relative cursor-pointer active:scale-[0.97] transition-transform opacity-0 animate-fade-up"
-              style={{ animationDelay: `${i * 80}ms`, animationFillMode: "forwards" }}
+              className="min-w-[140px] max-w-[140px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border relative cursor-pointer active:scale-[0.97] transition-transform animate-scale-in"
+              style={{ animationDelay: `${i * 80}ms` }}
             >
               <div className="h-[160px] relative">
                 <img src={story.avatar} alt={story.name} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                 <div className="absolute bottom-0 inset-x-0 p-2.5">
-                  <p className="text-white font-heading font-bold text-sm">{story.earned}</p>
-                  <p className="text-white/70 text-[9px]">in Feb</p>
+                  <p className="text-white text-[10px] leading-snug italic">"{story.quote}"</p>
                 </div>
               </div>
               <div className="p-2.5">
@@ -225,8 +205,8 @@ const FeaturedCampaignCard = ({ campaign, index }: { campaign: any; index: numbe
   return (
     <div
       onClick={() => navigate(`/campaigns/${campaign.id}`)}
-      className="min-w-[240px] max-w-[240px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border shadow-sm cursor-pointer active:scale-[0.97] transition-transform duration-150 opacity-0 animate-fade-up"
-      style={{ animationDelay: `${index * 80}ms`, animationFillMode: "forwards" }}
+      className="min-w-[240px] max-w-[240px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border shadow-sm cursor-pointer active:scale-[0.97] transition-transform duration-150 animate-scale-in"
+      style={{ animationDelay: `${index * 80}ms` }}
     >
       <div className="relative h-[130px]">
         <img src={image} alt={campaign.title} className="w-full h-full object-cover" />

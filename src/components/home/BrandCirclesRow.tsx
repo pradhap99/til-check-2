@@ -24,51 +24,56 @@ const BrandCirclesRow = ({ selectedBrand, onSelectBrand, activeBrand }: BrandCir
       <p className="text-[11px] font-heading font-semibold text-accent mb-2.5 flex items-center gap-1">
         <Sparkles className="w-3 h-3" /> Top Brands
       </p>
-      <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
-        {brands.map((brand, i) => {
-          const isSelected = selectedBrand === brand.name;
-          const isCarouselActive = activeBrand === brand.name && !selectedBrand;
-          const isHighlighted = isSelected || isCarouselActive;
-          return (
-            <button
-              key={brand.name}
-              onClick={() => onSelectBrand(isSelected ? null : brand.name)}
-              className="flex flex-col items-center gap-1.5 shrink-0 opacity-0 animate-fade-up"
-              style={{ animationDelay: `${i * 40}ms`, animationFillMode: "forwards" }}
-            >
-              <div
-                className="rounded-full transition-all duration-400 ease-in-out"
+      {/* overflow-hidden prevents scale from pushing layout */}
+      <div className="overflow-hidden">
+        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2 px-1">
+          {brands.map((brand, i) => {
+            const isSelected = selectedBrand === brand.name;
+            const isCarouselActive = activeBrand === brand.name && !selectedBrand;
+            const isHighlighted = isSelected || isCarouselActive;
+            return (
+              <button
+                key={brand.name}
+                onClick={() => onSelectBrand(isSelected ? null : brand.name)}
+                className="flex flex-col items-center gap-1.5 shrink-0 opacity-0 animate-fade-up"
                 style={{
-                  width: isHighlighted ? 62 : 56,
-                  height: isHighlighted ? 62 : 56,
-                  padding: isHighlighted ? 3 : 2.5,
-                  background: isHighlighted
-                    ? "linear-gradient(135deg, hsl(45,93%,58%), hsl(262,83%,58%))"
-                    : "linear-gradient(135deg, hsl(45,93%,47%), hsl(45,93%,62%))",
-                  boxShadow: isHighlighted ? "0 0 16px hsl(45,93%,58%,0.5)" : "none",
-                  transform: isHighlighted ? "scale(1.15)" : "scale(1)",
+                  animationDelay: `${i * 40}ms`,
+                  animationFillMode: "forwards",
+                  willChange: "transform",
                 }}
               >
-                <div className="w-full h-full rounded-full overflow-hidden bg-card flex items-center justify-center">
-                  {brand.logo ? (
-                    <img src={brand.logo} alt={brand.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className={`w-full h-full bg-gradient-to-br ${brand.color} flex items-center justify-center`}>
-                      <span className="text-white font-heading font-bold text-sm">{brand.name.charAt(0)}</span>
-                    </div>
-                  )}
+                <div
+                  className={`w-14 h-14 rounded-full transition-transform duration-300 ease-out ${isHighlighted ? "animate-pulse-glow-gold" : ""}`}
+                  style={{
+                    padding: 2.5,
+                    background: isHighlighted
+                      ? "linear-gradient(135deg, hsl(45,93%,58%), hsl(262,83%,58%))"
+                      : "linear-gradient(135deg, hsl(45,93%,47%), hsl(45,93%,62%))",
+                    transform: isHighlighted ? "scale(1.2)" : "scale(1)",
+                    transformOrigin: "center",
+                  }}
+                >
+                  <div className="w-full h-full rounded-full overflow-hidden bg-card flex items-center justify-center">
+                    {brand.logo ? (
+                      <img src={brand.logo} alt={brand.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className={`w-full h-full bg-gradient-to-br ${brand.color} flex items-center justify-center`}>
+                        <span className="text-white font-heading font-bold text-sm">{brand.name.charAt(0)}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <span
-                className={`text-[10px] max-w-[60px] truncate text-center transition-all duration-300 ${
-                  isHighlighted ? "font-bold text-accent" : "font-medium text-muted-foreground"
-                }`}
-              >
-                {brand.name}
-              </span>
-            </button>
-          );
-        })}
+                <span
+                  className={`text-[10px] max-w-[60px] truncate text-center transition-all duration-300 ${
+                    isHighlighted ? "font-bold text-accent" : "font-medium text-muted-foreground"
+                  }`}
+                >
+                  {brand.name}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
