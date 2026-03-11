@@ -114,7 +114,7 @@ const Landing = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8 opacity-0 animate-fade-up" style={{ animationDelay: "300ms" }}>
           <Link to="/auth"><Button size="lg" className="font-medium w-full sm:w-auto h-12 px-8 text-sm btn-micro">{hero.cta} <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
-          <Link to="/auth"><Button size="lg" variant="outline" className="font-medium w-full sm:w-auto h-12 px-8 text-sm btn-micro" onClick={() => setAudience(audience === "creator" ? "brand" : "creator")}>{hero.ctaSecondary}</Button></Link>
+          <Link to={audience === "creator" ? "/auth?role=brand" : "/auth?role=creator"}><Button size="lg" variant="outline" className="font-medium w-full sm:w-auto h-12 px-8 text-sm btn-micro" onClick={() => setAudience(audience === "creator" ? "brand" : "creator")}>{hero.ctaSecondary}</Button></Link>
         </div>
         <p className="text-xs text-muted-foreground mt-4">Free to join · No credit card required</p>
       </section>
