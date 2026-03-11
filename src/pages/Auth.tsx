@@ -11,10 +11,10 @@ import { ArrowLeft, Mail, Lock, User, CheckCircle } from "lucide-react";
 type Mode = "login" | "signup" | "forgot";
 type Role = "creator" | "brand";
 
-const floatingAvatars = [
-  { initials: "PS", color: "from-pink-500 to-rose-600", delay: "0s" },
-  { initials: "VK", color: "from-blue-500 to-indigo-600", delay: "1.2s" },
-  { initials: "AJ", color: "from-amber-500 to-orange-600", delay: "2.4s" },
+const demoPersonas = [
+  { initials: "PS", name: "Priya Sharma", color: "from-pink-500 to-rose-600", delay: "0s", role: "creator" as const },
+  { initials: "VK", name: "Vikram Kumar", color: "from-blue-500 to-indigo-600", delay: "1.2s", role: "creator" as const },
+  { initials: "AJ", name: "Ajay Jain", color: "from-amber-500 to-orange-600", delay: "2.4s", role: "brand" as const },
 ];
 
 const Auth = () => {
