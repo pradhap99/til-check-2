@@ -53,7 +53,7 @@ const Auth = () => {
       if (error) {
         toast({ title: "Login failed", description: error.message, variant: "destructive" });
       } else {
-        navigate("/home");
+        navigate(role === "brand" ? "/brand/dashboard" : "/home");
       }
     } else {
       const { error } = await signUp(email, password, fullName, role);
