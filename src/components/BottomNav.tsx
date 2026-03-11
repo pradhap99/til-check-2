@@ -1,5 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
-import { Home, FileText, Briefcase, TrendingUp, Shield } from "lucide-react";
+import { Home, FileText, Briefcase, TrendingUp, User } from "lucide-react";
 
 const BottomNav = () => {
   const location = useLocation();
