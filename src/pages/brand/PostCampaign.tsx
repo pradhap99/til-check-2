@@ -18,6 +18,7 @@ const PostCampaign = () => {
     title: "", brand: "", category: "Fashion", type: "Paid", description: "",
     minFollowers: 10000, niches: [] as string[], payoutMin: "", payoutMax: "",
     creatorCount: "", startDate: "", endDate: "", location: "",
+    milestones: [{ description: "", percentage: "" }] as { description: string; percentage: string }[],
   });
 
   const set = (key: string, val: any) => setForm(f => ({ ...f, [key]: val }));
