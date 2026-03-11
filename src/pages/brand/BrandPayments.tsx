@@ -1,19 +1,20 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Download, AlertTriangle } from "lucide-react";
+import { IndianRupee, Lock, Clock, AlertTriangle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BrandBottomNav from "@/components/BrandBottomNav";
 
-const summaryStats = [
-  { label: "Total Spent", value: "₹3.2L" },
-  { label: "In Escrow", value: "₹45K" },
-  { label: "Pending Release", value: "₹18K" },
+const summaryCards = [
+  { icon: IndianRupee, color: "text-amber-500", value: "₹3.2L", label: "Total Spent", sub: "All time", borderGradient: "from-amber-500 to-amber-400" },
+  { icon: Lock, color: "text-teal-400", value: "₹45K", label: "In Escrow", sub: "Locked funds", borderGradient: "from-teal-500 to-teal-400" },
+  { icon: Clock, color: "text-amber-400", value: "₹18K", label: "Pending Release", sub: "Milestone pending", borderGradient: "from-amber-400 to-yellow-400" },
 ];
 
 const escrowCampaigns = [
   {
-    name: "boAt Summer Audio Launch", total: "₹60,000",
+    name: "boAt Summer Audio Launch",
+    total: "₹60,000",
+    progress: 30,
     milestones: [
       { kpi: "Post 2 Instagram Reels", pct: 30, amount: "₹18,000", status: "Released" },
       { kpi: "Reach 5,000 views on content", pct: 40, amount: "₹24,000", status: "In Review" },
@@ -21,7 +22,9 @@ const escrowCampaigns = [
     ],
   },
   {
-    name: "Mamaearth Vitamin C Range", total: "₹45,000",
+    name: "Mamaearth Vitamin C Range",
+    total: "₹45,000",
+    progress: 60,
     milestones: [
       { kpi: "Publish 3 YouTube Shorts", pct: 25, amount: "₹11,250", status: "Released" },
       { kpi: "Achieve 10K total views", pct: 35, amount: "₹15,750", status: "Released" },
@@ -39,107 +42,152 @@ const invoices = [
   { campaign: "Myntra EOSS", creator: "Rohan K", amount: "₹55,000", date: "Mar 15, 2026", status: "Paid" },
 ];
 
-const statusColor: Record<string, string> = {
-  Released: "bg-emerald-500/15 text-emerald-400",
-  "In Review": "bg-amber-500/15 text-amber-400",
-  Locked: "bg-secondary text-muted-foreground",
-  Paid: "bg-emerald-500/15 text-emerald-400",
+const milestoneStatusStyles: Record<string, { badge: string; border: string }> = {
+  Released: { badge: "bg-teal-500/15 text-teal-400", border: "border-l-teal-500" },
+  "In Review": { badge: "bg-amber-500/15 text-amber-400", border: "border-l-amber-500" },
+  Locked: { badge: "bg-white/5 text-zinc-500", border: "border-l-zinc-700" },
+};
+
+const invoiceStatusStyles: Record<string, string> = {
+  Paid: "bg-teal-500/15 text-teal-400",
   Partial: "bg-amber-500/15 text-amber-400",
 };
-const statusIcon: Record<string, string> = { Released: "✅", "In Review": "⏳", Locked: "🔒" };
 
 const BrandPayments = () => {
-  const navigate = useNavigate();
   const [tab, setTab] = useState<"escrow" | "invoices">("escrow");
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="pb-20 max-w-lg mx-auto">
-        <div className="page-transition">
-          <header className="px-5 pt-6 pb-2">
-            <h1 className="text-lg font-heading font-bold text-foreground">Payments & Escrow</h1>
-          </header>
+    <div className="min-h-screen" style={{ background: "#09090B" }}>
+      <main className="pb-24 max-w-lg mx-auto">
+        <header className="px-5 pt-6 pb-2">
+          <h1 className="text-lg font-bold text-[#FAFAFA]">Payments & Escrow</h1>
+        </header>
 
-          {/* Summary */}
-          <div className="px-5 mt-4 flex gap-2">
-            {summaryStats.map((s, i) => (
-              <div key={i} className="flex-1 border border-border rounded-xl p-3 bg-card text-center">
-                <p className="text-lg font-heading font-bold text-foreground">{s.value}</p>
-                <p className="text-[9px] text-muted-foreground">{s.label}</p>
+        {/* Summary Cards */}
+        <div className="px-5 mt-4 grid grid-cols-3 gap-2.5">
+          {summaryCards.map((s, i) => (
+            <div
+              key={i}
+              className="rounded-2xl p-3.5 border border-white/5 relative overflow-hidden text-center animate-fade-slide-up"
+              style={{ background: "#111113", animationDelay: `${i * 80}ms` }}
+            >
+              {/* Top gradient border */}
+              <div className={`absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r ${s.borderGradient}`} />
+              <s.icon className={`w-4 h-4 ${s.color} mx-auto mb-1.5`} />
+              <p className="text-xl font-bold text-[#FAFAFA]" style={{ fontVariantNumeric: "tabular-nums" }}>{s.value}</p>
+              <p className="text-[10px] text-zinc-400 mt-0.5">{s.label}</p>
+              <p className="text-[9px] text-zinc-500">{s.sub}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Tabs */}
+        <div className="px-5 mt-5 flex gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.04)" }}>
+          {(["escrow", "invoices"] as const).map(t => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`flex-1 py-2.5 rounded-lg text-xs font-medium transition-all ${
+                tab === t
+                  ? "bg-gradient-to-r from-amber-500 to-amber-400 text-black font-semibold"
+                  : "text-zinc-400 hover:text-zinc-300"
+              }`}
+            >
+              {t === "escrow" ? "Escrow Tracking" : "Invoice History"}
+            </button>
+          ))}
+        </div>
+
+        {tab === "escrow" && (
+          <div className="px-5 mt-4 space-y-4 pb-6">
+            {escrowCampaigns.map((ec, i) => (
+              <div
+                key={i}
+                className="rounded-2xl p-4 border border-white/5 animate-fade-slide-up"
+                style={{ background: "#111113", boxShadow: "0 0 0 1px rgba(255,255,255,0.04), 0 4px 24px rgba(0,0,0,0.4)", animationDelay: `${i * 80}ms` }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-bold text-sm text-[#FAFAFA]">{ec.name}</h4>
+                  <span className="text-sm text-amber-500 font-bold" style={{ fontVariantNumeric: "tabular-nums" }}>{ec.total}</span>
+                </div>
+
+                <div className="space-y-2.5">
+                  {ec.milestones.map((ms, j) => (
+                    <div
+                      key={j}
+                      className={`flex items-start gap-3 pl-3 border-l-2 ${milestoneStatusStyles[ms.status].border}`}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] rounded-full bg-white/5 text-zinc-300 px-2 py-0.5 shrink-0" style={{ fontVariantNumeric: "tabular-nums" }}>{ms.pct}%</span>
+                          <p className="text-[11px] text-zinc-300">{ms.kpi}</p>
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-[10px] text-zinc-400" style={{ fontVariantNumeric: "tabular-nums" }}>{ms.amount}</span>
+                          <Badge className={`text-[8px] border-0 ${milestoneStatusStyles[ms.status].badge}`}>
+                            {ms.status === "Locked" && <Lock className="w-2.5 h-2.5 mr-0.5" />}
+                            {ms.status}
+                          </Badge>
+                        </div>
+                      </div>
+                      {ms.status === "In Review" && (
+                        <Button
+                          size="sm"
+                          className="h-7 px-3 text-[10px] rounded-lg bg-gradient-to-r from-amber-500 to-amber-400 text-black font-semibold hover:scale-[1.02] transition-transform border-0 shrink-0"
+                        >
+                          Release
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Progress bar */}
+                <div className="mt-4 pt-3 border-t border-white/5">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] text-zinc-400">Overall progress</span>
+                    <span className="text-[10px] text-amber-500 font-semibold" style={{ fontVariantNumeric: "tabular-nums" }}>{ec.progress}%</span>
+                  </div>
+                  <div className="w-full h-1.5 rounded-full bg-white/5">
+                    <div className="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-400 transition-all" style={{ width: `${ec.progress}%` }} />
+                  </div>
+                </div>
+
+                {ec.milestones.some(m => m.status === "In Review") && (
+                  <button className="flex items-center gap-1 mt-3 text-red-400 text-xs hover:text-red-300 transition-colors">
+                    <AlertTriangle className="w-3 h-3" /> Raise Dispute
+                  </button>
+                )}
               </div>
             ))}
           </div>
+        )}
 
-          {/* Tabs */}
-          <div className="px-5 mt-4 flex gap-1 p-1 rounded-lg bg-secondary/50">
-            {(["escrow", "invoices"] as const).map(t => (
-              <button key={t} onClick={() => setTab(t)} className={`flex-1 py-2 rounded-md text-xs font-heading font-medium transition-all ${tab === t ? "bg-accent text-accent-foreground" : "text-muted-foreground"}`}>
-                {t === "escrow" ? "Escrow Tracking" : "Invoice History"}
-              </button>
+        {tab === "invoices" && (
+          <div className="px-5 mt-4 space-y-2 pb-6">
+            {invoices.map((inv, i) => (
+              <div
+                key={i}
+                className="rounded-xl p-3.5 border border-white/5 flex items-center justify-between animate-fade-slide-up"
+                style={{ background: "#111113", animationDelay: `${i * 50}ms` }}
+              >
+                <div className="min-w-0">
+                  <p className="text-[12px] font-semibold text-[#FAFAFA]">{inv.campaign}</p>
+                  <p className="text-[10px] text-zinc-500">{inv.creator} · {inv.date}</p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <div className="text-right">
+                    <p className="text-xs font-bold text-[#FAFAFA]" style={{ fontVariantNumeric: "tabular-nums" }}>{inv.amount}</p>
+                    <Badge className={`text-[7px] border-0 ${invoiceStatusStyles[inv.status]}`}>{inv.status}</Badge>
+                  </div>
+                  <button className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/5 transition-colors text-zinc-400 hover:text-amber-500">
+                    <Download className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
-
-          {tab === "escrow" && (
-            <div className="px-5 mt-4 space-y-3 pb-6">
-              {escrowCampaigns.map((ec, i) => (
-                <div key={i} className="border border-border rounded-2xl p-4 bg-card animate-fade-slide-up" style={{ animationDelay: `${i * 80}ms` }}>
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-heading font-bold text-sm text-foreground">{ec.name}</h4>
-                    <span className="text-xs text-accent font-heading font-bold">{ec.total}</span>
-                  </div>
-                  <div className="space-y-2">
-                    {ec.milestones.map((ms, j) => (
-                      <div key={j} className="flex items-start gap-2">
-                        <span className="text-sm mt-0.5">{statusIcon[ms.status]}</span>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[11px] text-foreground font-medium">{ms.kpi}</p>
-                          <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[9px] text-accent font-heading font-bold">{ms.pct}% · {ms.amount}</span>
-                            <Badge className={`text-[8px] border-0 ${statusColor[ms.status]}`}>{ms.status}</Badge>
-                          </div>
-                        </div>
-                        {ms.status === "In Review" && (
-                          <Button size="sm" className="h-6 px-2 text-[9px] rounded-md bg-accent hover:bg-accent/90 text-accent-foreground font-heading shrink-0">
-                            Release
-                          </Button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex gap-2 mt-3 pt-3 border-t border-border">
-                    <Button size="sm" variant="outline" className="flex-1 h-8 rounded-xl text-[10px] font-heading text-destructive border-destructive/30">
-                      <AlertTriangle className="w-3 h-3 mr-1" /> Raise Dispute
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {tab === "invoices" && (
-            <div className="px-5 mt-4 space-y-2 pb-6">
-              {invoices.map((inv, i) => (
-                <div key={i} className="border border-border rounded-xl p-3.5 bg-card animate-fade-slide-up" style={{ animationDelay: `${i * 40}ms` }}>
-                  <div className="flex items-center justify-between">
-                    <div className="min-w-0">
-                      <p className="text-[11px] font-heading font-semibold text-foreground">{inv.campaign}</p>
-                      <p className="text-[9px] text-muted-foreground">{inv.creator} · {inv.date}</p>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <div className="text-right">
-                        <p className="text-xs font-heading font-bold text-foreground">{inv.amount}</p>
-                        <Badge className={`text-[7px] border-0 ${statusColor[inv.status]}`}>{inv.status}</Badge>
-                      </div>
-                      <button className="w-7 h-7 rounded-lg bg-accent/10 flex items-center justify-center hover:bg-accent/20 transition-colors">
-                        <Download className="w-3 h-3 text-accent" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        )}
       </main>
       <BrandBottomNav />
     </div>
