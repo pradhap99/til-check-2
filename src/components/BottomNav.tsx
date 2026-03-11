@@ -9,7 +9,7 @@ const BottomNav = () => {
     { icon: FileText, label: "Applications", to: "/applications" },
     { icon: Briefcase, label: "Campaigns", to: "/campaigns" },
     { icon: TrendingUp, label: "Earnings", to: "/earnings" },
-    { icon: Shield, label: "Escrow", to: "/escrow" },
+    { icon: User, label: "Profile", to: "/profile" },
   ];
 
   return (
