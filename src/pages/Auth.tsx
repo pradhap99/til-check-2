@@ -63,7 +63,7 @@ const Auth = () => {
         toast({ title: "Account created", description: "Signing you in..." });
         const { error: loginErr } = await signIn(email, password);
         if (!loginErr) {
-          navigate("/home");
+          navigate(role === "brand" ? "/brand/dashboard" : "/home");
         }
       }
     }
