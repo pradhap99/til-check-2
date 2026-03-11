@@ -164,14 +164,15 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
       <section className="mt-5 mb-6">
         <div className="flex items-center justify-between px-5 mb-3">
           <h3 className="font-heading font-bold text-[15px] text-foreground">Success Stories</h3>
-          <span className="text-[9px] text-accent font-heading font-medium flex items-center gap-0.5">
-            <Star className="w-3 h-3" /> Verified earnings
-          </span>
+          <button onClick={() => navigate("/stories")} className="text-[10px] text-accent font-heading font-medium flex items-center gap-0.5">
+            View all stories <ArrowRight className="w-3 h-3" />
+          </button>
         </div>
         <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 pb-2">
           {successStories.map((story, i) => (
             <div
               key={i}
+              onClick={() => navigate("/stories")}
               className="min-w-[140px] max-w-[140px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border relative cursor-pointer active:scale-[0.97] transition-transform animate-scale-in"
               style={{ animationDelay: `${i * 80}ms` }}
             >

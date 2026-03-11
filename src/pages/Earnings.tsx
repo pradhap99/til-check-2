@@ -8,14 +8,9 @@ import { Button } from "@/components/ui/button";
 import {
   Wallet, TrendingUp, Clock, Download, ArrowUpRight,
   Shield, ChevronRight, ArrowDownLeft, ArrowUpFromLine,
-  CheckCircle, FileText, Users, IndianRupee, Gift, Building2
+  CheckCircle, Gift, Building2, Sparkles, Flame, Copy, ArrowRight
 } from "lucide-react";
-import {
-  Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription,
-  DrawerFooter, DrawerClose,
-} from "@/components/ui/drawer";
 import { toast } from "sonner";
-import { Slider } from "@/components/ui/slider";
 
 interface Transaction {
   id: string;
@@ -28,17 +23,17 @@ interface Transaction {
   payment_method: string | null;
 }
 
+const affiliateOffers = [
+  { brand: "Lenskart", commission: "8%", color: "from-blue-500 to-blue-700" },
+  { brand: "Nykaa", commission: "12%", color: "from-red-500 to-red-700" },
+  { brand: "boAt", commission: "6%", color: "from-gray-700 to-gray-900" },
+];
+
 const Earnings = () => {
   const { user, role } = useAuth();
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [withdrawOpen, setWithdrawOpen] = useState(false);
-  const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("upi");
-  const [processing, setProcessing] = useState(false);
-  const [calcFollowers, setCalcFollowers] = useState([50000]);
-  const [calcCampaigns, setCalcCampaigns] = useState([3]);
 
   useEffect(() => {
     if (!user) return;
@@ -74,25 +69,10 @@ const Earnings = () => {
     failed: { color: "bg-destructive/10 text-destructive", label: "Failed" },
   };
 
-  const handleWithdraw = async () => {
-    if (!user) return;
-    setProcessing(true);
-    await supabase.from("transactions").insert({
-      amount: Number(withdrawAmount), payer_user_id: user.id, payee_user_id: user.id,
-      status: "completed", description: `Withdrawal via ${paymentMethod.toUpperCase()}`,
-      payment_method: paymentMethod, currency: "INR",
-    });
-    toast.success(`₹${Number(withdrawAmount).toLocaleString("en-IN")} withdrawal initiated`);
-    setWithdrawOpen(false); setWithdrawAmount(""); setProcessing(false);
-    const column = role === "brand" ? "payer_user_id" : "payee_user_id";
-    const { data } = await supabase.from("transactions").select("*").eq(column, user.id).order("created_at", { ascending: false });
-    setTransactions(data || []);
+  const handleCopyLink = (brand: string) => {
+    navigator.clipboard.writeText(`https://til.app/ref/${brand.toLowerCase()}-${Date.now()}`);
+    toast.success("Link copied!");
   };
-
-  const ratePerFollower = calcFollowers[0] < 10000 ? 0.3 : calcFollowers[0] < 50000 ? 0.5 : calcFollowers[0] < 200000 ? 0.8 : 1.2;
-  const estEarnings = Math.round(calcFollowers[0] * ratePerFollower * calcCampaigns[0] / 1000) * 1000;
-  const estMin = Math.round(estEarnings * 0.7);
-  const estMax = Math.round(estEarnings * 1.3);
 
   return (
     <Layout>
@@ -110,30 +90,46 @@ const Earnings = () => {
               <p className="text-[10px] text-white/50 font-heading uppercase tracking-wider">Available Balance</p>
               <h2 className="text-3xl font-heading font-bold mt-1" style={{ color: "#f59e0b" }}>₹{totalEarned.toLocaleString("en-IN")}</h2>
               {pending > 0 && <p className="text-[10px] text-white/40 mt-0.5">+ ₹{pending.toLocaleString("en-IN")} pending</p>}
-              <div className="flex gap-2 mt-4">
-                <Button
-                  size="sm"
-                  className="h-9 rounded-xl font-heading text-[11px] btn-hover-lift btn-shimmer-hover border-0"
-                  style={{ background: "rgba(245,158,11,0.15)", color: "#f59e0b", border: "1px solid rgba(245,158,11,0.3)" }}
-                  onClick={() => navigate("/redeem")}
-                >
-                  <Gift className="w-3.5 h-3.5" /> Redeem as Voucher
-                </Button>
-                <Button
-                  size="sm"
-                  className="h-9 rounded-xl font-heading text-[11px] text-white btn-hover-lift btn-shimmer-hover"
-                  style={{ background: "#f59e0b" }}
-                  onClick={() => navigate("/bank-transfer")}
-                >
-                  <Building2 className="w-3.5 h-3.5" /> Transfer to Bank
-                </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Voucher promo banner */}
+        <div className="px-4 mt-3">
+          <div className="rounded-xl p-3 border border-accent/20" style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02))" }}>
+            <div className="flex items-start gap-2">
+              <Gift className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+              <div>
+                <p className="text-[11px] font-heading font-semibold text-foreground">Vouchers give you UP TO 20% extra value!</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">₹10,000 balance = ₹12,000 in Amazon vouchers</p>
               </div>
             </div>
           </div>
         </div>
 
+        {/* Payout buttons */}
+        <div className="px-4 mt-3 space-y-2">
+          <Button
+            className="w-full h-12 rounded-xl font-heading font-bold bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift btn-shimmer-hover text-sm"
+            onClick={() => navigate("/redeem")}
+          >
+            <Sparkles className="w-4 h-4 mr-1.5" /> Redeem as Voucher
+          </Button>
+          <div className="text-center">
+            <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-heading font-bold">UP TO 20% BONUS VALUE</span>
+          </div>
+          <Button
+            variant="outline"
+            className="w-full h-10 rounded-xl font-heading text-xs text-muted-foreground border-border"
+            onClick={() => navigate("/bank-transfer")}
+          >
+            <Building2 className="w-3.5 h-3.5 mr-1.5" /> Transfer to Bank
+          </Button>
+          <p className="text-[9px] text-muted-foreground text-center">2-3 business days processing</p>
+        </div>
+
         {/* Stats */}
-        <div className="px-4 mt-3 grid grid-cols-3 gap-2">
+        <div className="px-4 mt-4 grid grid-cols-3 gap-2">
           <div className="border border-border rounded-xl p-3 text-center">
             <Clock className="w-3.5 h-3.5 text-yellow-600 mx-auto mb-1" />
             <p className="font-heading font-bold text-sm text-foreground">₹{pending.toLocaleString("en-IN")}</p>
@@ -193,6 +189,38 @@ const Earnings = () => {
               })}
             </div>
           )}
+        </div>
+
+        {/* Affiliate Deals Section */}
+        <div className="px-4 mt-2 mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Flame className="w-4 h-4 text-accent" />
+            <div>
+              <h3 className="font-heading font-semibold text-sm text-foreground">Affiliate Deals</h3>
+              <p className="text-[9px] text-muted-foreground">Share links. Earn passive commissions.</p>
+            </div>
+          </div>
+          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+            {affiliateOffers.map((offer, i) => (
+              <div key={i} className="min-w-[160px] border border-border rounded-xl p-3 shrink-0 animate-scale-in" style={{ animationDelay: `${i * 60}ms` }}>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${offer.color} flex items-center justify-center`}>
+                    <span className="text-white font-heading font-bold text-xs">{offer.brand[0]}</span>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-heading font-semibold text-foreground">{offer.brand}</p>
+                    <p className="text-[10px] text-accent font-heading font-bold">{offer.commission}</p>
+                  </div>
+                </div>
+                <Button size="sm" className="w-full h-7 rounded-lg text-[10px] bg-accent/10 text-accent hover:bg-accent/20 border-0 font-heading" onClick={() => handleCopyLink(offer.brand)}>
+                  <Copy className="w-3 h-3 mr-1" /> Copy Link
+                </Button>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => navigate("/offers")} className="flex items-center gap-1 text-xs text-accent font-heading font-medium mt-2">
+            View All Offers <ArrowRight className="w-3 h-3" />
+          </button>
         </div>
 
         {/* Escrow link */}

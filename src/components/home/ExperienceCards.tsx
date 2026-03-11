@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 const experiences = [
   { id: "cafes", label: "Cafés", image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&h=200&fit=crop" },
   { id: "dining", label: "Dining", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=300&h=200&fit=crop" },
@@ -13,6 +15,13 @@ interface ExperienceCardsProps {
 }
 
 const ExperienceCards = ({ selected, onSelect }: ExperienceCardsProps) => {
+  const navigate = useNavigate();
+
+  const handleTap = (id: string) => {
+    onSelect(id === selected ? "all" : id);
+    navigate(`/experience/${id}`);
+  };
+
   return (
     <section className="mt-5">
       <h3 className="font-heading font-bold text-[15px] text-foreground px-5 mb-3">Browse by Experience</h3>
@@ -22,7 +31,7 @@ const ExperienceCards = ({ selected, onSelect }: ExperienceCardsProps) => {
           return (
             <button
               key={exp.id}
-              onClick={() => onSelect(exp.id === selected ? "all" : exp.id)}
+              onClick={() => handleTap(exp.id)}
               className={`relative shrink-0 w-[100px] h-[72px] rounded-2xl overflow-hidden active:scale-95 transition-all duration-200 ${
                 isActive ? "ring-2 ring-accent ring-offset-2 ring-offset-background" : ""
               }`}
