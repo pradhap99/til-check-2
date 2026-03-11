@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeft, Shield, Lock, Unlock, CheckCircle, Clock, AlertTriangle,
-  ArrowRight, IndianRupee, FileCheck, ChevronRight, Info, Tag, Star, Eye
+  ArrowRight, IndianRupee, FileCheck, ChevronRight, ChevronDown, ChevronUp,
+  Info, Tag, Star, Eye, Gift
 } from "lucide-react";
 
 interface EscrowItem {
@@ -18,13 +19,6 @@ interface EscrowItem {
   completion_status: "pending" | "released" | "held" | "locked";
   deliverables_total: number; deliverables_approved: number; created_at: string;
 }
-
-const escrowStatusConfig: Record<string, { color: string; label: string; icon: any }> = {
-  pending: { color: "bg-yellow-500/10 text-yellow-600", label: "Pending", icon: Clock },
-  held: { color: "bg-accent/10 text-accent", label: "In Escrow", icon: Lock },
-  released: { color: "bg-primary/10 text-primary", label: "Released", icon: Unlock },
-  locked: { color: "bg-secondary text-muted-foreground", label: "Locked", icon: Lock },
-};
 
 const smartReleaseSteps = [
   { emoji: "🎯", label: "Brand Posts Campaign" },
@@ -37,36 +31,86 @@ const smartReleaseSteps = [
   { emoji: "⚠", label: "7-day Dispute Window" },
 ];
 
-const releaseTiers = [
-  { tier: "Tier 1", pct: "0%", trigger: "On Acceptance", status: "locked" },
-  { tier: "Tier 2", pct: "30%", trigger: "On Content Published + 500 engagements", status: "pending" },
-  { tier: "Tier 3", pct: "40%", trigger: "On 2,000 engagements within 7 days", status: "pending" },
-  { tier: "Tier 4", pct: "30%", trigger: "On Campaign Completion + Brand Approval", status: "locked" },
+interface Milestone {
+  label: string;
+  pct: number;
+  amount: number;
+  status: "completed" | "in_progress" | "locked" | "released" | "in_review";
+}
+
+interface MockEscrow {
+  id: string;
+  brand: string;
+  title: string;
+  total: number;
+  progress: number;
+  activeUntil: string | null;
+  isPerks?: boolean;
+  milestones: Milestone[];
+  autoRelease?: string;
+}
+
+const mockEscrows: MockEscrow[] = [
+  {
+    id: "esc-1",
+    brand: "boAt",
+    title: "Summer Audio Launch 2026",
+    total: 60000,
+    progress: 45,
+    activeUntil: "Mar 15, 2026",
+    milestones: [
+      { label: "Post 2 Instagram Reels", pct: 30, amount: 18000, status: "completed" },
+      { label: "Reach 5,000 views on content", pct: 40, amount: 24000, status: "in_progress" },
+      { label: "Campaign completion + brand sign-off", pct: 30, amount: 18000, status: "locked" },
+    ],
+    autoRelease: "If no dispute within 14 days of Milestone 3",
+  },
+  {
+    id: "esc-2",
+    brand: "Mamaearth",
+    title: "Vitamin C Glow Series",
+    total: 45000,
+    progress: 60,
+    activeUntil: "Apr 15, 2026",
+    milestones: [
+      { label: "Publish 3 YouTube Shorts", pct: 25, amount: 11250, status: "released" },
+      { label: "Achieve 10K total views across posts", pct: 35, amount: 15750, status: "released" },
+      { label: "Submit UGC photos (min 5 images)", pct: 20, amount: 9000, status: "in_review" },
+      { label: "Brand approval + final sign-off", pct: 20, amount: 9000, status: "locked" },
+    ],
+    autoRelease: "Auto-release after 14 days if no dispute",
+  },
+  {
+    id: "esc-3",
+    brand: "Blue Tokai Coffee",
+    title: "Coffee & Content",
+    total: 0,
+    progress: 33,
+    activeUntil: "May 5, 2026",
+    isPerks: true,
+    milestones: [
+      { label: "Post 1 Instagram Story tagging @bluetokaicoffee → Monthly subscription unlocked", pct: 33, amount: 0, status: "completed" },
+      { label: "Post 1 Reel showing morning coffee routine → Merchandise kit", pct: 34, amount: 0, status: "in_progress" },
+      { label: "Attend brand event and post coverage → Partner invite access", pct: 33, amount: 0, status: "locked" },
+    ],
+    autoRelease: "Perks released by brand on milestone verification",
+  },
 ];
 
-const exampleEscrows = [
-  {
-    id: "ex-1", title: "Summer Audio Launch 2026", creator: "Priya Sharma (@priyafashion)",
-    total: 60000, upfront: 30000, upfrontStatus: "released" as const, upfrontDate: "Mar 1, 2026",
-    completion: 30000, completionStatus: "held" as const,
-    progress: 75, totalDels: 4, approvedDels: 3,
-    remaining: "Instagram Stories (x3) - Submitted, under review",
-    disputeWindow: "Active until Mar 15, 2026", isActive: true,
-  },
-  {
-    id: "ex-2", title: "Mamaearth Skincare Review", creator: "Neha Kapoor (@nehabeauty)",
-    total: 45000, upfront: 22500, upfrontStatus: "released" as const, upfrontDate: "Feb 28, 2026",
-    completion: 22500, completionStatus: "released" as const,
-    progress: 100, totalDels: 3, approvedDels: 3,
-    remaining: null, disputeWindow: null, isActive: false,
-  },
-];
+const milestoneStatusConfig: Record<string, { color: string; label: string; icon: string }> = {
+  completed: { color: "bg-emerald-500/10 text-emerald-500", label: "✅ Completed", icon: "✅" },
+  released: { color: "bg-emerald-500/10 text-emerald-500", label: "✅ Released", icon: "✅" },
+  in_progress: { color: "bg-yellow-500/10 text-yellow-600", label: "⏳ In Progress", icon: "⏳" },
+  in_review: { color: "bg-accent/10 text-accent", label: "📋 In Review", icon: "📋" },
+  locked: { color: "bg-secondary text-muted-foreground", label: "🔒 Locked", icon: "🔒" },
+};
 
 const Escrow = () => {
   const { user, role } = useAuth();
   const navigate = useNavigate();
   const [escrows, setEscrows] = useState<EscrowItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [howItWorksOpen, setHowItWorksOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -125,18 +169,6 @@ const Escrow = () => {
     load();
   }, [user, role]);
 
-  const releasePayment = async (escrow: EscrowItem, type: "upfront" | "completion") => {
-    const amount = type === "upfront" ? escrow.upfront_amount : escrow.completion_amount;
-    const { data: campaign } = await supabase.from("campaigns").select("brand_user_id").eq("id", escrow.campaign_id).maybeSingle();
-    if (!campaign) return;
-    await supabase.from("transactions").insert({ amount, payer_user_id: campaign.brand_user_id, payee_user_id: escrow.creator_user_id, campaign_id: escrow.campaign_id, application_id: escrow.application_id, status: "completed", description: `${type === "upfront" ? "Upfront" : "Completion"} payment for "${escrow.campaign_title}"`, payment_method: "escrow", currency: "INR" });
-    await supabase.from("notifications").insert({ user_id: escrow.creator_user_id, title: type === "upfront" ? "Payment Released! 💰" : "Final Payment Released! 🎉", message: `₹${amount.toLocaleString("en-IN")} has been released for "${escrow.campaign_title}"`, type: "payment", reference_type: "campaign", reference_id: escrow.campaign_id });
-    setEscrows(prev => prev.map(e => {
-      if (e.id !== escrow.id) return e;
-      return type === "upfront" ? { ...e, upfront_status: "released" as const } : { ...e, completion_status: "released" as const };
-    }));
-  };
-
   const totalInEscrow = escrows.reduce((sum, e) => {
     let held = 0;
     if (e.upfront_status === "held") held += e.upfront_amount;
@@ -155,10 +187,17 @@ const Escrow = () => {
   return (
     <Layout>
       <header className="px-4 pt-6 pb-2">
-        <h1 className="text-xl font-heading font-bold text-foreground">Escrow & Payments</h1>
-        <p className="text-xs text-muted-foreground">
-          {role === "brand" ? "Manage milestone payments to creators" : "Track your payment milestones"}
-        </p>
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-lg border border-border flex items-center justify-center">
+            <ArrowLeft className="w-4 h-4 text-muted-foreground" />
+          </button>
+          <div>
+            <h1 className="text-xl font-heading font-bold text-foreground">Escrow & Payments</h1>
+            <p className="text-xs text-muted-foreground">
+              {role === "brand" ? "Manage milestone payments to creators" : "Track your payment milestones"}
+            </p>
+          </div>
+        </div>
       </header>
 
       {/* Summary Cards */}
@@ -172,97 +211,81 @@ const Escrow = () => {
         </div>
         <div className="border border-border rounded-xl p-4">
           <div className="flex items-center gap-2 mb-1">
-            <CheckCircle className="w-3.5 h-3.5 text-primary" />
+            <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
             <span className="text-[10px] text-muted-foreground">Released</span>
           </div>
           <p className="font-heading font-bold text-lg text-foreground">₹{totalReleased.toLocaleString("en-IN")}</p>
         </div>
       </div>
 
-      {/* How Smart Escrow Works - Updated timeline */}
+      {/* Collapsible How Milestone Release Works */}
       <div className="px-4 mt-4">
-        <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Shield className="w-4 h-4 text-primary" />
-            <p className="text-xs font-heading font-semibold text-foreground">Smart Escrow Flow</p>
+        <button
+          onClick={() => setHowItWorksOpen(!howItWorksOpen)}
+          className="w-full bg-accent/5 border border-accent/20 rounded-xl p-4 text-left"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-accent" />
+              <p className="text-xs font-heading font-semibold text-foreground">How Milestone Release Works</p>
+            </div>
+            {howItWorksOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
           </div>
-          <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
-            {smartReleaseSteps.map((s, i) => (
-              <div key={i} className="flex items-center shrink-0">
-                <div className="flex flex-col items-center min-w-[48px]">
-                  <span className="text-sm">{s.emoji}</span>
-                  <p className="text-[7px] text-muted-foreground text-center mt-0.5 leading-tight max-w-[52px]">{s.label}</p>
+        </button>
+        <div
+          className="overflow-hidden transition-all duration-350 ease-in-out"
+          style={{ maxHeight: howItWorksOpen ? "400px" : "0px" }}
+        >
+          <div className="pt-3 px-1">
+            <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+              Every campaign has its own brand-defined milestones. TIL holds funds/perks in escrow and releases them automatically when each milestone is verified. If no dispute is raised within 14 days of completion, funds auto-release. Brands set their own KPIs — views, posts, engagement, or deliverables — when creating a campaign.
+            </p>
+            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-2">
+              {smartReleaseSteps.map((s, i) => (
+                <div key={i} className="flex items-center shrink-0">
+                  <div className="flex flex-col items-center min-w-[48px]">
+                    <span className="text-sm">{s.emoji}</span>
+                    <p className="text-[7px] text-muted-foreground text-center mt-0.5 leading-tight max-w-[52px]">{s.label}</p>
+                  </div>
+                  {i < smartReleaseSteps.length - 1 && <span className="text-muted-foreground text-[8px] shrink-0 mx-0.5">→</span>}
                 </div>
-                {i < smartReleaseSteps.length - 1 && <span className="text-muted-foreground text-[8px] shrink-0 mx-0.5">→</span>}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Smart Release System Card */}
-      <div className="px-4 mt-3">
-        <div className="border border-accent/20 rounded-xl p-4" style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.05), transparent)" }}>
-          <div className="flex items-center gap-2 mb-1">
-            <Shield className="w-4 h-4 text-accent" />
-            <p className="text-xs font-heading font-bold text-foreground">Smart Release System</p>
-          </div>
-          <p className="text-[9px] text-muted-foreground mb-3">Powered by TIL Smart Contracts</p>
-          <div className="space-y-2">
-            {releaseTiers.map((tier, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <span className="text-[10px] font-heading font-bold text-accent w-8 shrink-0">{tier.pct}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-heading font-medium text-foreground">{tier.tier}</p>
-                  <p className="text-[9px] text-muted-foreground truncate">{tier.trigger}</p>
-                </div>
-                <Badge className={`text-[8px] border-0 font-heading shrink-0 ${tier.status === "locked" ? "bg-secondary text-muted-foreground" : "bg-yellow-500/10 text-yellow-600"}`}>
-                  {tier.status === "locked" ? "🔒 Locked" : "⏳ Pending"}
-                </Badge>
-              </div>
-            ))}
-          </div>
-          <p className="text-[8px] text-muted-foreground mt-2 italic">Auto-release after 14 days if no dispute</p>
-        </div>
-      </div>
-
-      {/* Active Escrows */}
+      {/* Active Escrows - Dynamic Milestones */}
       <div className="px-4 mt-5 mb-4 space-y-3">
         <h3 className="font-heading font-semibold text-sm text-foreground">Active Escrows</h3>
 
         {loading ? (
-          <div className="text-center py-16"><div className="w-8 h-8 rounded-xl bg-primary/20 animate-pulse mx-auto" /></div>
+          <div className="text-center py-16"><div className="w-8 h-8 rounded-xl bg-accent/20 animate-pulse mx-auto" /></div>
         ) : (
           <>
+            {/* Real escrows from DB */}
             {escrows.map((escrow, i) => {
               const progress = escrow.deliverables_total > 0 ? Math.round((escrow.deliverables_approved / escrow.deliverables_total) * 100) : 0;
               return (
-                <div key={escrow.id} className="border border-border rounded-xl overflow-hidden opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
+                <div key={escrow.id} className="border border-border rounded-xl overflow-hidden animate-fade-slide-up" style={{ animationDelay: `${i * 60}ms` }}>
                   <div className="p-4 pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <p className="font-heading font-semibold text-sm text-foreground truncate">{escrow.campaign_title}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">{role === "brand" ? escrow.creator_name : "Your earnings"} • ₹{escrow.total_amount.toLocaleString("en-IN")} total</p>
-                      </div>
-                    </div>
+                    <p className="font-heading font-semibold text-sm text-foreground truncate">{escrow.campaign_title}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{role === "brand" ? escrow.creator_name : "Your earnings"} • ₹{escrow.total_amount.toLocaleString("en-IN")} total</p>
                     <div className="mt-3">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-[10px] text-muted-foreground">Deliverables</span>
                         <span className="text-[10px] font-heading font-medium text-foreground">{escrow.deliverables_approved}/{escrow.deliverables_total}</span>
                       </div>
                       <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-                        <div className="h-full bg-primary rounded-full transition-all duration-700" style={{ width: `${progress}%` }} />
+                        <div className="h-full bg-accent rounded-full transition-all duration-700" style={{ width: `${progress}%` }} />
                       </div>
                     </div>
-                  </div>
-                  <div className="border-t border-border">
-                    <MilestoneRow label="Upfront Payment (50%)" amount={escrow.upfront_amount} status={escrow.upfront_status} canRelease={role === "brand" && escrow.upfront_status === "held"} onRelease={() => releasePayment(escrow, "upfront")} />
-                    <MilestoneRow label="Completion Payment (50%)" amount={escrow.completion_amount} status={escrow.completion_status} canRelease={role === "brand" && escrow.completion_status === "held"} onRelease={() => releasePayment(escrow, "completion")} isLast />
                   </div>
                 </div>
               );
             })}
 
+            {/* Mock escrows with dynamic milestones */}
             {!hasRealEscrows && (
               <>
                 <div className="flex items-center gap-2 mt-1">
@@ -270,72 +293,64 @@ const Escrow = () => {
                   <p className="text-[10px] text-muted-foreground">Example escrows — real escrows appear when {role === "brand" ? "you accept creators" : "brands accept your applications"}</p>
                 </div>
 
-                {exampleEscrows.map((ex, i) => (
-                  <div key={ex.id} className="border border-border rounded-xl overflow-hidden opacity-0 animate-fade-up relative" style={{ animationDelay: `${i * 80}ms`, animationFillMode: "forwards" }}>
-                    <Badge className="absolute top-2 right-2 bg-accent/10 text-accent border-0 text-[8px] z-10"><Tag className="w-2.5 h-2.5 mr-0.5" />Example</Badge>
+                {mockEscrows.map((ex, i) => (
+                  <div key={ex.id} className="border border-border rounded-xl overflow-hidden animate-fade-slide-up" style={{ animationDelay: `${i * 80}ms` }}>
+                    <Badge className="absolute top-2 right-2 bg-accent/10 text-accent border-0 text-[8px] z-10 relative ml-auto mr-2 mt-2"><Tag className="w-2.5 h-2.5 mr-0.5" />Example</Badge>
                     <div className="p-4 pb-3">
-                      <p className="font-heading font-semibold text-sm text-foreground">{ex.title}</p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">with {ex.creator}</p>
-                      <p className="text-xs font-heading font-bold text-foreground mt-2">Total: ₹{ex.total.toLocaleString("en-IN")}</p>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
+                          <span className="text-xs font-heading font-bold text-accent">{ex.brand[0]}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-heading font-semibold text-sm text-foreground truncate">{ex.title}</p>
+                          <p className="text-[10px] text-muted-foreground">{ex.brand}</p>
+                        </div>
+                        {ex.isPerks && (
+                          <Badge className="bg-emerald-500/10 text-emerald-500 border-0 text-[9px]">
+                            <Gift className="w-3 h-3 mr-0.5" /> Perks
+                          </Badge>
+                        )}
+                      </div>
+
+                      {!ex.isPerks && (
+                        <p className="text-xs font-heading font-bold text-foreground mt-2">Total: ₹{ex.total.toLocaleString("en-IN")}</p>
+                      )}
+
+                      {/* Progress bar */}
                       <div className="mt-3">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] text-muted-foreground">Deliverable Progress</span>
-                          <span className="text-[10px] font-heading font-medium text-foreground">{ex.approvedDels}/{ex.totalDels}</span>
+                          <span className="text-[10px] text-muted-foreground">Progress</span>
+                          <span className="text-[10px] font-heading font-medium text-foreground">{ex.progress}%</span>
                         </div>
                         <div className="w-full h-2 bg-secondary rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full transition-all ${ex.progress === 100 ? "bg-primary" : "bg-accent"}`} style={{ width: `${ex.progress}%` }} />
+                          <div className={`h-full rounded-full transition-all ${ex.progress === 100 ? "bg-emerald-500" : "bg-accent"}`} style={{ width: `${ex.progress}%` }} />
                         </div>
                       </div>
                     </div>
+
+                    {/* Dynamic milestones */}
                     <div className="border-t border-border">
-                      <div className="px-4 py-3 flex items-center justify-between border-b border-border">
-                        <div className="flex items-center gap-3">
-                          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-primary/10 text-primary"><Unlock className="w-3.5 h-3.5" /></div>
-                          <div>
-                            <p className="text-xs font-heading font-medium text-foreground">Upfront (50%)</p>
-                            <p className="text-[10px] text-muted-foreground">₹{ex.upfront.toLocaleString("en-IN")} • {ex.upfrontDate}</p>
+                      {ex.milestones.map((ms, mi) => {
+                        const cfg = milestoneStatusConfig[ms.status] || milestoneStatusConfig.locked;
+                        return (
+                          <div key={mi} className={`px-4 py-3 flex items-start gap-3 ${mi < ex.milestones.length - 1 ? "border-b border-border" : ""}`}>
+                            <span className="text-[10px] font-heading font-bold text-accent w-8 shrink-0 pt-0.5">{ms.pct}%</span>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[11px] font-heading font-medium text-foreground leading-tight">{ms.label}</p>
+                              {!ex.isPerks && ms.amount > 0 && (
+                                <p className="text-[9px] text-muted-foreground mt-0.5">₹{ms.amount.toLocaleString("en-IN")}</p>
+                              )}
+                            </div>
+                            <Badge className={`${cfg.color} border-0 text-[8px] font-heading shrink-0`}>{cfg.label}</Badge>
                           </div>
-                        </div>
-                        <Badge className="bg-primary/10 text-primary border-0 text-[9px]">✅ Released</Badge>
-                      </div>
-                      <div className="px-4 py-3 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${ex.completionStatus === "released" ? "bg-primary/10 text-primary" : "bg-accent/10 text-accent"}`}>
-                            {ex.completionStatus === "released" ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
-                          </div>
-                          <div>
-                            <p className="text-xs font-heading font-medium text-foreground">Completion (50%)</p>
-                            <p className="text-[10px] text-muted-foreground">₹{ex.completion.toLocaleString("en-IN")}</p>
-                          </div>
-                        </div>
-                        <Badge className={`border-0 text-[9px] ${ex.completionStatus === "released" ? "bg-primary/10 text-primary" : "bg-accent/10 text-accent"}`}>
-                          {ex.completionStatus === "released" ? "✅ Released" : "🟡 In Escrow"}
-                        </Badge>
-                      </div>
+                        );
+                      })}
                     </div>
-                    {ex.remaining && (
-                      <div className="px-4 py-2.5 bg-secondary/30 border-t border-border">
-                        <p className="text-[10px] text-muted-foreground">Remaining: {ex.remaining}</p>
-                        {ex.disputeWindow && <p className="text-[10px] text-accent mt-0.5">🛡️ {ex.disputeWindow}</p>}
-                      </div>
-                    )}
-                    {!ex.isActive && (
-                      <div className="px-4 py-2.5 bg-primary/5 border-t border-border">
-                        <p className="text-[10px] text-primary font-medium">✅ Campaign Completed Successfully</p>
-                      </div>
-                    )}
-                    <div className="px-4 py-2.5 border-t border-border flex gap-2">
-                      {ex.isActive ? (
-                        <>
-                          <Button size="sm" variant="outline" className="flex-1 h-8 text-[10px] rounded-lg"><Eye className="w-3 h-3" /> View Deliverables</Button>
-                          <Button size="sm" variant="outline" className="flex-1 h-8 text-[10px] rounded-lg text-accent border-accent/30"><Unlock className="w-3 h-3" /> Release Early</Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button size="sm" variant="outline" className="flex-1 h-8 text-[10px] rounded-lg"><FileCheck className="w-3 h-3" /> View Report</Button>
-                          <Button size="sm" variant="outline" className="flex-1 h-8 text-[10px] rounded-lg text-accent border-accent/30"><Star className="w-3 h-3" /> Leave Review</Button>
-                        </>
-                      )}
+
+                    {/* Footer */}
+                    <div className="px-4 py-2.5 bg-secondary/30 border-t border-border">
+                      <p className="text-[9px] text-muted-foreground italic">{ex.autoRelease}</p>
+                      {ex.activeUntil && <p className="text-[9px] text-accent mt-0.5">Active until: {ex.activeUntil}</p>}
                     </div>
                   </div>
                 ))}
@@ -345,36 +360,16 @@ const Escrow = () => {
         )}
       </div>
 
-      {/* Help link */}
-      <div className="px-4 mb-6">
+      {/* Help & Docs links */}
+      <div className="px-4 mb-6 space-y-2">
         <Button variant="outline" size="sm" className="w-full h-10 rounded-xl text-xs" onClick={() => navigate("/help")}>
           <Info className="w-3.5 h-3.5" /> How TIL Works <ChevronRight className="w-3 h-3" />
         </Button>
+        <Button variant="outline" size="sm" className="w-full h-10 rounded-xl text-xs" onClick={() => navigate("/docs")}>
+          <FileCheck className="w-3.5 h-3.5" /> Platform Documentation <ChevronRight className="w-3 h-3" />
+        </Button>
       </div>
     </Layout>
-  );
-};
-
-const MilestoneRow = ({ label, amount, status, canRelease, onRelease, isLast }: {
-  label: string; amount: number; status: string; canRelease: boolean; onRelease: () => void; isLast?: boolean;
-}) => {
-  const config = escrowStatusConfig[status] || escrowStatusConfig.pending;
-  const StatusIcon = config.icon;
-  return (
-    <div className={`px-4 py-3 flex items-center justify-between ${!isLast ? "border-b border-border" : ""}`}>
-      <div className="flex items-center gap-3 flex-1 min-w-0">
-        <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${config.color}`}><StatusIcon className="w-3.5 h-3.5" /></div>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-heading font-medium text-foreground">{label}</p>
-          <p className="text-[10px] text-muted-foreground">₹{amount.toLocaleString("en-IN")}</p>
-        </div>
-      </div>
-      {canRelease ? (
-        <Button size="sm" className="h-7 text-[10px] rounded-lg px-3 bg-accent hover:bg-accent/90 text-accent-foreground" onClick={onRelease}>Release</Button>
-      ) : (
-        <Badge className={`${config.color} border-0 text-[9px] font-heading`}>{config.label}</Badge>
-      )}
-    </div>
   );
 };
 

@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, ChevronRight, Shield, HelpCircle, FileText, BarChart3, Wallet, Instagram, Youtube, Twitter, Linkedin, CheckCircle, Users, Radio, Sparkles, Sun, Moon } from "lucide-react";
+import { User, Settings, Heart, Bell, LogOut, Edit3, MapPin, Star, ChevronRight, Shield, HelpCircle, FileText, BarChart3, Wallet, Instagram, Youtube, Twitter, Linkedin, CheckCircle, Users, Radio, Sparkles, Sun, Moon, BookOpen } from "lucide-react";
 import CreatorLevelBadge from "@/components/CreatorLevelBadge";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -173,6 +173,7 @@ const Profile = () => {
             { icon: Radio, label: "Channels", to: "/channels" },
             { icon: Sparkles, label: "Managed Services", to: "/managed-services" },
             { icon: HelpCircle, label: "How TIL Works", to: "/help" },
+            { icon: BookOpen, label: "Platform Docs", to: "/docs" },
             { icon: HelpCircle, label: "Help & Support", to: "/support" },
             ...(isAdmin ? [{ icon: Shield, label: "Admin Panel", to: "/admin" }] : []),
           ].map((item, i) => (

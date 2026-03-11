@@ -18,6 +18,7 @@ const PostCampaign = () => {
     title: "", brand: "", category: "Fashion", type: "Paid", description: "",
     minFollowers: 10000, niches: [] as string[], payoutMin: "", payoutMax: "",
     creatorCount: "", startDate: "", endDate: "", location: "",
+    milestones: [{ description: "", percentage: "" }] as { description: string; percentage: string }[],
   });
 
   const set = (key: string, val: any) => setForm(f => ({ ...f, [key]: val }));
@@ -130,6 +131,57 @@ const PostCampaign = () => {
                   <Label className="text-xs">Location</Label>
                   <Input value={form.location} onChange={e => set("location", e.target.value)} placeholder="e.g. Mumbai, Delhi" />
                 </div>
+
+                {/* Define Milestones */}
+                <div className="space-y-2">
+                  <Label className="text-xs">Define Milestones (must total 100%)</Label>
+                  {form.milestones.map((ms, i) => (
+                    <div key={i} className="flex gap-2 items-start">
+                      <Input
+                        className="flex-1"
+                        value={ms.description}
+                        onChange={e => {
+                          const updated = [...form.milestones];
+                          updated[i] = { ...updated[i], description: e.target.value };
+                          set("milestones", updated);
+                        }}
+                        placeholder={`Milestone ${i + 1} KPI`}
+                      />
+                      <div className="w-20 relative">
+                        <Input
+                          value={ms.percentage}
+                          onChange={e => {
+                            const updated = [...form.milestones];
+                            updated[i] = { ...updated[i], percentage: e.target.value };
+                            set("milestones", updated);
+                          }}
+                          placeholder="%"
+                          type="number"
+                        />
+                      </div>
+                      {form.milestones.length > 1 && (
+                        <button
+                          onClick={() => set("milestones", form.milestones.filter((_, j) => j !== i))}
+                          className="text-destructive text-xs mt-2"
+                        >✕</button>
+                      )}
+                    </div>
+                  ))}
+                  {form.milestones.length < 5 && (
+                    <button
+                      onClick={() => set("milestones", [...form.milestones, { description: "", percentage: "" }])}
+                      className="text-xs text-accent font-heading font-medium"
+                    >+ Add Milestone</button>
+                  )}
+                  {(() => {
+                    const total = form.milestones.reduce((s, m) => s + (parseInt(m.percentage) || 0), 0);
+                    return (
+                      <p className={`text-[10px] font-heading ${total === 100 ? "text-emerald-500" : "text-accent"}`}>
+                        Total: {total}%{total !== 100 && ` — need ${100 - total}% more`}
+                      </p>
+                    );
+                  })()}
+                </div>
               </>
             )}
 
@@ -142,6 +194,7 @@ const PostCampaign = () => {
                   ["Niches", form.niches.join(", ") || "—"], ["Payout", `₹${form.payoutMin} – ₹${form.payoutMax}`],
                   ["Creators", form.creatorCount || "—"], ["Dates", `${form.startDate} to ${form.endDate}` || "—"],
                   ["Location", form.location || "—"],
+                  ["Milestones", form.milestones.filter(m => m.description).map(m => `${m.description} (${m.percentage}%)`).join(", ") || "—"],
                 ].map(([label, val], i) => (
                   <div key={i} className="flex justify-between py-2 border-b border-border last:border-0">
                     <span className="text-xs text-muted-foreground">{label}</span>
