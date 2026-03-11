@@ -113,6 +113,10 @@ const App = () => (
                 <Route path="/brand/dashboard" element={<ProtectedRoute requiredRole="brand"><BrandDashboard /></ProtectedRoute>} />
                 <Route path="/brand/post-campaign" element={<ProtectedRoute requiredRole="brand"><PostCampaign /></ProtectedRoute>} />
                 <Route path="/brand/applications" element={<ProtectedRoute requiredRole="brand"><BrandApplications /></ProtectedRoute>} />
+                <Route path="/brand/campaigns" element={<ProtectedRoute requiredRole="brand"><BrandCampaigns /></ProtectedRoute>} />
+                <Route path="/brand/creators" element={<ProtectedRoute requiredRole="brand"><BrandCreators /></ProtectedRoute>} />
+                <Route path="/brand/payments" element={<ProtectedRoute requiredRole="brand"><BrandPayments /></ProtectedRoute>} />
+                <Route path="/brand/account" element={<ProtectedRoute requiredRole="brand"><BrandAccount /></ProtectedRoute>} />
                 <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
                 <Route path="/docs" element={<ProtectedRoute><Documentation /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
