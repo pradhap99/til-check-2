@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
-import { ArrowLeft, HelpCircle } from "lucide-react";
+import { ArrowLeft, HelpCircle, BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionContent,
