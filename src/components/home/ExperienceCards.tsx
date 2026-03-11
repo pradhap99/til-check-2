@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-
 const experiences = [
   { id: "cafes", label: "Cafés", image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300&h=200&fit=crop" },
   { id: "dining", label: "Dining", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=300&h=200&fit=crop" },
