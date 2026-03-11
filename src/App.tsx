@@ -44,6 +44,11 @@ import Alerts from "./pages/Alerts";
 import Offers from "./pages/Offers";
 import Redeem from "./pages/Redeem";
 import BankTransfer from "./pages/BankTransfer";
+import ExperienceCategory from "./pages/ExperienceCategory";
+import SuccessStories from "./pages/SuccessStories";
+import BrandDashboard from "./pages/brand/BrandDashboard";
+import PostCampaign from "./pages/brand/PostCampaign";
+import BrandApplications from "./pages/brand/BrandApplications";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -97,6 +102,11 @@ const App = () => (
                 <Route path="/offers" element={<ProtectedRoute><Offers /></ProtectedRoute>} />
                 <Route path="/redeem" element={<ProtectedRoute><Redeem /></ProtectedRoute>} />
                 <Route path="/bank-transfer" element={<ProtectedRoute><BankTransfer /></ProtectedRoute>} />
+                <Route path="/experience/:category" element={<ProtectedRoute><ExperienceCategory /></ProtectedRoute>} />
+                <Route path="/stories" element={<ProtectedRoute><SuccessStories /></ProtectedRoute>} />
+                <Route path="/brand/dashboard" element={<ProtectedRoute requiredRole="brand"><BrandDashboard /></ProtectedRoute>} />
+                <Route path="/brand/post-campaign" element={<ProtectedRoute requiredRole="brand"><PostCampaign /></ProtectedRoute>} />
+                <Route path="/brand/applications" element={<ProtectedRoute requiredRole="brand"><BrandApplications /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </OnboardingProvider>

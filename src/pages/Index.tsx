@@ -129,6 +129,15 @@ const Index = () => {
         ) : (
           <CreatorHomeContent stats={stats} statsLoading={statsLoading} userCity={userCity} />
         )}
+
+        {/* Brand redirect hint */}
+        {role === "brand" && (
+          <div className="px-5 mt-2 mb-4">
+            <button onClick={() => navigate("/brand/dashboard")} className="w-full rounded-xl p-3 text-center border border-accent/20 text-xs font-heading text-accent btn-hover-lift" style={{ background: "rgba(245,158,11,0.05)" }}>
+              Go to Brand Dashboard →
+            </button>
+          </div>
+        )}
       </div>
     </Layout>
   );
