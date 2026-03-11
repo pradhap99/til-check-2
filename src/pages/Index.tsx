@@ -72,7 +72,7 @@ const Index = () => {
         {/* Header */}
         <header className="px-5 pt-6 pb-1 flex items-center justify-between">
           <div className="flex items-center gap-3 opacity-0 animate-fade-up" style={{ animationFillMode: "forwards" }}>
-            <Avatar className="w-9 h-9 border-2 border-accent/40">
+            <Avatar className="w-9 h-9 border-2 border-accent/40 animate-float-up">
               <AvatarImage src={avatarUrl} alt={firstName} />
               <AvatarFallback className="bg-accent/20 text-accent font-heading font-bold text-sm">{initials}</AvatarFallback>
             </Avatar>

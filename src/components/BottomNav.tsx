@@ -21,7 +21,7 @@ const BottomNav = () => {
             <Link
               key={tab.to}
               to={tab.to}
-              className={`flex flex-col items-center justify-center gap-0.5 w-14 py-1 transition-all duration-200 ${
+              className={`flex flex-col items-center justify-center gap-0.5 w-14 py-1 nav-icon-active transition-all duration-200 ${
                 isActive ? "text-accent" : "text-muted-foreground"
               }`}
             >
