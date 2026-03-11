@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Wallet, TrendingUp, Clock, Download, ArrowUpRight,
-  Shield, ChevronRight, ArrowDownLeft, ArrowUpFromLine,
+  Shield, ChevronRight, ChevronDown, ChevronUp, ArrowDownLeft, ArrowUpFromLine,
   CheckCircle, Gift, Building2, Sparkles, Flame, Copy, ArrowRight
 } from "lucide-react";
 import { toast } from "sonner";
@@ -34,6 +34,7 @@ const Earnings = () => {
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [txOpen, setTxOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -52,6 +53,8 @@ const Earnings = () => {
     { id: "mock-3", amount: 7200, status: "completed", description: "Sugar Cosmetics Reel", created_at: "2026-01-30T10:00:00Z", campaign_id: null, currency: "INR", payment_method: "upi" },
     { id: "mock-4", amount: 15000, status: "completed", description: "boAt Audio Review", created_at: "2026-01-12T10:00:00Z", campaign_id: "3", currency: "INR", payment_method: "bank" },
     { id: "mock-5", amount: 7800, status: "pending", description: "Nykaa New Year", created_at: "2025-12-31T10:00:00Z", campaign_id: "5", currency: "INR", payment_method: "upi" },
+    { id: "mock-6", amount: 5500, status: "completed", description: "Bewakoof Reel", created_at: "2025-12-15T10:00:00Z", campaign_id: null, currency: "INR", payment_method: "upi" },
+    { id: "mock-7", amount: 12000, status: "completed", description: "Lenskart Eyewear", created_at: "2025-11-28T10:00:00Z", campaign_id: "1", currency: "INR", payment_method: "bank" },
   ];
 
   const displayTransactions = transactions.length > 0 ? transactions : mockTransactions;
@@ -107,17 +110,22 @@ const Earnings = () => {
           </div>
         </div>
 
-        {/* Payout buttons */}
-        <div className="px-4 mt-3 space-y-2">
-          <Button
-            className="w-full h-12 rounded-xl font-heading font-bold bg-accent hover:bg-accent/90 text-accent-foreground btn-hover-lift btn-shimmer-hover text-sm"
+        {/* Hero Voucher CTA */}
+        <div className="px-4 mt-3">
+          <button
             onClick={() => navigate("/redeem")}
+            className="w-full rounded-2xl py-[18px] font-heading font-bold text-[18px] text-white btn-shimmer-hover btn-hover-lift relative overflow-hidden"
+            style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)" }}
           >
-            <Sparkles className="w-4 h-4 mr-1.5" /> Redeem as Voucher
-          </Button>
-          <div className="text-center">
+            Redeem as Voucher ✨
+          </button>
+          <div className="text-center mt-1.5">
             <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-heading font-bold">UP TO 20% BONUS VALUE</span>
           </div>
+        </div>
+
+        {/* Secondary bank transfer */}
+        <div className="px-4 mt-2">
           <Button
             variant="outline"
             className="w-full h-10 rounded-xl font-heading text-xs text-muted-foreground border-border"
@@ -125,7 +133,7 @@ const Earnings = () => {
           >
             <Building2 className="w-3.5 h-3.5 mr-1.5" /> Transfer to Bank
           </Button>
-          <p className="text-[9px] text-muted-foreground text-center">2-3 business days processing</p>
+          <p className="text-[9px] text-muted-foreground text-center mt-1">2-3 business days processing</p>
         </div>
 
         {/* Stats */}
@@ -147,48 +155,64 @@ const Earnings = () => {
           </div>
         </div>
 
-        {/* Transaction History */}
+        {/* Collapsible Transaction History */}
         <div className="px-4 mt-5 mb-4">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-heading font-semibold text-sm text-foreground">Transaction History</h3>
-            <button className="text-[10px] text-primary font-heading font-medium flex items-center gap-0.5">
-              <Download className="w-3 h-3" /> Export
-            </button>
-          </div>
+          <button
+            onClick={() => setTxOpen(!txOpen)}
+            className="w-full flex items-center justify-between py-2"
+          >
+            <div className="flex items-center gap-2">
+              <h3 className="font-heading font-semibold text-sm text-foreground">Transaction History</h3>
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-secondary text-muted-foreground font-heading">
+                {displayTransactions.length}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="text-[10px] text-primary font-heading font-medium flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+                <Download className="w-3 h-3" /> Export
+              </button>
+              {txOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
+            </div>
+          </button>
 
-          {loading ? (
-            <div className="text-center py-16"><div className="w-8 h-8 rounded-lg bg-primary/20 animate-pulse mx-auto" /></div>
-          ) : (
-            <div className="space-y-2">
-              {displayTransactions.map((tx, i) => {
-                const config = statusConfig[tx.status] || statusConfig.pending;
-                const isWithdrawal = tx.description?.includes("Withdrawal");
-                const isIncoming = role === "creator" && !isWithdrawal;
-                return (
-                  <div key={tx.id} className="border border-border rounded-xl p-3.5 animate-fade-slide-up" style={{ animationDelay: `${i * 50}ms` }}>
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isIncoming ? "bg-primary/10" : "bg-secondary"}`}>
-                        {isIncoming ? <ArrowDownLeft className="w-4 h-4 text-primary" /> : <ArrowUpFromLine className="w-4 h-4 text-muted-foreground" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-heading font-medium text-sm text-foreground truncate">{tx.description || "Campaign Payment"}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">
-                          {new Date(tx.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                          {tx.payment_method && ` • ${tx.payment_method.toUpperCase()}`}
-                        </p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <p className={`font-heading font-bold text-sm ${isIncoming ? "text-primary" : "text-foreground"}`}>
-                          {isIncoming ? "+" : ""}₹{tx.amount.toLocaleString("en-IN")}
-                        </p>
-                        <Badge className={`${config.color} border-0 text-[8px] font-heading mt-0.5`}>{config.label}</Badge>
+          <div
+            className="overflow-hidden transition-all duration-350 ease-in-out"
+            style={{ maxHeight: txOpen ? `${displayTransactions.length * 80 + 20}px` : "0px" }}
+          >
+            {loading ? (
+              <div className="text-center py-16"><div className="w-8 h-8 rounded-lg bg-primary/20 animate-pulse mx-auto" /></div>
+            ) : (
+              <div className="space-y-2 pt-2">
+                {displayTransactions.map((tx, i) => {
+                  const config = statusConfig[tx.status] || statusConfig.pending;
+                  const isWithdrawal = tx.description?.includes("Withdrawal");
+                  const isIncoming = role === "creator" && !isWithdrawal;
+                  return (
+                    <div key={tx.id} className="border border-border rounded-xl p-3.5 animate-fade-slide-up" style={{ animationDelay: `${i * 50}ms` }}>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isIncoming ? "bg-primary/10" : "bg-secondary"}`}>
+                          {isIncoming ? <ArrowDownLeft className="w-4 h-4 text-primary" /> : <ArrowUpFromLine className="w-4 h-4 text-muted-foreground" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-heading font-medium text-sm text-foreground truncate">{tx.description || "Campaign Payment"}</p>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">
+                            {new Date(tx.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                            {tx.payment_method && ` • ${tx.payment_method.toUpperCase()}`}
+                          </p>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <p className={`font-heading font-bold text-sm ${isIncoming ? "text-primary" : "text-foreground"}`}>
+                            {isIncoming ? "+" : ""}₹{tx.amount.toLocaleString("en-IN")}
+                          </p>
+                          <Badge className={`${config.color} border-0 text-[8px] font-heading mt-0.5`}>{config.label}</Badge>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Affiliate Deals Section */}

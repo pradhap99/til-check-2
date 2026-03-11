@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Gift, CheckCircle, Sparkles, Check } from "lucide-react";
+import { ArrowLeft, Gift, Check } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 
@@ -43,8 +43,13 @@ const Redeem = () => {
           </div>
         </header>
 
+        {/* Urgency text */}
+        <div className="px-5 mt-3">
+          <p className="text-[10px] text-accent font-heading font-medium">🔥 Voucher bonus available until Mar 31</p>
+        </div>
+
         {/* Balance */}
-        <div className="px-5 mt-4">
+        <div className="px-5 mt-3">
           <div className="rounded-xl border border-border p-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Gift className="w-4 h-4 text-accent" />
@@ -54,41 +59,55 @@ const Redeem = () => {
           </div>
         </div>
 
-        {/* Voucher Grid */}
-        <div className="px-5 mt-4 space-y-4 pb-4">
-          {vouchers.map((v, vi) => (
-            <div key={v.brand} className="animate-fade-slide-up" style={{ animationDelay: `${vi * 80}ms` }}>
-              <div className="flex items-center gap-2.5 mb-2">
-                <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${v.color} flex items-center justify-center`}>
-                  <span className="text-white font-heading font-bold text-xs">{v.initial}</span>
-                </div>
-                <span className="font-heading font-semibold text-sm text-foreground">{v.brand}</span>
+        {/* Hero Amazon ₹2000 card */}
+        <div className="px-5 mt-4">
+          <div
+            className="rounded-2xl border-2 border-accent p-4 relative overflow-hidden btn-shimmer-hover cursor-pointer active:scale-[0.98] transition-transform"
+            style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02))" }}
+            onClick={() => handleRedeem("Amazon", 2000)}
+          >
+            <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground border-0 text-[8px] font-heading">BEST VALUE</Badge>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center">
+                <span className="text-white font-heading font-bold text-lg">A</span>
               </div>
-              <div className="flex gap-2">
-                {v.amounts.map(amt => {
-                  const isBest = v.bestValue.includes(amt);
-                  return (
-                    <button
-                      key={amt}
-                      onClick={() => handleRedeem(v.brand, amt)}
-                      className={`flex-1 border rounded-xl p-3 text-center transition-all active:scale-95 relative ${isBest ? "border-accent bg-accent/5 hover:bg-accent/10" : "border-border hover:border-accent"}`}
-                    >
-                      {isBest && (
-                        <Badge className="absolute -top-2 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground border-0 text-[7px] font-heading px-1.5 py-0">
-                          BEST VALUE
-                        </Badge>
-                      )}
-                      <p className="font-heading font-bold text-sm text-accent">₹{amt}</p>
-                      {isBest && (
-                        <p className="text-[8px] text-emerald-500 font-heading mt-0.5">Get ₹{getBonusAmount(amt)} value</p>
-                      )}
-                      <p className="text-[9px] text-muted-foreground mt-0.5">Redeem</p>
-                    </button>
-                  );
-                })}
+              <div>
+                <p className="font-heading font-bold text-lg text-foreground">Amazon ₹2,000</p>
+                <p className="text-[11px] text-emerald-500 font-heading font-semibold">₹2,400 credited for ₹2,000 balance</p>
+                <p className="text-[9px] text-muted-foreground mt-0.5">20% bonus value</p>
               </div>
             </div>
-          ))}
+          </div>
+        </div>
+
+        {/* Other vouchers in 2-col grid */}
+        <div className="px-5 mt-4 grid grid-cols-2 gap-3 pb-4">
+          {vouchers.map((v) =>
+            v.amounts.filter(amt => !(v.brand === "Amazon" && amt === 2000)).map(amt => {
+              const isBest = v.bestValue.includes(amt);
+              return (
+                <button
+                  key={`${v.brand}-${amt}`}
+                  onClick={() => handleRedeem(v.brand, amt)}
+                  className={`border rounded-xl p-3 text-center transition-all active:scale-95 relative ${isBest ? "border-accent bg-accent/5" : "border-border hover:border-accent"}`}
+                >
+                  {isBest && (
+                    <Badge className="absolute -top-2 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground border-0 text-[7px] font-heading px-1.5 py-0">
+                      BEST VALUE
+                    </Badge>
+                  )}
+                  <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${v.color} flex items-center justify-center mx-auto mb-1.5`}>
+                    <span className="text-white font-heading font-bold text-xs">{v.initial}</span>
+                  </div>
+                  <p className="text-[10px] font-heading font-medium text-foreground">{v.brand}</p>
+                  <p className="font-heading font-bold text-sm text-accent">₹{amt}</p>
+                  {isBest && (
+                    <p className="text-[8px] text-emerald-500 font-heading mt-0.5">Get ₹{getBonusAmount(amt)} value</p>
+                  )}
+                </button>
+              );
+            })
+          )}
         </div>
 
         {/* Comparison */}
@@ -117,7 +136,7 @@ const Redeem = () => {
         {/* Bank transfer link */}
         <div className="px-5 mb-6 text-center">
           <button onClick={() => navigate("/bank-transfer")} className="text-[10px] text-muted-foreground underline">
-            or transfer to bank (less value)
+            Prefer bank transfer? Click here
           </button>
         </div>
       </div>

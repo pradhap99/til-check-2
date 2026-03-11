@@ -38,7 +38,15 @@ const mapPins = [
   ]},
 ];
 
-const filterCategories = ["All", "Cafés", "Dining", "Staycations", "Fashion", "Beauty", "Tech"];
+const filterCategories = [
+  { label: "All", key: "All" },
+  { label: "☕ Cafés", key: "Cafés" },
+  { label: "🍽 Dining", key: "Dining" },
+  { label: "🌄 Staycations", key: "Staycations" },
+  { label: "👗 Fashion", key: "Fashion" },
+  { label: "✨ Beauty", key: "Beauty" },
+  { label: "📱 Tech", key: "Tech" },
+];
 const filterToCategory: Record<string, string[]> = {
   "All": [], "Cafés": ["Cafe"], "Dining": ["Dining", "Food"], "Staycations": ["Staycation"],
   "Fashion": ["Fashion"], "Beauty": ["Beauty"], "Tech": ["Tech"],
@@ -58,21 +66,27 @@ const CampaignMapView = ({ campaigns }: CampaignMapViewProps) => {
     ? mapPins
     : mapPins.filter(p => filterToCategory[activeFilter]?.includes(p.category));
 
-  const bottomCampaigns = filteredPins.flatMap(p => p.campaigns.map(c => ({ ...c, city: p.city })));
+  const bottomCampaigns = filteredPins.flatMap(p => p.campaigns.map(c => ({ ...c, city: p.city, category: p.category })));
 
   return (
     <div className="space-y-2">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h4 className="text-xs font-heading font-semibold text-foreground">Discover Campaigns Near You</h4>
+        <span className="text-[9px] px-2 py-0.5 rounded-full bg-accent/10 text-accent font-heading font-bold">{filteredPins.length} active</span>
+      </div>
+
       {/* Filter pills */}
       <div className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
         {filterCategories.map(cat => (
           <button
-            key={cat}
-            onClick={() => setActiveFilter(cat)}
+            key={cat.key}
+            onClick={() => setActiveFilter(cat.key)}
             className={`px-2.5 py-1 rounded-full text-[10px] font-heading font-medium whitespace-nowrap transition-all ${
-              activeFilter === cat ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"
+              activeFilter === cat.key ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"
             }`}
           >
-            {cat}
+            {cat.label}
           </button>
         ))}
       </div>
@@ -83,6 +97,7 @@ const CampaignMapView = ({ campaigns }: CampaignMapViewProps) => {
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute w-32 h-32 rounded-full" style={{ left: "20%", top: "30%", background: "radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%)" }} />
           <div className="absolute w-40 h-40 rounded-full" style={{ left: "50%", top: "50%", background: "radial-gradient(circle, rgba(245,158,11,0.04) 0%, transparent 70%)" }} />
+          <div className="absolute w-28 h-28 rounded-full" style={{ left: "35%", top: "65%", background: "radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%)" }} />
         </div>
 
         {/* Grid lines */}
@@ -119,41 +134,43 @@ const CampaignMapView = ({ campaigns }: CampaignMapViewProps) => {
                 {/* Pulse rings */}
                 <div className={`absolute inset-0 w-6 h-6 -m-[3px] rounded-full border ${colors.ring} map-pin-pulse`} />
                 <div className={`absolute inset-0 w-8 h-8 -m-[6px] rounded-full border ${colors.ring} map-pin-pulse opacity-30`} style={{ animationDelay: "0.5s" }} />
+                <div className={`absolute inset-0 w-10 h-10 -m-[9px] rounded-full border ${colors.ring} map-pin-pulse opacity-15`} style={{ animationDelay: "1s" }} />
                 <div className={`w-5 h-5 rounded-full ${colors.dot} border-2 border-white/30 shadow-[0_0_10px_rgba(245,158,11,0.5)] flex items-center justify-center`}>
-                  <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                  <span className="text-white text-[7px] font-bold">{pin.campaigns[0]?.brand?.[0]}</span>
                 </div>
                 <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1 text-[8px] text-white/50 font-medium whitespace-nowrap">{pin.city}</span>
 
                 {/* Popup */}
                 {activePin === pin.id && (
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-30 min-w-[200px]" onClick={e => e.stopPropagation()}>
-                    <div className="bg-card/95 backdrop-blur-md border border-border rounded-xl p-3 shadow-xl">
-                      <button onClick={() => setActivePin(null)} className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-secondary flex items-center justify-center">
-                        <X className="w-3 h-3 text-muted-foreground" />
+                    <div className="rounded-xl p-3 shadow-xl" style={{ background: "rgba(15,15,30,0.95)", border: "1px solid rgba(245,158,11,0.3)" }}>
+                      <button onClick={() => setActivePin(null)} className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-white/10 flex items-center justify-center">
+                        <X className="w-3 h-3 text-white/60" />
                       </button>
                       {pin.campaigns.map((c, ci) => (
-                        <div key={c.id} className={ci > 0 ? "mt-2 pt-2 border-t border-border" : ""}>
+                        <div key={c.id} className={ci > 0 ? "mt-2 pt-2 border-t border-white/10" : ""}>
                           <div className="flex items-center gap-2 mb-1">
-                            <div className={`w-6 h-6 rounded-full ${colors.dot} flex items-center justify-center`}>
-                              <span className="text-white text-[8px] font-bold">{c.brand[0]}</span>
+                            <div className={`w-5 h-5 rounded-full ${colors.dot} flex items-center justify-center`}>
+                              <span className="text-white text-[7px] font-bold">{c.brand[0]}</span>
                             </div>
-                            <p className="font-heading font-bold text-[11px] text-foreground">{c.brand}</p>
+                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-accent/10 text-accent font-heading">{colors.label}</span>
                           </div>
-                          <p className="text-[9px] text-muted-foreground truncate">{c.title}</p>
-                          <div className="flex items-center gap-2 mt-1 text-[8px] text-muted-foreground">
+                          <p className="font-heading font-bold text-[11px] text-white">{c.brand}</p>
+                          <p className="text-[9px] text-white/50 truncate">{c.title}</p>
+                          <div className="flex items-center gap-2 mt-1 text-[8px] text-white/40">
                             <Calendar className="w-2.5 h-2.5 text-accent" /> {c.date}
                           </div>
-                          <p className="text-[8px] text-muted-foreground mt-0.5">{c.applied} creators applied</p>
+                          <p className="text-[8px] text-white/40 mt-0.5">{c.applied} creators applied</p>
                           <div className="flex items-center justify-between mt-1.5">
                             <span className="text-[10px] font-heading font-bold text-accent">{c.budget}</span>
                             <button onClick={() => navigate(`/campaigns/${c.id}`)} className="text-[9px] font-heading font-semibold px-2.5 py-1 rounded-lg text-white btn-shimmer-hover" style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)" }}>
-                              Apply
+                              Apply Now
                             </button>
                           </div>
                         </div>
                       ))}
                     </div>
-                    <div className="w-2.5 h-2.5 bg-card/95 border-r border-b border-border rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-[5px]" />
+                    <div className="w-2.5 h-2.5 rotate-45 absolute left-1/2 -translate-x-1/2 -bottom-[5px]" style={{ background: "rgba(15,15,30,0.95)", borderRight: "1px solid rgba(245,158,11,0.3)", borderBottom: "1px solid rgba(245,158,11,0.3)" }} />
                   </div>
                 )}
               </div>
@@ -165,28 +182,40 @@ const CampaignMapView = ({ campaigns }: CampaignMapViewProps) => {
         <div className="absolute bottom-2 left-2 right-2 z-10">
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
-              {[{ label: "Fashion", color: "bg-amber-500" }, { label: "Café", color: "bg-emerald-500" }, { label: "Tech", color: "bg-blue-500" }, { label: "Beauty", color: "bg-pink-500" }].map(l => (
+              {[{ label: "Fashion", color: "bg-amber-500" }, { label: "Café", color: "bg-emerald-500" }, { label: "Tech", color: "bg-blue-500" }, { label: "Beauty", color: "bg-pink-500" }, { label: "Travel", color: "bg-cyan-500" }].map(l => (
                 <span key={l.label} className="flex items-center gap-0.5 text-[7px] text-white/40">
                   <span className={`w-1.5 h-1.5 rounded-full ${l.color}`} /> {l.label}
                 </span>
               ))}
             </div>
-            <span className="text-[8px] text-accent/70 font-heading">{filteredPins.length} locations</span>
           </div>
         </div>
       </div>
 
       {/* Bottom sheet - horizontal campaign cards */}
       <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-        {bottomCampaigns.slice(0, 5).map((c, i) => (
-          <div key={c.id} className="min-w-[150px] shrink-0 border border-border rounded-xl p-2.5 cursor-pointer active:scale-95 transition-transform" onClick={() => navigate(`/campaigns/${c.id}`)}>
-            <p className="text-[10px] font-heading font-bold text-foreground truncate">{c.brand}</p>
-            <p className="text-[8px] text-muted-foreground truncate">{c.city}</p>
-            <div className="flex items-center justify-between mt-1.5">
-              <span className="text-[9px] font-heading font-bold text-accent">{c.budget}</span>
-              <span className="text-[8px] px-1.5 py-0.5 rounded bg-accent text-accent-foreground font-heading">Apply</span>
+        {bottomCampaigns.slice(0, 5).map((c) => {
+          const colors = categoryColors[c.category] || categoryColors.Fashion;
+          return (
+            <div key={c.id} className="min-w-[140px] shrink-0 border border-border rounded-xl p-2.5 cursor-pointer active:scale-95 transition-transform" onClick={() => navigate(`/campaigns/${c.id}`)}>
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className={`w-2 h-2 rounded-full ${colors.dot}`} />
+                <p className="text-[10px] font-heading font-bold text-foreground truncate">{c.brand}</p>
+              </div>
+              <p className="text-[8px] text-muted-foreground truncate">{c.city}</p>
+              <div className="flex items-center justify-between mt-1.5">
+                <span className="text-[9px] font-heading font-bold text-accent">{c.budget}</span>
+                <span className="text-[8px] px-1.5 py-0.5 rounded bg-accent text-accent-foreground font-heading">Apply</span>
+              </div>
             </div>
-          </div>
+          );
+        })}
+      </div>
+
+      {/* Use case hints */}
+      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+        {["📍 Plan your shoots by location", "📅 See campaign dates on map", "☕ Discover cafe collabs near you", "💰 Find highest-paying campaigns"].map((hint, i) => (
+          <span key={i} className="text-[10px] text-accent/60 whitespace-nowrap shrink-0 font-heading">{hint}</span>
         ))}
       </div>
     </div>

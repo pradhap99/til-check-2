@@ -7,6 +7,11 @@ import CreatorHomeContent from "@/components/home/CreatorHomeContent";
 import BrandHomeContent from "@/components/home/BrandHomeContent";
 import { Bell, Search, MessageCircle, SlidersHorizontal } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { getCreatorLevel } from "@/lib/creatorLevels";
+
+const LEVEL_EMOJIS: Record<number, string> = {
+  1: "✨", 2: "🌟", 3: "🔥", 4: "💫", 5: "👑", 6: "🥇",
+};
 
 const Index = () => {
   const { user, role } = useAuth();
@@ -24,6 +29,9 @@ const Index = () => {
     activeCampaigns: 0,
     applicationsCount: 0,
   });
+
+  const levelData = getCreatorLevel(45000, 5.2, 3);
+  const levelEmoji = LEVEL_EMOJIS[levelData.current.level] || "✨";
 
   useEffect(() => {
     if (!user) return;
@@ -63,9 +71,6 @@ const Index = () => {
     loadStats();
   }, [user, role]);
 
-  const greeting = new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening";
-  const levelProgress = 90;
-
   return (
     <Layout>
       <div className="radial-gradient-bg">
@@ -77,14 +82,11 @@ const Index = () => {
               <AvatarFallback className="bg-accent/20 text-accent font-heading font-bold text-sm">{initials}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-[10px] text-muted-foreground leading-none">{greeting}</p>
-              <h1 className="text-base font-heading font-bold text-foreground tracking-tight leading-tight mt-0.5">{firstName} 👋</h1>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <div className="w-20 h-1 rounded-full bg-secondary overflow-hidden">
-                  <div className="h-full rounded-full transition-all duration-500" style={{ width: `${levelProgress}%`, background: "linear-gradient(90deg, #f59e0b, #d97706)" }} />
-                </div>
-                <span className="text-[9px] text-muted-foreground font-medium">Lv1 · {levelProgress}%</span>
+              <div className="flex items-center gap-1.5">
+                <h1 className="text-base font-heading font-bold text-foreground tracking-tight leading-tight">{firstName}</h1>
+                <span className="animate-sparkle-emoji" style={{ fontSize: "1.2em", lineHeight: 1 }}>{levelEmoji}</span>
               </div>
+              <p className="text-[11px] text-muted-foreground leading-none mt-0.5">{levelData.current.name}</p>
             </div>
           </div>
           <div className="flex items-center gap-1">

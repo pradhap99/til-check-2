@@ -49,6 +49,7 @@ import SuccessStories from "./pages/SuccessStories";
 import BrandDashboard from "./pages/brand/BrandDashboard";
 import PostCampaign from "./pages/brand/PostCampaign";
 import BrandApplications from "./pages/brand/BrandApplications";
+import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -107,6 +108,7 @@ const App = () => (
                 <Route path="/brand/dashboard" element={<ProtectedRoute requiredRole="brand"><BrandDashboard /></ProtectedRoute>} />
                 <Route path="/brand/post-campaign" element={<ProtectedRoute requiredRole="brand"><PostCampaign /></ProtectedRoute>} />
                 <Route path="/brand/applications" element={<ProtectedRoute requiredRole="brand"><BrandApplications /></ProtectedRoute>} />
+                <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </OnboardingProvider>

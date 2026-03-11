@@ -172,6 +172,7 @@ const Profile = () => {
             { icon: Users, label: "Community", to: "/community" },
             { icon: Radio, label: "Channels", to: "/channels" },
             { icon: Sparkles, label: "Managed Services", to: "/managed-services" },
+            { icon: HelpCircle, label: "How TIL Works", to: "/help" },
             { icon: HelpCircle, label: "Help & Support", to: "/support" },
             ...(isAdmin ? [{ icon: Shield, label: "Admin Panel", to: "/admin" }] : []),
           ].map((item, i) => (
