@@ -20,13 +20,10 @@ const ProtectedRoute = ({ children, requiredRole }: Props) => {
   }
 
   if (!user) return <Navigate to="/auth" replace />;
-  
-  // For demo users, skip role check if they're demo accounts
-  const isDemoUser = user.id?.startsWith("demo-");
-  if (requiredRole && role !== requiredRole && !isDemoUser) return <Navigate to="/" replace />;
+  if (requiredRole && role !== requiredRole) return <Navigate to="/" replace />;
 
-  // Skip onboarding for demo users
-  if (!isDemoUser && onboardingComplete === false) {
+  // Redirect to onboarding if not completed (except if already on onboarding)
+  if (onboardingComplete === false) {
     return <Navigate to="/onboarding" replace />;
   }
 

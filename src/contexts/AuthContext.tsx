@@ -12,7 +12,6 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName: string, role: AppRole) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-  demoLogin: (name: string, role: AppRole) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,8 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(session?.user ?? null);
         if (session?.user) {
           setTimeout(() => fetchRole(session.user.id), 0);
-        } else if (!user) {
-          // Don't clear demo user on auth state change
+        } else {
           setRole(null);
         }
         setLoading(false);
@@ -83,25 +81,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setRole(null);
   };
 
-  const demoLogin = (name: string, demoRole: AppRole) => {
-    // Create a mock user object that satisfies the User interface minimally
-    const mockUser = {
-      id: `demo-${name.toLowerCase().replace(/\s/g, "-")}-${Date.now()}`,
-      email: `${name.toLowerCase().replace(/\s/g, ".")}@demo.til.app`,
-      user_metadata: { full_name: name, role: demoRole },
-      app_metadata: {},
-      aud: "authenticated",
-      created_at: new Date().toISOString(),
-    } as User;
-
-    setUser(mockUser);
-    setSession({ user: mockUser } as Session);
-    setRole(demoRole);
-    setLoading(false);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, session, role, loading, signUp, signIn, signOut, demoLogin }}>
+    <AuthContext.Provider value={{ user, session, role, loading, signUp, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

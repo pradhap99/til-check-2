@@ -11,22 +11,20 @@ import { ArrowLeft, Mail, Lock, User, CheckCircle } from "lucide-react";
 type Mode = "login" | "signup" | "forgot";
 type Role = "creator" | "brand";
 
-const demoPersonas = [
-  { initials: "PS", name: "Priya Sharma", color: "from-pink-500 to-rose-600", delay: "0s", role: "creator" as const },
-  { initials: "VK", name: "Vikram Kumar", color: "from-blue-500 to-indigo-600", delay: "1.2s", role: "creator" as const },
-  { initials: "AJ", name: "Ajay Jain", color: "from-amber-500 to-orange-600", delay: "2.4s", role: "brand" as const },
+const floatingAvatars = [
+  { initials: "PS", color: "from-pink-500 to-rose-600", delay: "0s" },
+  { initials: "VK", color: "from-blue-500 to-indigo-600", delay: "1.2s" },
+  { initials: "AJ", color: "from-amber-500 to-orange-600", delay: "2.4s" },
 ];
 
 const Auth = () => {
   const [mode, setMode] = useState<Mode>("login");
-  const searchParams = new URLSearchParams(window.location.search);
-  const initialRole = searchParams.get("role") === "brand" ? "brand" : "creator";
-  const [role, setRole] = useState<Role>(initialRole);
+  const [role, setRole] = useState<Role>("creator");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const { signIn, signUp, demoLogin } = useAuth();
+  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -53,7 +51,7 @@ const Auth = () => {
       if (error) {
         toast({ title: "Login failed", description: error.message, variant: "destructive" });
       } else {
-        navigate(role === "brand" ? "/brand/dashboard" : "/home");
+        navigate("/home");
       }
     } else {
       const { error } = await signUp(email, password, fullName, role);
@@ -63,16 +61,11 @@ const Auth = () => {
         toast({ title: "Account created", description: "Signing you in..." });
         const { error: loginErr } = await signIn(email, password);
         if (!loginErr) {
-          navigate(role === "brand" ? "/brand/dashboard" : "/home");
+          navigate("/home");
         }
       }
     }
     setSubmitting(false);
-  };
-
-  const handleDemoLogin = (persona: typeof demoPersonas[0]) => {
-    demoLogin(persona.name, persona.role);
-    navigate(persona.role === "brand" ? "/brand/dashboard" : "/home");
   };
 
   return (
@@ -97,24 +90,20 @@ const Auth = () => {
           <p className="text-sm text-white/60 mt-1 font-medium">India's Creator Economy Platform</p>
         </div>
 
-        {/* Demo Avatar Buttons */}
-        <div className="flex items-center gap-4 mb-4">
-          {demoPersonas.map((av, i) => (
-            <button
+        {/* Floating Avatars */}
+        <div className="flex items-center gap-4 mb-8">
+          {floatingAvatars.map((av, i) => (
+            <div
               key={i}
-              className="animate-float-avatar flex flex-col items-center gap-1 group"
+              className="animate-float-avatar"
               style={{ animationDelay: av.delay }}
-              onClick={() => handleDemoLogin(av)}
             >
-              <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${av.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+              <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${av.color} flex items-center justify-center shadow-lg`}>
                 <span className="text-white font-heading font-bold text-sm">{av.initials}</span>
               </div>
-              <span className="text-[8px] text-white/40 font-medium">{av.name.split(" ")[0]}</span>
-              <span className="text-[7px] text-white/25">{av.role === "brand" ? "Brand" : "Creator"}</span>
-            </button>
+            </div>
           ))}
         </div>
-        <p className="text-[10px] text-white/30 mb-4">↑ Tap an avatar for instant demo login</p>
 
         {/* Glass Form Card */}
         <div
@@ -130,13 +119,11 @@ const Auth = () => {
             {mode === "login" ? "Welcome back" : mode === "signup" ? "Create account" : "Reset password"}
           </h2>
           <p className="text-sm text-white/50 mt-1 mb-6">
-            {mode === "login"
-              ? (role === "brand" ? "Sign in to manage your campaigns" : "Sign in to continue")
-              : mode === "signup" ? "Get started with TIL" : "We'll send you a reset link"}
+            {mode === "login" ? "Sign in to continue" : mode === "signup" ? "Get started with TIL" : "We'll send you a reset link"}
           </p>
 
-          {mode !== "forgot" && (
-            <div className="flex gap-1 mb-4 p-1 rounded-lg" style={{ background: "rgba(255,255,255,0.08)" }}>
+          {mode === "signup" && (
+            <div className="flex gap-1 mb-6 p-1 rounded-lg" style={{ background: "rgba(255,255,255,0.08)" }}>
               {(["creator", "brand"] as Role[]).map((r) => (
                 <button
                   key={r}
@@ -151,9 +138,6 @@ const Auth = () => {
               ))}
             </div>
           )}
-
-
-
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "signup" && (
