@@ -172,6 +172,7 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
           {successStories.map((story, i) => (
             <div
               key={i}
+              onClick={() => navigate("/stories")}
               className="min-w-[140px] max-w-[140px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border relative cursor-pointer active:scale-[0.97] transition-transform animate-scale-in"
               style={{ animationDelay: `${i * 80}ms` }}
             >
