@@ -194,6 +194,7 @@ const PostCampaign = () => {
                   ["Niches", form.niches.join(", ") || "—"], ["Payout", `₹${form.payoutMin} – ₹${form.payoutMax}`],
                   ["Creators", form.creatorCount || "—"], ["Dates", `${form.startDate} to ${form.endDate}` || "—"],
                   ["Location", form.location || "—"],
+                  ["Milestones", form.milestones.filter(m => m.description).map(m => `${m.description} (${m.percentage}%)`).join(", ") || "—"],
                 ].map(([label, val], i) => (
                   <div key={i} className="flex justify-between py-2 border-b border-border last:border-0">
                     <span className="text-xs text-muted-foreground">{label}</span>
