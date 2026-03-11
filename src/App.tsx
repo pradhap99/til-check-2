@@ -49,6 +49,7 @@ import SuccessStories from "./pages/SuccessStories";
 import BrandDashboard from "./pages/brand/BrandDashboard";
 import PostCampaign from "./pages/brand/PostCampaign";
 import BrandApplications from "./pages/brand/BrandApplications";
+import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
