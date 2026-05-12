@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { subscribeRaf } from "./useRafScheduler";
 
 interface Options {
   threshold?: number;
@@ -46,14 +47,14 @@ export function useScrollProgress() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => {
+    const compute = () => {
       const h = document.documentElement;
       const total = h.scrollHeight - h.clientHeight;
-      setProgress(total > 0 ? h.scrollTop / total : 0);
+      const next = total > 0 ? h.scrollTop / total : 0;
+      setProgress((prev) => (Math.abs(prev - next) > 0.0005 ? next : prev));
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    compute();
+    return subscribeRaf(compute);
   }, []);
 
   return progress;
@@ -66,31 +67,18 @@ export function useParallax(strength = 0.2) {
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    let frame = 0;
     const update = () => {
       const rect = node.getBoundingClientRect();
       const vh = window.innerHeight;
       const center = rect.top + rect.height / 2 - vh / 2;
-      setOffset(-center * strength);
-      frame = 0;
-    };
-
-    const onScroll = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(update);
+      const next = -center * strength;
+      setOffset((prev) => (Math.abs(prev - next) > 0.25 ? next : prev));
     };
 
     update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) cancelAnimationFrame(frame);
-    };
+    return subscribeRaf(update);
   }, [strength]);
 
   return { ref, offset };

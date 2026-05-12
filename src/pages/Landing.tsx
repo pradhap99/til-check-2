@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowRight, TrendingUp, Users, Shield, CreditCard,
   ChevronDown, Star, CheckCircle, BarChart3, Zap, Lock,
-  IndianRupee, Clock, Award, Target, Handshake, Sparkles, PlayCircle
+  IndianRupee, Clock, Award, Target, Handshake,
 } from "lucide-react";
 import { useState } from "react";
 import CountUp from "@/components/CountUp";
@@ -11,6 +11,12 @@ import ScrollReveal from "@/components/motion/ScrollReveal";
 import Tilt3D from "@/components/motion/Tilt3D";
 import ScrollProgress from "@/components/motion/ScrollProgress";
 import MagneticButton from "@/components/motion/MagneticButton";
+import Pinned3DScene from "@/components/motion/Pinned3DScene";
+import ParallaxLayer from "@/components/motion/ParallaxLayer";
+import VelocityField from "@/components/motion/VelocityField";
+import { useSceneProgress, mapRange, clamp } from "@/components/motion/SceneProgressContext";
+import HeroSceneContent, { HeroSceneFallback } from "@/components/landing/HeroScene";
+import HowItWorksSceneContent, { HowItWorksFallback } from "@/components/landing/HowItWorksScene";
 import { TOP_CATEGORIES } from "@/data/experienceCategories";
 
 const faqs = [
@@ -30,10 +36,7 @@ const testimonials = [
   { name: "Kavya Nair", role: "Beauty · 780K followers", quote: "10 Reels, 25 Stories, 3 brand deals renewed. Escrow protection gives complete peace of mind.", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=face" },
 ];
 
-const experienceCategories = TOP_CATEGORIES.map(c => ({
-  label: c.label,
-  img: c.img || "",
-}));
+const experienceCategories = TOP_CATEGORIES.map(c => ({ label: c.label, img: c.img || "" }));
 
 const brandLogos = [
   { name: "boAt", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=60&h=60&fit=crop" },
@@ -42,6 +45,60 @@ const brandLogos = [
   { name: "Sugar", img: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=60&h=60&fit=crop" },
   { name: "CRED", img: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=60&h=60&fit=crop" },
 ];
+
+const howItWorksCols = [
+  { label: "For Creators", steps: [
+    { step: "01", title: "Build your profile", desc: "Connect social accounts, set your niche and rate card. Verified metrics, instant credibility." },
+    { step: "02", title: "Discover campaigns", desc: "AI-matched brand deals filtered by niche, budget and location. No more cold pitching." },
+    { step: "03", title: "Deliver content", desc: "Submit work for brand review through built-in tools. Version tracking and revision history baked in." },
+    { step: "04", title: "Get paid via UPI", desc: "Instant payments on approval, zero fee, GST-ready invoices generated automatically." },
+  ]},
+  { label: "For Brands", steps: [
+    { step: "01", title: "Post a campaign", desc: "Define budget, deliverables, and target audience in under 5 minutes." },
+    { step: "02", title: "Review applications", desc: "Sort by AI match score, engagement rate, and reach. See verified portfolios." },
+    { step: "03", title: "Approve content", desc: "Review submissions with version tracking. Comment, request revisions, approve in one click." },
+    { step: "04", title: "Track ROI", desc: "Real-time analytics on reach, engagement, CPE, and sales attribution across platforms." },
+  ]},
+];
+
+// Inner content of the CTA pinned outro
+const CTAOutroContent = () => {
+  const { progress: p } = useSceneProgress();
+  const cardZ = mapRange(p, 0, 1, -120, 80);
+  const cardScale = 0.92 + clamp(mapRange(p, 0, 0.6, 0, 1)) * 0.1;
+  const cardOpacity = clamp(mapRange(p, 0, 0.4, 0, 1));
+  const orbScale = 1 + p * 0.6;
+
+  return (
+    <div className="absolute inset-0 flex items-center justify-center px-5">
+      <div aria-hidden className="absolute -top-10 -right-10 w-96 h-96 rounded-full bg-accent/20 blur-3xl" style={{ transform: `scale(${orbScale})` }} />
+      <div aria-hidden className="absolute -bottom-10 -left-10 w-96 h-96 rounded-full bg-info/15 blur-3xl" style={{ transform: `scale(${orbScale})` }} />
+      <div
+        className="w-full max-w-4xl"
+        style={{ transform: `translateZ(${cardZ}px) scale(${cardScale})`, opacity: cardOpacity, willChange: "transform, opacity" }}
+      >
+        <div className="bg-foreground rounded-3xl p-10 md:p-16 text-center relative overflow-hidden shadow-2xl">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-background/10 backdrop-blur text-background/80 text-xs font-medium mb-6 border border-background/15">
+            <Zap className="w-3 h-3 text-accent" /> Limited beta · Early access
+          </div>
+          <h2 className="text-2xl md:text-4xl font-heading font-bold text-background tracking-tight">Start growing today</h2>
+          <p className="text-background/60 text-sm mt-3 max-w-md mx-auto">
+            Join 12,000+ creators and 800+ brands already using TIL to power their influencer marketing.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
+            <MagneticButton>
+              <Link to="/auth">
+                <Button size="lg" className="bg-background text-foreground hover:bg-background/90 font-medium h-12 px-8 btn-micro rounded-full">
+                  Get Started Free <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </Link>
+            </MagneticButton>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Landing = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -83,8 +140,9 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-background noise-overlay scroll-smooth">
       <ScrollProgress />
+      <VelocityField selector=".velocity-orb" />
 
-      {/* Navbar */}
+      {/* Sticky nav */}
       <nav className="sticky top-0 z-40 px-5 py-3 backdrop-blur-xl bg-background/70 border-b border-border/40">
         <div className="flex items-center justify-between max-w-5xl mx-auto">
           <Link to="/" className="flex items-center gap-2 group">
@@ -100,148 +158,52 @@ const Landing = () => {
         </div>
       </nav>
 
-      {/* Audience Toggle */}
-      <div className="flex justify-center mt-6">
-        <div className="inline-flex bg-secondary rounded-full p-1 gap-1 shadow-sm">
-          <button onClick={() => setAudience("creator")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all duration-300 ${audience === "creator" ? "bg-foreground text-background shadow-md scale-105" : "text-muted-foreground hover:text-foreground"}`}>For Creators</button>
-          <button onClick={() => setAudience("brand")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all duration-300 ${audience === "brand" ? "bg-foreground text-background shadow-md scale-105" : "text-muted-foreground hover:text-foreground"}`}>For Brands</button>
-        </div>
+      {/* ===== HERO PINNED SCENE (desktop) + flat fallback (mobile) ===== */}
+      <HeroSceneFallback
+        audience={audience}
+        setAudience={setAudience}
+        title={hero.title}
+        subtitle={hero.subtitle}
+        cta={hero.cta}
+        ctaSecondary={hero.ctaSecondary}
+        stats={hero.stats}
+      />
+      <div className="hidden md:block">
+        <Pinned3DScene height="260vh">
+          <HeroSceneContent
+            audience={audience}
+            setAudience={setAudience}
+            title={hero.title}
+            subtitle={hero.subtitle}
+            cta={hero.cta}
+            ctaSecondary={hero.ctaSecondary}
+            stats={hero.stats}
+          />
+        </Pinned3DScene>
       </div>
-
-      {/* Hero — cinematic 3D layered */}
-      <section className="relative px-5 pt-10 pb-20 max-w-5xl mx-auto text-center overflow-hidden">
-        {/* Aurora + orbs */}
-        <div aria-hidden className="absolute inset-0 aurora-bg dot-grid-bg" />
-        <div aria-hidden className="hero-orb w-72 h-72 -top-10 -left-16" style={{ background: "radial-gradient(circle, hsl(38 92% 55%), transparent 70%)" }} />
-        <div aria-hidden className="hero-orb hero-orb-2 w-80 h-80 -top-20 -right-20" style={{ background: "radial-gradient(circle, hsl(280 80% 60%), transparent 70%)" }} />
-        <div aria-hidden className="hero-orb hero-orb-3 w-64 h-64 bottom-0 left-1/3" style={{ background: "radial-gradient(circle, hsl(180 70% 50%), transparent 70%)" }} />
-
-        <div className="relative">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/80 backdrop-blur text-muted-foreground text-xs font-medium mb-6 animate-fade-up chip-float border border-border/60">
-            <Sparkles className="w-3 h-3 text-accent" /> India's #1 Creator-Brand Marketplace
-          </div>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-extrabold leading-[1.05] tracking-tight animate-fade-up" style={{ animationDelay: "100ms" }}>
-            {hero.title}
-          </h1>
-          <p className="text-muted-foreground text-base md:text-lg mt-5 max-w-xl mx-auto leading-relaxed opacity-0 animate-fade-up" style={{ animationDelay: "200ms" }}>
-            {hero.subtitle}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8 opacity-0 animate-fade-up" style={{ animationDelay: "300ms" }}>
-            <MagneticButton>
-              <Link to="/auth">
-                <Button size="lg" className="cta-glow font-medium w-full sm:w-auto h-12 px-8 text-sm btn-micro rounded-full">
-                  {hero.cta} <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </Link>
-            </MagneticButton>
-            <MagneticButton strength={0.25}>
-              <Link to="/auth">
-                <Button size="lg" variant="outline" className="font-medium w-full sm:w-auto h-12 px-8 text-sm btn-micro rounded-full gap-1.5" onClick={() => setAudience(audience === "creator" ? "brand" : "creator")}>
-                  <PlayCircle className="w-4 h-4" /> {hero.ctaSecondary}
-                </Button>
-              </Link>
-            </MagneticButton>
-          </div>
-          <p className="text-xs text-muted-foreground mt-4">Free to join · No credit card required</p>
-
-          {/* Floating 3D preview cards */}
-          <div className="relative mt-14 hidden md:block perspective-1200">
-            <div className="relative h-72 w-full">
-              {/* Center hero card */}
-              <Tilt3D max={12} scale={1.03} className="absolute left-1/2 top-0 -translate-x-1/2 w-80 rounded-2xl bg-card border border-border shadow-2xl p-5 text-left">
-                <div className="flex items-center gap-3">
-                  <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" alt="" className="w-10 h-10 rounded-full object-cover" />
-                  <div>
-                    <p className="font-heading font-semibold text-sm">Priya Sharma</p>
-                    <p className="text-[11px] text-muted-foreground">Fashion · 1.2M</p>
-                  </div>
-                  <span className="ml-auto text-[10px] font-heading px-2 py-0.5 rounded-full bg-success/15 text-success">Accepted</span>
-                </div>
-                <div className="mt-4 rounded-lg overflow-hidden">
-                  <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=200&fit=crop" alt="" className="w-full h-32 object-cover" />
-                </div>
-                <div className="flex items-center justify-between mt-3">
-                  <span className="text-[11px] text-muted-foreground">Lenskart · Reel × 5</span>
-                  <span className="font-heading font-bold text-sm">₹85,000</span>
-                </div>
-              </Tilt3D>
-
-              {/* Left floating card */}
-              <div className="absolute left-0 top-8 w-56 rounded-2xl bg-card border border-border shadow-xl p-4 text-left animate-float-up" style={{ transform: "rotate(-6deg)" }}>
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Live earnings</p>
-                <p className="font-heading font-bold text-2xl mt-1">
-                  ₹<CountUp end={12450} duration={2400} />
-                </p>
-                <div className="mt-2 flex items-center gap-1 text-[11px] text-success font-medium">
-                  <TrendingUp className="w-3 h-3" /> +24% this week
-                </div>
-                <div className="mt-3 flex gap-1">
-                  {[8, 14, 11, 18, 22, 16, 26].map((h, i) => (
-                    <div key={i} className="flex-1 rounded-sm bg-accent/30" style={{ height: `${h * 1.2}px` }} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Right floating card */}
-              <div className="absolute right-0 top-16 w-56 rounded-2xl bg-foreground text-background border border-border shadow-2xl p-4 text-left animate-float-up" style={{ animationDelay: "1.5s", transform: "rotate(5deg)" }}>
-                <div className="flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-accent" />
-                  <p className="font-heading font-semibold text-sm">Payment Secured</p>
-                </div>
-                <p className="text-[11px] text-background/60 mt-1">Held in escrow until approval</p>
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="text-[11px] text-background/60">boAt Campaign</span>
-                  <span className="font-heading font-bold text-base">₹1.2L</span>
-                </div>
-                <div className="mt-2 h-1.5 rounded-full bg-background/15 overflow-hidden">
-                  <div className="h-full bg-accent" style={{ width: "70%" }} />
-                </div>
-                <p className="text-[10px] text-background/50 mt-1.5">2 of 3 deliverables approved</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Brand Social Proof */}
       {audience === "brand" && (
-        <ScrollReveal className="px-5 max-w-4xl mx-auto mb-8" variant="up">
+        <ScrollReveal className="px-5 max-w-4xl mx-auto mt-12 md:mt-4 mb-8" variant="up">
           <p className="text-[10px] text-muted-foreground text-center uppercase tracking-widest mb-4">Trusted by leading brands</p>
           <div className="flex justify-center gap-4 flex-wrap">
             {brandLogos.map((b, i) => (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary border border-border hover:scale-110 transition-transform duration-300">
-                  <img src={b.img} alt={b.name} className="w-full h-full object-cover" />
+              <ParallaxLayer key={i} depth={-0.3 + (i % 3) * 0.2}>
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary border border-border hover:scale-110 transition-transform duration-300">
+                    <img src={b.img} alt={b.name} className="w-full h-full object-cover" />
+                  </div>
+                  <span className="text-[9px] text-muted-foreground font-medium">{b.name}</span>
                 </div>
-                <span className="text-[9px] text-muted-foreground font-medium">{b.name}</span>
-              </div>
+              </ParallaxLayer>
             ))}
           </div>
         </ScrollReveal>
       )}
 
-      {/* Dark stats bar with 3D tilt */}
-      <section className="px-5 max-w-4xl mx-auto">
-        <ScrollReveal variant="scale" duration={900}>
-          <Tilt3D max={5} scale={1.01} className="rounded-2xl">
-            <div className="bg-foreground rounded-2xl p-8 grid grid-cols-2 md:grid-cols-4 gap-6 relative overflow-hidden">
-              <div aria-hidden className="absolute -top-20 -right-20 w-48 h-48 rounded-full bg-accent/15 blur-3xl" />
-              {hero.stats.map((stat, i) => (
-                <div key={i} className="text-center relative" style={{ transform: `translateZ(${20 + i * 4}px)` }}>
-                  <p className="font-heading font-bold text-2xl md:text-3xl text-primary-foreground">
-                    <CountUp end={stat.value} duration={2000} prefix={stat.prefix} suffix={stat.suffix} />
-                  </p>
-                  <p className="text-xs text-primary-foreground/50 mt-0.5">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-          </Tilt3D>
-        </ScrollReveal>
-      </section>
-
-      {/* Brand-specific features */}
+      {/* Brand features */}
       {audience === "brand" && (
-        <section className="px-5 mt-20 max-w-4xl mx-auto">
+        <section className="px-5 mt-16 max-w-4xl mx-auto">
           <ScrollReveal>
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">Why TIL</p>
             <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight mb-10">Everything your brand needs</h2>
@@ -264,8 +226,8 @@ const Landing = () => {
         </section>
       )}
 
-      {/* Explore by Experience */}
-      <section className="px-5 mt-24 max-w-4xl mx-auto">
+      {/* Browse categories — z-staggered parallax tiles */}
+      <section className="px-5 mt-20 md:mt-24 max-w-4xl mx-auto">
         <ScrollReveal>
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">Browse</p>
           <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight">
@@ -274,18 +236,20 @@ const Landing = () => {
         </ScrollReveal>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-10 perspective-1200">
           {experienceCategories.map((cat, i) => (
-            <ScrollReveal key={i} delay={i * 60} variant="up">
-              <Tilt3D max={10} scale={1.04}>
-                <Link to="/auth" className="relative rounded-xl overflow-hidden aspect-[4/3] group block">
-                  <img src={cat.img} alt={cat.label} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                  <div className="absolute inset-x-3 bottom-3 flex items-center justify-between">
-                    <p className="text-xs font-heading font-semibold text-white">{cat.label}</p>
-                    <ArrowRight className="w-3.5 h-3.5 text-white translate-x-0 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
-              </Tilt3D>
-            </ScrollReveal>
+            <ParallaxLayer key={i} depth={-0.3 + (i % 4) * 0.15}>
+              <ScrollReveal delay={i * 50} variant="up">
+                <Tilt3D max={10} scale={1.04}>
+                  <Link to="/auth" className="relative rounded-xl overflow-hidden aspect-[4/3] group block">
+                    <img src={cat.img} alt={cat.label} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                    <div className="absolute inset-x-3 bottom-3 flex items-center justify-between">
+                      <p className="text-xs font-heading font-semibold text-white">{cat.label}</p>
+                      <ArrowRight className="w-3.5 h-3.5 text-white translate-x-0 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </Link>
+                </Tilt3D>
+              </ScrollReveal>
+            </ParallaxLayer>
           ))}
         </div>
       </section>
@@ -330,7 +294,7 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* As Featured In */}
+      {/* Featured in */}
       <ScrollReveal className="px-5 mt-20 max-w-4xl mx-auto text-center">
         <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-4">As featured in</p>
         <div className="flex items-center justify-center gap-6 md:gap-10 flex-wrap">
@@ -340,7 +304,7 @@ const Landing = () => {
         </div>
       </ScrollReveal>
 
-      {/* Bento grid features */}
+      {/* Bento features */}
       <section className="px-5 mt-24 max-w-4xl mx-auto">
         <ScrollReveal>
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">Platform</p>
@@ -370,55 +334,53 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="px-5 mt-24 max-w-4xl mx-auto">
-        <ScrollReveal>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">How it works</p>
-          <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight">From signup to payout in four steps</h2>
-        </ScrollReveal>
-        <div className="grid md:grid-cols-2 gap-4 mt-10">
-          {[
-            { label: "For Creators", steps: [
-              { step: "01", title: "Build your profile", desc: "Connect social accounts, set niche & rate card" },
-              { step: "02", title: "Discover campaigns", desc: "AI-matched brand deals by niche, budget, location" },
-              { step: "03", title: "Deliver content", desc: "Submit work for brand review through built-in tools" },
-              { step: "04", title: "Get paid via UPI", desc: "Instant payments, zero fee, GST-ready invoices" },
-            ]},
-            { label: "For Brands", steps: [
-              { step: "01", title: "Post a campaign", desc: "Define budget, deliverables, and target audience" },
-              { step: "02", title: "Review applications", desc: "Sort by match score, engagement rate, reach" },
-              { step: "03", title: "Approve content", desc: "Review submissions with version tracking" },
-              { step: "04", title: "Track ROI", desc: "Real-time analytics on reach, engagement, sales" },
-            ]},
-          ].map((section, si) => (
-            <ScrollReveal key={si} delay={si * 120} variant={si === 0 ? "left" : "right"}>
-              <div className="card-3d border border-border rounded-xl p-6 bg-card hover-lift">
-                <p className="text-xs font-medium text-accent uppercase tracking-widest mb-4">{section.label}</p>
-                <div className="space-y-5">
-                  {section.steps.map((item) => (
-                    <div key={item.step} className="flex items-start gap-4 group">
-                      <span className="text-[10px] font-heading font-bold text-muted-foreground mt-1 w-5 shrink-0 group-hover:text-accent transition-colors">{item.step}</span>
-                      <div>
-                        <p className="font-heading font-semibold text-sm text-foreground">{item.title}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </ScrollReveal>
-          ))}
+      {/* ===== HOW IT WORKS PINNED SCENE (desktop) + flat fallback (mobile) ===== */}
+      <div className="mt-24">
+        <div className="md:hidden">
+          <HowItWorksFallback cols={howItWorksCols} />
         </div>
-      </section>
+        <div className="hidden md:block">
+          <Pinned3DScene height="480vh">
+            <HowItWorksSceneContent cols={howItWorksCols} />
+          </Pinned3DScene>
+        </div>
+      </div>
 
-      {/* Testimonials — 3D marquee */}
+      {/* Testimonials — depth-layered 3D marquee */}
       <section className="mt-24 max-w-full overflow-hidden">
         <ScrollReveal>
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2 px-5">Testimonials</p>
           <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight px-5">Trusted by 12,000+ creators & 800+ brands</h2>
         </ScrollReveal>
-        <div className="mt-10 marquee-3d">
-          <div className="marquee-3d-track flex gap-4 animate-scroll-x" style={{ width: "max-content" }}>
+        <div className="mt-10 marquee-3d relative">
+          {/* Back row — receded depth, slower, reverse */}
+          <div
+            className="flex gap-4 animate-scroll-x absolute left-0 right-0 top-1/2 -translate-y-1/2"
+            style={{
+              width: "max-content",
+              animationDuration: "55s",
+              animationDirection: "reverse",
+              transform: "translateY(-50%) translateZ(-180px) scale(0.85)",
+              opacity: 0.55,
+            }}
+            aria-hidden
+          >
+            {[...testimonials, ...testimonials].map((t, i) => (
+              <div key={`back-${i}`} className="w-[300px] shrink-0 border border-border rounded-xl p-5 bg-card card-3d">
+                <div className="flex items-center gap-3 mb-4">
+                  <img src={t.avatar} alt="" className="w-10 h-10 rounded-full object-cover bg-secondary" />
+                  <div>
+                    <p className="font-heading font-semibold text-sm text-foreground">{t.name}</p>
+                    <p className="text-[11px] text-muted-foreground">{t.role}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">"{t.quote}"</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Front row */}
+          <div className="marquee-3d-track flex gap-4 animate-scroll-x relative" style={{ width: "max-content" }}>
             {[...testimonials, ...testimonials].map((t, i) => (
               <div key={i} className="w-[300px] shrink-0 border border-border rounded-xl p-5 bg-card card-3d hover-lift">
                 <div className="flex items-center gap-3 mb-4">
@@ -463,36 +425,34 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="px-5 mt-24 max-w-4xl mx-auto">
-        <ScrollReveal variant="scale">
-          <Tilt3D max={4} scale={1.005}>
-            <div className="bg-foreground rounded-3xl p-10 md:p-16 text-center relative overflow-hidden">
-              <div aria-hidden className="absolute top-0 right-0 w-72 h-72 rounded-full bg-accent/20 blur-3xl -translate-y-1/2 translate-x-1/2 animate-drift-orb" />
-              <div aria-hidden className="absolute bottom-0 left-0 w-72 h-72 rounded-full bg-info/15 blur-3xl translate-y-1/2 -translate-x-1/2 animate-drift-orb" style={{ animationDelay: "-4s" }} />
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-background/10 backdrop-blur text-background/80 text-xs font-medium mb-6 border border-background/15">
-                <Zap className="w-3 h-3 text-accent" /> Limited beta · Early access
-              </div>
-              <h2 className="text-2xl md:text-4xl font-heading font-bold text-background tracking-tight relative z-10">Start growing today</h2>
-              <p className="text-background/60 text-sm mt-3 max-w-md mx-auto relative z-10">
-                Join 12,000+ creators and 800+ brands already using TIL to power their influencer marketing.
+      {/* ===== CTA PINNED OUTRO ===== */}
+      <div className="mt-24">
+        <div className="md:hidden">
+          <section className="px-5 max-w-4xl mx-auto">
+            <div className="bg-foreground rounded-3xl p-10 text-center relative overflow-hidden">
+              <h2 className="text-2xl font-heading font-bold text-background tracking-tight">Start growing today</h2>
+              <p className="text-background/60 text-sm mt-3">
+                Join 12,000+ creators and 800+ brands already using TIL.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8 relative z-10">
-                <MagneticButton>
-                  <Link to="/auth">
-                    <Button size="lg" className="bg-background text-foreground hover:bg-background/90 font-medium h-12 px-8 btn-micro rounded-full">
-                      Get Started Free <ArrowRight className="w-4 h-4 ml-1" />
-                    </Button>
-                  </Link>
-                </MagneticButton>
+              <div className="mt-6">
+                <Link to="/auth">
+                  <Button size="lg" className="bg-background text-foreground hover:bg-background/90 h-12 px-8 rounded-full">
+                    Get Started Free <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </Link>
               </div>
             </div>
-          </Tilt3D>
-        </ScrollReveal>
-      </section>
+          </section>
+        </div>
+        <div className="hidden md:block">
+          <Pinned3DScene height="180vh">
+            <CTAOutroContent />
+          </Pinned3DScene>
+        </div>
+      </div>
 
       {/* Footer */}
-      <footer className="px-5 mt-20 pb-10 max-w-4xl mx-auto border-t border-border pt-8">
+      <footer className="px-5 mt-12 pb-10 max-w-4xl mx-auto border-t border-border pt-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-md bg-foreground flex items-center justify-center">
