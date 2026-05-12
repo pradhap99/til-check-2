@@ -134,7 +134,7 @@ const CreateCampaign = () => {
             <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Campaign Type</label>
             <div className="grid grid-cols-2 gap-2">
               {campaignTypes.map(t => (
-                <button key={t.label} onClick={() => setCampaignType(t.label)} className={`p-3 rounded-xl text-xs font-heading font-medium transition-all flex items-center gap-2 ${campaignType === t.label ? "bg-accent text-accent-foreground shadow-md" : "bg-secondary text-secondary-foreground"}`}>
+                <button key={t.label} onClick={() => setCampaignType(t.label)} className={`p-3 rounded-xl text-xs font-heading font-medium transition-all flex items-center gap-2 ${campaignType === t.label ? "bg-accent text-accent-foreground shadow-elev-2" : "bg-secondary text-secondary-foreground"}`}>
                   <span>{t.emoji}</span> {t.label}
                 </button>
               ))}

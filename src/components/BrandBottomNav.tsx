@@ -22,7 +22,7 @@ const BrandBottomNav = () => {
               key={tab.to}
               to={tab.to}
               className={`flex flex-col items-center justify-center gap-0.5 w-14 py-1 transition-all duration-200 ${
-                isActive ? "text-accent" : "text-[#52525B]"
+                isActive ? "text-accent" : "text-[hsl(var(--muted-foreground))]"
               }`}
             >
               <tab.icon className={`w-[18px] h-[18px] transition-transform duration-200 ${isActive ? "scale-110" : ""}`} strokeWidth={isActive ? 2.5 : 1.5} />

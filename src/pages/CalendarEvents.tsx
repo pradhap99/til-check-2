@@ -88,7 +88,7 @@ const CalendarEvents = () => {
                   className={cn(
                     "flex flex-col items-center justify-center min-w-[52px] h-[68px] rounded-2xl border transition-all duration-200 shrink-0",
                     isSelected
-                      ? "bg-accent text-accent-foreground border-accent shadow-lg shadow-accent/20"
+                      ? "bg-accent text-accent-foreground border-accent shadow-elev-3 shadow-accent/20"
                       : "bg-card border-border text-muted-foreground hover:border-accent/30"
                   )}
                 >
@@ -152,7 +152,7 @@ const CalendarEvents = () => {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                <span className="absolute top-3 right-3 bg-accent text-accent-foreground text-[10px] font-heading font-bold px-3 py-1 rounded-lg shadow-lg">
+                <span className="absolute top-3 right-3 bg-accent text-accent-foreground text-[10px] font-heading font-bold px-3 py-1 rounded-lg shadow-elev-3">
                   Apply
                 </span>
                 <div className="absolute bottom-0 inset-x-0 p-4">

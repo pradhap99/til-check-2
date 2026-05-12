@@ -25,7 +25,7 @@ const CreatorLevelBadge = ({ followers, engagementRate = 0, completedCampaigns =
   if (size === "md") {
     return (
       <div className="flex items-center gap-2">
-        <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${current.badgeGradient} flex items-center justify-center shadow-md`}>
+        <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${current.badgeGradient} flex items-center justify-center shadow-elev-2`}>
           <Award className="w-3.5 h-3.5 text-white" />
         </div>
         <div>
@@ -40,7 +40,7 @@ const CreatorLevelBadge = ({ followers, engagementRate = 0, completedCampaigns =
   return (
     <div className="border border-border rounded-2xl p-4 bg-card">
       <div className="flex items-center gap-3">
-        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${current.badgeGradient} flex items-center justify-center shadow-lg`}>
+        <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${current.badgeGradient} flex items-center justify-center shadow-elev-3`}>
           <Award className="w-5 h-5 text-white" />
         </div>
         <div className="flex-1">

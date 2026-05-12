@@ -187,7 +187,7 @@ const Reviews = () => {
       {/* Write Review FAB */}
       <Drawer open={writeOpen} onOpenChange={setWriteOpen}>
         <DrawerTrigger asChild>
-          <button className="fixed bottom-6 right-6 w-14 h-14 rounded-2xl gradient-primary flex items-center justify-center shadow-xl z-20">
+          <button className="fixed bottom-6 right-6 w-14 h-14 rounded-2xl gradient-primary flex items-center justify-center shadow-elev-3 z-20">
             <Plus className="w-6 h-6 text-primary-foreground" />
           </button>
         </DrawerTrigger>

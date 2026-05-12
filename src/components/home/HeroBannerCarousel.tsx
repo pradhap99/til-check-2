@@ -75,7 +75,7 @@ const HeroBannerCarousel = ({ onSlideChange }: HeroBannerCarouselProps) => {
           <h3 className="text-white font-heading font-bold text-base leading-tight">
             {slides[current].title}
           </h3>
-          <p className="text-[#E5E7EB] text-xs mt-0.5 flex items-center gap-1">
+          <p className="text-[hsl(var(--parchment))] text-xs mt-0.5 flex items-center gap-1">
             {slides[current].subtitle} <ChevronRight className="w-3 h-3 text-amber-500" />
           </p>
         </div>

@@ -184,7 +184,7 @@ const ChatConversation = () => {
               <Smile className="w-4 h-4 text-muted-foreground" />
             </button>
           </div>
-          <button onClick={() => handleSend()} disabled={!newMessage.trim() || sending} className="w-11 h-11 rounded-2xl gradient-primary flex items-center justify-center shrink-0 disabled:opacity-50 shadow-md active:scale-90 transition-transform">
+          <button onClick={() => handleSend()} disabled={!newMessage.trim() || sending} className="w-11 h-11 rounded-2xl gradient-primary flex items-center justify-center shrink-0 disabled:opacity-50 shadow-elev-2 active:scale-90 transition-transform">
             <Send className="w-4 h-4 text-primary-foreground" />
           </button>
         </div>
