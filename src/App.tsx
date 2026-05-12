@@ -55,6 +55,7 @@ import BrandApplications from "./pages/brand/BrandApplications";
 import Help from "./pages/Help";
 import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
+import Showcase from "./pages/Showcase";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +76,7 @@ const AnimatedRoutes = () => {
       >
         <Routes location={location}>
           <Route path="/" element={<Landing />} />
+                <Route path="/showcase" element={<Showcase />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/onboarding" element={<Onboarding />} />
