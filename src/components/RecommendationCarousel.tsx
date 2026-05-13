@@ -45,7 +45,7 @@ const RecommendationCarousel = () => {
         .filter(c => !appliedIds.has(c.id))
         .map(c => {
           let score = 0;
-          let reasons: string[] = [];
+          const reasons: string[] = [];
           // Niche match (40%)
           if (cp?.primary_niche && c.niche_targeting?.includes(cp.primary_niche)) {
             score += 40;
@@ -106,7 +106,7 @@ const RecommendationCarousel = () => {
 
       const scored = (creators || []).map(c => {
         let score = 0;
-        let reasons: string[] = [];
+        const reasons: string[] = [];
         const p = profileMap.get(c.user_id);
         if (c.primary_niche && niches.has(c.primary_niche)) { score += 40; reasons.push(`Expert in ${c.primary_niche}`); }
         if (p?.location_city && locations.has(p.location_city)) { score += 20; reasons.push(`Based in ${p.location_city}`); }

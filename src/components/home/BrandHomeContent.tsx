@@ -65,7 +65,7 @@ const BrandHomeContent = ({ stats, statsLoading }: BrandHomeContentProps) => {
             { icon: Wallet, label: "Payments", to: "/earnings", gradient: "from-pink-400 to-rose-500" },
           ].map((action, i) => (
             <Link key={i} to={action.to} className="rounded-2xl p-3 text-center active:scale-90 transition-all duration-150 flex flex-col items-center gap-2 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
-              <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center shadow-lg`}>
+              <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center shadow-elev-3`}>
                 <action.icon className="w-5 h-5 text-white" />
               </div>
               <p className="text-[10px] font-heading font-semibold text-foreground">{action.label}</p>
@@ -91,7 +91,7 @@ const BrandHomeContent = ({ stats, statsLoading }: BrandHomeContentProps) => {
               <div
                 key={campaign.id}
                 onClick={() => navigate(`/campaigns/${campaign.id}`)}
-                className="min-w-[260px] max-w-[260px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border shadow-sm cursor-pointer active:scale-[0.97] transition-transform duration-150 opacity-0 animate-fade-up"
+                className="min-w-[260px] max-w-[260px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border shadow-elev-1 cursor-pointer active:scale-[0.97] transition-transform duration-150 opacity-0 animate-fade-up"
                 style={{ animationDelay: `${i * 80}ms`, animationFillMode: "forwards" }}
               >
                 <div className="relative h-[120px]">

@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local-only showcase screenshots (Phase A demos).
+showcase-*.png

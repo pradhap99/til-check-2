@@ -74,7 +74,7 @@ const Alerts = () => {
             onClick={() => setTab("personalised")}
             className={`px-5 py-2 rounded-full text-xs font-heading font-semibold transition-all ${
               tab === "personalised"
-                ? "bg-accent text-accent-foreground shadow-lg shadow-accent/20"
+                ? "bg-accent text-accent-foreground shadow-elev-3 shadow-accent/20"
                 : "bg-secondary text-muted-foreground"
             }`}
           >
@@ -84,7 +84,7 @@ const Alerts = () => {
             onClick={() => setTab("general")}
             className={`px-5 py-2 rounded-full text-xs font-heading font-semibold transition-all ${
               tab === "general"
-                ? "bg-accent text-accent-foreground shadow-lg shadow-accent/20"
+                ? "bg-accent text-accent-foreground shadow-elev-3 shadow-accent/20"
                 : "bg-secondary text-muted-foreground"
             }`}
           >
@@ -131,7 +131,7 @@ const Alerts = () => {
         </div>
 
         {/* Floating Chat FAB */}
-        <button className="fixed bottom-20 right-4 z-40 w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center shadow-xl shadow-accent/30 active:scale-90 transition-transform">
+        <button className="fixed bottom-20 right-4 z-40 w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center shadow-elev-3 shadow-accent/30 active:scale-90 transition-transform">
           <MessageCircle className="w-5 h-5" />
         </button>
       </div>

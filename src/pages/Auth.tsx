@@ -86,7 +86,7 @@ const Auth = () => {
       <div className="flex-1 flex flex-col items-center justify-center px-5 pb-8 relative z-10">
         {/* Logo Section */}
         <div className="text-center mb-6 animate-fade-slide-up">
-          <h1 className="text-5xl font-heading font-extrabold" style={{ color: "#f59e0b" }}>TIL</h1>
+          <h1 className="text-5xl font-heading font-extrabold" style={{ color: "hsl(var(--champagne))" }}>TIL</h1>
           <p className="text-sm text-white/60 mt-1 font-medium">India's Creator Economy Platform</p>
         </div>
 
@@ -98,7 +98,7 @@ const Auth = () => {
               className="animate-float-avatar"
               style={{ animationDelay: av.delay }}
             >
-              <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${av.color} flex items-center justify-center shadow-lg`}>
+              <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${av.color} flex items-center justify-center shadow-elev-3`}>
                 <span className="text-white font-heading font-bold text-sm">{av.initials}</span>
               </div>
             </div>
@@ -129,9 +129,9 @@ const Auth = () => {
                   key={r}
                   onClick={() => setRole(r)}
                   className={`flex-1 py-2.5 rounded-md text-sm font-medium transition-all btn-micro ${
-                    role === r ? "text-black shadow-sm" : "text-white/60 hover:text-white"
+                    role === r ? "text-black shadow-elev-1" : "text-white/60 hover:text-white"
                   }`}
-                  style={role === r ? { background: "#f59e0b" } : {}}
+                  style={role === r ? { background: "hsl(var(--champagne))" } : {}}
                 >
                   {r === "creator" ? "Creator" : "Brand"}
                 </button>
@@ -196,7 +196,7 @@ const Auth = () => {
             <Button
               type="submit" size="lg"
               className="w-full h-12 font-heading font-bold rounded-xl text-white btn-hover-lift btn-shimmer-hover"
-              style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)" }}
+              style={{ background: "linear-gradient(135deg, hsl(var(--champagne)), hsl(var(--champagne-deep)))" }}
               disabled={submitting}
             >
               {submitting ? "Please wait..." : mode === "login" ? "Sign In" : mode === "signup" ? "Create Account" : "Send Reset Link"}
@@ -211,7 +211,7 @@ const Auth = () => {
             ) : (
               <>
                 {mode === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
-                <button onClick={() => setMode(mode === "login" ? "signup" : "login")} className="font-medium hover:underline" style={{ color: "#f59e0b" }}>
+                <button onClick={() => setMode(mode === "login" ? "signup" : "login")} className="font-medium hover:underline" style={{ color: "hsl(var(--champagne))" }}>
                   {mode === "login" ? "Sign up" : "Sign in"}
                 </button>
               </>
@@ -221,7 +221,7 @@ const Auth = () => {
 
         {/* Trust badge */}
         <div className="mt-6 flex items-center gap-1.5 animate-fade-slide-up" style={{ animationDelay: "0.4s" }}>
-          <CheckCircle className="w-3.5 h-3.5" style={{ color: "#f59e0b" }} />
+          <CheckCircle className="w-3.5 h-3.5" style={{ color: "hsl(var(--champagne))" }} />
           <span className="text-[11px] text-white/50 font-medium">Trusted by 12,400+ creators</span>
         </div>
       </div>

@@ -140,7 +140,7 @@ const Community = () => {
             <Button size="sm" className="h-7 text-[10px] rounded-lg"><Plus className="w-3 h-3 mr-1" /> Create Group</Button>
           </div>
           {mockGroups.map((g, i) => (
-            <div key={i} className="border border-border rounded-xl overflow-hidden hover:shadow-md transition-all">
+            <div key={i} className="border border-border rounded-xl overflow-hidden hover:shadow-elev-2 transition-all">
               <img src={g.cover} alt={g.name} className="w-full h-28 object-cover" />
               <div className="p-4">
                 <div className="flex items-start justify-between">

@@ -159,7 +159,7 @@ const CreatorDetail = () => {
         <div className="px-4 -mt-10 relative z-10">
           <div className="flex items-end gap-3">
             <div className="relative">
-              <img src={creator.avatar} alt={creator.name} className="w-20 h-20 rounded-xl border-4 border-background object-cover shadow-md bg-muted" />
+              <img src={creator.avatar} alt={creator.name} className="w-20 h-20 rounded-xl border-4 border-background object-cover shadow-elev-2 bg-muted" />
               {creator.verified && (
                 <CheckCircle className="absolute -bottom-1 -right-1 w-5 h-5 text-primary fill-background" />
               )}

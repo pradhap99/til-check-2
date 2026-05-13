@@ -77,7 +77,7 @@ const CTAOutroContent = () => {
         className="w-full max-w-4xl"
         style={{ transform: `translateZ(${cardZ}px) scale(${cardScale})`, opacity: cardOpacity, willChange: "transform, opacity" }}
       >
-        <div className="bg-foreground rounded-3xl p-10 md:p-16 text-center relative overflow-hidden shadow-2xl">
+        <div className="bg-foreground rounded-3xl p-10 md:p-16 text-center relative overflow-hidden shadow-elev-3">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-background/10 backdrop-blur text-background/80 text-xs font-medium mb-6 border border-background/15">
             <Zap className="w-3 h-3 text-accent" /> Limited beta · Early access
           </div>
@@ -409,7 +409,7 @@ const Landing = () => {
         <div className="space-y-2">
           {faqs.map((faq, i) => (
             <ScrollReveal key={i} delay={i * 60}>
-              <div className={`border border-border rounded-xl overflow-hidden bg-card transition-all duration-300 ${openFaq === i ? "shadow-md" : ""}`}>
+              <div className={`border border-border rounded-xl overflow-hidden bg-card transition-all duration-300 ${openFaq === i ? "shadow-elev-2" : ""}`}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-4 text-left group">
                   <span className="font-medium text-sm text-foreground pr-4 group-hover:text-accent transition-colors">{faq.q}</span>
                   <ChevronDown className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-300 ${openFaq === i ? "rotate-180 text-accent" : ""}`} />

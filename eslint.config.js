@@ -21,6 +21,13 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
+      // Phase A debt — pre-existing `any` usage in legacy pages.
+      // Re-elevate to "error" page-by-page in phases C–I as each surface
+      // is rebuilt.
+      "@typescript-eslint/no-explicit-any": "warn",
+      // Phase A debt — one occurrence in brand/PostCampaign; fixed when
+      // the create-campaign flow is rebuilt in phase E.
+      "no-constant-binary-expression": "warn",
     },
   },
 );

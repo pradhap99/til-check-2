@@ -70,7 +70,7 @@ const HowItWorksSceneContent = ({ cols }: Props) => {
                   {cols.map((col) => (
                     <div
                       key={col.label}
-                      className="card-3d border border-border rounded-2xl p-6 bg-card shadow-xl flex flex-col"
+                      className="card-3d border border-border rounded-2xl p-6 bg-card shadow-elev-3 flex flex-col"
                     >
                       <p className="text-[10px] font-heading font-semibold text-accent uppercase tracking-widest mb-3">
                         {col.label}

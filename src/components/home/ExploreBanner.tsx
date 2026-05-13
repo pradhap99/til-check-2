@@ -9,7 +9,7 @@ const ExploreBanner = () => {
     <section className="px-5 mt-4">
       <div
         className="relative rounded-2xl overflow-hidden p-5 h-[140px] flex flex-col justify-center"
-        style={{ background: "linear-gradient(135deg, #1a0533 0%, #0d0d0d 60%, #1a1a2e 100%)" }}
+        style={{ background: "linear-gradient(135deg, hsl(var(--champagne-deep)) 0%, hsl(var(--onyx)) 60%, hsl(var(--onyx-elev)) 100%)" }}
       >
         {/* Corner sparkle */}
         <Sparkles className="absolute top-4 right-4 w-5 h-5 text-accent/60" />
@@ -36,7 +36,7 @@ const ExploreBanner = () => {
           className="mt-3 w-fit h-9 rounded-xl text-[11px] font-heading font-bold gap-1.5 relative z-10 collab-btn-glow"
           style={{
             background: "linear-gradient(90deg, hsl(45,93%,52%), hsl(35,90%,45%))",
-            color: "#0d0d0d",
+            color: "hsl(var(--onyx))",
           }}
         >
           <LinkIcon className="w-3.5 h-3.5" />

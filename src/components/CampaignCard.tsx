@@ -73,7 +73,7 @@ const CampaignCard = ({ campaign, index = 0, userLevel = 1 }: CampaignCardProps)
 
   return (
     <div
-      className={`rounded-2xl overflow-hidden bg-card border border-border shadow-sm cursor-pointer active:scale-[0.97] transition-transform duration-150 opacity-0 animate-fade-up category-strip ${categoryColors[campaign.category] || ""}`}
+      className={`rounded-2xl overflow-hidden bg-card border border-border shadow-elev-1 cursor-pointer active:scale-[0.97] transition-transform duration-150 opacity-0 animate-fade-up category-strip ${categoryColors[campaign.category] || ""}`}
       style={{ animationDelay: `${index * 50}ms`, animationFillMode: "forwards" }}
     >
       {/* Image Header */}
@@ -95,7 +95,7 @@ const CampaignCard = ({ campaign, index = 0, userLevel = 1 }: CampaignCardProps)
             <Star className="w-2.5 h-2.5" /> Level {requiredLevel}+
           </span>
         )}
-        <span className="absolute top-2.5 right-2.5 bg-emerald-500 text-white text-[11px] font-heading font-bold px-2.5 py-1 rounded-lg shadow-md">
+        <span className="absolute top-2.5 right-2.5 bg-emerald-500 text-white text-[11px] font-heading font-bold px-2.5 py-1 rounded-lg shadow-elev-2">
           {campaign.budget}
         </span>
       </div>
@@ -164,7 +164,7 @@ const CampaignCard = ({ campaign, index = 0, userLevel = 1 }: CampaignCardProps)
             <Lock className="w-3.5 h-3.5" /> Level {requiredLevel} Required
           </button>
         ) : (
-          <button className="w-full mt-3 py-2 rounded-xl text-white text-xs font-heading font-semibold flex items-center justify-center gap-1 active:scale-95 transition-transform btn-shimmer-hover" style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)" }}>
+          <button className="w-full mt-3 py-2 rounded-xl text-white text-xs font-heading font-semibold flex items-center justify-center gap-1 active:scale-95 transition-transform btn-shimmer-hover" style={{ background: "linear-gradient(135deg, hsl(var(--champagne)), hsl(var(--champagne-deep)))" }}>
             Apply Now <ArrowRight className="w-3.5 h-3.5" />
           </button>
         )}

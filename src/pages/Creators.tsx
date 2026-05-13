@@ -145,7 +145,7 @@ const Creators = () => {
         <div className="px-5 mt-2">
           <div className="flex gap-1 overflow-x-auto no-scrollbar bg-secondary/50 rounded-xl p-1">
             {segments.map(seg => (
-              <button key={seg} onClick={() => { setSelectedSegment(seg); setSelectedTile(null); }} className={`px-3 py-2 rounded-lg text-xs font-heading font-semibold whitespace-nowrap transition-all ${selectedSegment === seg ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}>
+              <button key={seg} onClick={() => { setSelectedSegment(seg); setSelectedTile(null); }} className={`px-3 py-2 rounded-lg text-xs font-heading font-semibold whitespace-nowrap transition-all ${selectedSegment === seg ? "bg-card text-foreground shadow-elev-1" : "text-muted-foreground"}`}>
                 {seg}
               </button>
             ))}
@@ -157,9 +157,9 @@ const Creators = () => {
       <div className="px-5 mt-3 flex gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input type="text" placeholder={isBrand ? "Search by name, niche, or location..." : "Search creators, brands, niches..."} value={search} onChange={(e) => setSearch(e.target.value)} className="w-full h-[52px] pl-11 pr-4 rounded-full bg-card text-foreground placeholder:text-muted-foreground text-sm border border-border focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent/50 shadow-sm transition-all" />
+          <input type="text" placeholder={isBrand ? "Search by name, niche, or location..." : "Search creators, brands, niches..."} value={search} onChange={(e) => setSearch(e.target.value)} className="w-full h-[52px] pl-11 pr-4 rounded-full bg-card text-foreground placeholder:text-muted-foreground text-sm border border-border focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent/50 shadow-elev-1 transition-all" />
         </div>
-        <button onClick={() => setShowFilters(!showFilters)} className={`w-[52px] h-[52px] rounded-full flex items-center justify-center shrink-0 border transition-all relative shadow-sm ${showFilters ? "bg-foreground border-foreground" : "border-border bg-card"}`}>
+        <button onClick={() => setShowFilters(!showFilters)} className={`w-[52px] h-[52px] rounded-full flex items-center justify-center shrink-0 border transition-all relative shadow-elev-1 ${showFilters ? "bg-foreground border-foreground" : "border-border bg-card"}`}>
           <SlidersHorizontal className={`w-4 h-4 ${showFilters ? "text-background" : "text-muted-foreground"}`} />
           {activeFilters > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent text-[9px] font-bold text-accent-foreground flex items-center justify-center">{activeFilters}</span>}
         </button>
@@ -355,7 +355,7 @@ const Creators = () => {
                 <div className="flex gap-2.5 overflow-x-auto no-scrollbar px-5 pb-1">
                   {featuredBrands.map((brand) => (
                     <button key={brand.name} onClick={() => navigate("/campaigns")} className="flex flex-col items-center shrink-0 active:scale-95 transition-transform">
-                      <div className="w-[72px] h-[72px] rounded-2xl bg-card border border-border overflow-hidden flex items-center justify-center shadow-sm">
+                      <div className="w-[72px] h-[72px] rounded-2xl bg-card border border-border overflow-hidden flex items-center justify-center shadow-elev-1">
                         <img src={brand.logo} alt={brand.name} className="w-full h-full object-cover" />
                       </div>
                       <p className="text-[10px] font-heading font-semibold text-foreground mt-1.5">{brand.name}</p>
@@ -467,7 +467,7 @@ const Creators = () => {
 
       {/* FAB for creators */}
       {role === "creator" && (
-        <button onClick={() => navigate("/campaigns")} className="fixed bottom-20 right-5 w-14 h-14 rounded-full bg-accent text-accent-foreground shadow-xl flex items-center justify-center z-40 active:scale-90 transition-transform">
+        <button onClick={() => navigate("/campaigns")} className="fixed bottom-20 right-5 w-14 h-14 rounded-full bg-accent text-accent-foreground shadow-elev-3 flex items-center justify-center z-40 active:scale-90 transition-transform">
           <Search className="w-5 h-5" />
         </button>
       )}

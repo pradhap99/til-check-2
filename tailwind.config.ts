@@ -1,21 +1,28 @@
 import type { Config } from "tailwindcss";
+import tailwindAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
       center: true,
       padding: "1rem",
-      screens: {
-        "2xl": "1400px",
-      },
+      screens: { "2xl": "1400px" },
     },
     extend: {
       fontFamily: {
-        heading: ["Plus Jakarta Sans", "sans-serif"],
-        body: ["Inter", "sans-serif"],
+        heading: ["var(--font-heading)"],
+        body: ["var(--font-body)"],
+        sans: ["var(--font-body)"],
+        mono: ["var(--font-mono)"],
+        numeric: ["var(--font-mono)"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -23,6 +30,7 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -73,11 +81,79 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+
+        /* Brand palette — the only place these tokens are reachable. */
+        champagne: {
+          DEFAULT: "hsl(var(--champagne))",
+          soft: "hsl(var(--champagne-soft))",
+          deep: "hsl(var(--champagne-deep))",
+        },
+        emerald: {
+          DEFAULT: "hsl(var(--emerald))",
+          soft: "hsl(var(--emerald-soft))",
+          deep: "hsl(var(--emerald-deep))",
+        },
+        onyx: {
+          DEFAULT: "hsl(var(--onyx))",
+          elev: "hsl(var(--onyx-elev))",
+          "elev-2": "hsl(var(--onyx-elev-2))",
+        },
+        ivory: {
+          DEFAULT: "hsl(var(--ivory))",
+          elev: "hsl(var(--ivory-elev))",
+          "elev-2": "hsl(var(--ivory-elev-2))",
+        },
+        parchment: {
+          DEFAULT: "hsl(var(--parchment))",
+          muted: "hsl(var(--parchment-muted))",
+        },
+
+        /* Status semantics — exposed for chips and pills. */
+        status: {
+          live: "hsl(var(--status-live))",
+          pending: "hsl(var(--status-pending))",
+          closed: "hsl(var(--status-closed))",
+          hot: "hsl(var(--status-hot))",
+          danger: "hsl(var(--status-danger))",
+          info: "hsl(var(--status-info))",
+        },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        sm: "var(--radius-sm)",
+        md: "var(--radius-md)",
+        lg: "var(--radius-lg)",
+        xl: "var(--radius-xl)",
+        "2xl": "var(--radius-2xl)",
+        full: "var(--radius-full)",
+      },
+      boxShadow: {
+        "elev-0": "var(--elev-0)",
+        "elev-1": "var(--elev-1)",
+        "elev-2": "var(--elev-2)",
+        "elev-3": "var(--elev-3)",
+      },
+      backgroundImage: {
+        "gradient-brand": "var(--gradient-brand)",
+        "gradient-celebrate": "var(--gradient-celebrate)",
+        "gradient-glass": "var(--gradient-glass)",
+      },
+      transitionTimingFunction: {
+        "ease-out-soft": "var(--ease-out)",
+        "ease-in-soft": "var(--ease-in)",
+        "ease-in-out-soft": "var(--ease-in-out)",
+      },
+      transitionDuration: {
+        instant: "var(--t-instant)",
+        fast: "var(--t-fast)",
+        base: "var(--t-base)",
+        slow: "var(--t-slow)",
+        cinematic: "var(--t-cinematic)",
+      },
+      spacing: {
+        "section-y": "var(--space-section-y)",
+        "section-y-lg": "var(--space-section-y-lg)",
+        "section-x": "var(--space-section-x)",
+        "section-x-lg": "var(--space-section-x-lg)",
       },
       keyframes: {
         "accordion-down": {
@@ -100,25 +176,32 @@ export default {
           "0%": { transform: "translateY(100%)" },
           "100%": { transform: "translateY(0)" },
         },
-        "float": {
-          "0%, 100%": { transform: "translateY(0px)" },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-6px)" },
         },
         "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 20px hsla(38 92% 50% / 0.15)" },
-          "50%": { boxShadow: "0 0 40px hsla(38 92% 50% / 0.3)" },
+          "0%, 100%": { boxShadow: "0 0 20px hsl(var(--champagne) / 0.15)" },
+          "50%": { boxShadow: "0 0 40px hsl(var(--champagne) / 0.40)" },
+        },
+        "heart-pop": {
+          "0%": { transform: "scale(1)" },
+          "30%": { transform: "scale(0.85)" },
+          "60%": { transform: "scale(1.2)" },
+          "100%": { transform: "scale(1)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-up": "fade-up 0.35s ease-out forwards",
-        "fade-in": "fade-in 0.3s ease-out forwards",
-        "slide-up": "slide-up 0.4s ease-out",
-        "float": "float 3s ease-in-out infinite",
+        "fade-up": "fade-up 0.35s var(--ease-out) forwards",
+        "fade-in": "fade-in 0.3s var(--ease-out) forwards",
+        "slide-up": "slide-up 0.4s var(--ease-out)",
+        float: "float 3s ease-in-out infinite",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
+        "heart-pop": "heart-pop 0.45s var(--ease-out)",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindAnimate],
 } satisfies Config;

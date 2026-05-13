@@ -79,9 +79,9 @@ const HeroSceneContent = ({
         className="absolute top-6 left-0 right-0 flex justify-center z-30"
         style={{ opacity: copyOpacity, pointerEvents: interactable ? "auto" : "none" }}
       >
-        <div className="inline-flex bg-secondary/70 backdrop-blur rounded-full p-1 gap-1 shadow-sm border border-border/50">
-          <button onClick={() => setAudience("creator")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all duration-300 ${audience === "creator" ? "bg-foreground text-background shadow-md scale-105" : "text-muted-foreground hover:text-foreground"}`}>For Creators</button>
-          <button onClick={() => setAudience("brand")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all duration-300 ${audience === "brand" ? "bg-foreground text-background shadow-md scale-105" : "text-muted-foreground hover:text-foreground"}`}>For Brands</button>
+        <div className="inline-flex bg-secondary/70 backdrop-blur rounded-full p-1 gap-1 shadow-elev-1 border border-border/50">
+          <button onClick={() => setAudience("creator")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all duration-300 ${audience === "creator" ? "bg-foreground text-background shadow-elev-2 scale-105" : "text-muted-foreground hover:text-foreground"}`}>For Creators</button>
+          <button onClick={() => setAudience("brand")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all duration-300 ${audience === "brand" ? "bg-foreground text-background shadow-elev-2 scale-105" : "text-muted-foreground hover:text-foreground"}`}>For Brands</button>
         </div>
       </div>
 
@@ -152,7 +152,7 @@ const HeroSceneContent = ({
               willChange: "transform, opacity",
             }}
           >
-            <div className="rounded-2xl bg-card border border-border shadow-2xl p-5 text-left">
+            <div className="rounded-2xl bg-card border border-border shadow-elev-3 p-5 text-left">
               <div className="flex items-center gap-3">
                 <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face" alt="" className="w-10 h-10 rounded-full object-cover" />
                 <div>
@@ -180,7 +180,7 @@ const HeroSceneContent = ({
               willChange: "transform, opacity",
             }}
           >
-            <div className="rounded-2xl bg-card border border-border shadow-xl p-4 text-left">
+            <div className="rounded-2xl bg-card border border-border shadow-elev-3 p-4 text-left">
               <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Live earnings</p>
               <p className="font-heading font-bold text-2xl mt-1">
                 ₹<CountUp end={12450} duration={2400} />
@@ -205,7 +205,7 @@ const HeroSceneContent = ({
               willChange: "transform, opacity",
             }}
           >
-            <div className="rounded-2xl bg-foreground text-background border border-border shadow-2xl p-4 text-left">
+            <div className="rounded-2xl bg-foreground text-background border border-border shadow-elev-3 p-4 text-left">
               <div className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-accent" />
                 <p className="font-heading font-semibold text-sm">Payment Secured</p>
@@ -234,7 +234,7 @@ const HeroSceneContent = ({
             willChange: "transform, opacity",
           }}
         >
-          <div className="bg-foreground rounded-2xl p-8 grid grid-cols-2 md:grid-cols-4 gap-6 relative overflow-hidden shadow-2xl">
+          <div className="bg-foreground rounded-2xl p-8 grid grid-cols-2 md:grid-cols-4 gap-6 relative overflow-hidden shadow-elev-3">
             <div aria-hidden className="absolute -top-20 -right-20 w-48 h-48 rounded-full bg-accent/15 blur-3xl" />
             {stats.map((stat, i) => (
               <div key={i} className="text-center relative" style={{ transform: `translateZ(${20 + i * 4}px)` }}>
@@ -279,7 +279,7 @@ export const HeroSceneFallback = ({
 
     <div className="relative">
       <div className="flex justify-center mb-6">
-        <div className="inline-flex bg-secondary rounded-full p-1 gap-1 shadow-sm">
+        <div className="inline-flex bg-secondary rounded-full p-1 gap-1 shadow-elev-1">
           <button onClick={() => setAudience("creator")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold ${audience === "creator" ? "bg-foreground text-background" : "text-muted-foreground"}`}>For Creators</button>
           <button onClick={() => setAudience("brand")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold ${audience === "brand" ? "bg-foreground text-background" : "text-muted-foreground"}`}>For Brands</button>
         </div>

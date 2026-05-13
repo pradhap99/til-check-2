@@ -42,7 +42,7 @@ const BankTransfer = () => {
             <button
               onClick={() => setMode("bank")}
               className={`flex-1 py-2.5 rounded-md text-sm font-heading font-medium flex items-center justify-center gap-1.5 transition-all ${
-                mode === "bank" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+                mode === "bank" ? "bg-card text-foreground shadow-elev-1" : "text-muted-foreground"
               }`}
             >
               <Building2 className="w-3.5 h-3.5" /> Bank Account
@@ -50,7 +50,7 @@ const BankTransfer = () => {
             <button
               onClick={() => setMode("upi")}
               className={`flex-1 py-2.5 rounded-md text-sm font-heading font-medium flex items-center justify-center gap-1.5 transition-all ${
-                mode === "upi" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+                mode === "upi" ? "bg-card text-foreground shadow-elev-1" : "text-muted-foreground"
               }`}
             >
               <Smartphone className="w-3.5 h-3.5" /> UPI

@@ -87,11 +87,11 @@ const Earnings = () => {
 
         {/* Premium Wallet Balance Card */}
         <div className="px-4 mt-4">
-          <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #1a0533, #2d1b69)" }}>
+          <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: "linear-gradient(135deg, hsl(var(--champagne-deep)), hsl(var(--emerald-deep)))" }}>
             <div className="absolute top-0 right-0 w-32 h-32 rounded-full" style={{ background: "radial-gradient(circle, rgba(245,158,11,0.15), transparent 70%)" }} />
             <div className="relative z-10">
               <p className="text-[10px] text-white/50 font-heading uppercase tracking-wider">Available Balance</p>
-              <h2 className="text-3xl font-heading font-bold mt-1" style={{ color: "#f59e0b" }}>₹{totalEarned.toLocaleString("en-IN")}</h2>
+              <h2 className="text-3xl font-heading font-bold mt-1" style={{ color: "hsl(var(--champagne))" }}>₹{totalEarned.toLocaleString("en-IN")}</h2>
               {pending > 0 && <p className="text-[10px] text-white/40 mt-0.5">+ ₹{pending.toLocaleString("en-IN")} pending</p>}
             </div>
           </div>
@@ -115,7 +115,7 @@ const Earnings = () => {
           <button
             onClick={() => navigate("/redeem")}
             className="w-full rounded-2xl py-[18px] font-heading font-bold text-[18px] text-white btn-shimmer-hover btn-hover-lift relative overflow-hidden"
-            style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)" }}
+            style={{ background: "linear-gradient(135deg, hsl(var(--champagne)), hsl(var(--champagne-deep)))" }}
           >
             Redeem as Voucher ✨
           </button>

@@ -2,11 +2,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { OnboardingProvider } from "@/contexts/OnboardingContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import GlobalCommandPalette from "@/components/GlobalCommandPalette";
+import { pageVariants, reducedFade } from "@/lib/motion";
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
@@ -52,20 +55,28 @@ import BrandApplications from "./pages/brand/BrandApplications";
 import Help from "./pages/Help";
 import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
+import Showcase from "./pages/Showcase";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AuthProvider>
-            <OnboardingProvider>
-              <Routes>
-                <Route path="/" element={<Landing />} />
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  const reduced = useReducedMotion();
+  const variants = reduced ? reducedFade : pageVariants;
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        variants={variants}
+        initial="initial"
+        animate="enter"
+        exit="exit"
+        className="contents"
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Landing />} />
+                <Route path="/showcase" element={<Showcase />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/onboarding" element={<Onboarding />} />
@@ -112,7 +123,23 @@ const App = () => (
                 <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
                 <Route path="/docs" element={<ProtectedRoute><Documentation /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
-              </Routes>
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AuthProvider>
+            <OnboardingProvider>
+              <GlobalCommandPalette />
+              <AnimatedRoutes />
             </OnboardingProvider>
           </AuthProvider>
         </BrowserRouter>

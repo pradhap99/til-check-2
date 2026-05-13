@@ -109,13 +109,13 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
             <div className="flex bg-secondary rounded-lg p-0.5">
               <button
                 onClick={() => setViewMode("list")}
-                className={`w-7 h-7 rounded-md flex items-center justify-center transition-all ${viewMode === "list" ? "bg-accent text-accent-foreground shadow-sm" : "text-muted-foreground"}`}
+                className={`w-7 h-7 rounded-md flex items-center justify-center transition-all ${viewMode === "list" ? "bg-accent text-accent-foreground shadow-elev-1" : "text-muted-foreground"}`}
               >
                 <List className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setViewMode("map")}
-                className={`w-7 h-7 rounded-md flex items-center justify-center transition-all ${viewMode === "map" ? "bg-accent text-accent-foreground shadow-sm" : "text-muted-foreground"}`}
+                className={`w-7 h-7 rounded-md flex items-center justify-center transition-all ${viewMode === "map" ? "bg-accent text-accent-foreground shadow-elev-1" : "text-muted-foreground"}`}
               >
                 <Map className="w-3.5 h-3.5" />
               </button>
@@ -213,7 +213,7 @@ const FeaturedCampaignCard = ({ campaign, index }: { campaign: any; index: numbe
   return (
     <div
       onClick={() => navigate(`/campaigns/${campaign.id}`)}
-      className="min-w-[240px] max-w-[240px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border shadow-sm cursor-pointer active:scale-[0.97] transition-transform duration-150 animate-scale-in"
+      className="min-w-[240px] max-w-[240px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border shadow-elev-1 cursor-pointer active:scale-[0.97] transition-transform duration-150 animate-scale-in"
       style={{ animationDelay: `${index * 80}ms` }}
     >
       <div className="relative h-[130px]">

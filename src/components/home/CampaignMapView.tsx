@@ -92,7 +92,7 @@ const CampaignMapView = ({ campaigns }: CampaignMapViewProps) => {
       </div>
 
       {/* Map */}
-      <div className="rounded-2xl overflow-hidden border border-border relative" style={{ height: 300, background: "#0d0d1a" }}>
+      <div className="rounded-2xl overflow-hidden border border-border relative" style={{ height: 300, background: "hsl(var(--onyx))" }}>
         {/* Background glow effects */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute w-32 h-32 rounded-full" style={{ left: "20%", top: "30%", background: "radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%)" }} />
@@ -143,7 +143,7 @@ const CampaignMapView = ({ campaigns }: CampaignMapViewProps) => {
                 {/* Popup */}
                 {activePin === pin.id && (
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-30 min-w-[200px]" onClick={e => e.stopPropagation()}>
-                    <div className="rounded-xl p-3 shadow-xl" style={{ background: "rgba(15,15,30,0.95)", border: "1px solid rgba(245,158,11,0.3)" }}>
+                    <div className="rounded-xl p-3 shadow-elev-3" style={{ background: "rgba(15,15,30,0.95)", border: "1px solid rgba(245,158,11,0.3)" }}>
                       <button onClick={() => setActivePin(null)} className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-white/10 flex items-center justify-center">
                         <X className="w-3 h-3 text-white/60" />
                       </button>
@@ -163,7 +163,7 @@ const CampaignMapView = ({ campaigns }: CampaignMapViewProps) => {
                           <p className="text-[8px] text-white/40 mt-0.5">{c.applied} creators applied</p>
                           <div className="flex items-center justify-between mt-1.5">
                             <span className="text-[10px] font-heading font-bold text-accent">{c.budget}</span>
-                            <button onClick={() => navigate(`/campaigns/${c.id}`)} className="text-[9px] font-heading font-semibold px-2.5 py-1 rounded-lg text-white btn-shimmer-hover" style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)" }}>
+                            <button onClick={() => navigate(`/campaigns/${c.id}`)} className="text-[9px] font-heading font-semibold px-2.5 py-1 rounded-lg text-white btn-shimmer-hover" style={{ background: "linear-gradient(135deg, hsl(var(--champagne)), hsl(var(--champagne-deep)))" }}>
                               Apply Now
                             </button>
                           </div>

@@ -262,7 +262,7 @@ const Campaigns = () => {
       {role === "brand" && (
         <button
           onClick={() => navigate("/campaigns/create")}
-          className="fixed bottom-20 right-5 w-14 h-14 rounded-full bg-accent text-accent-foreground shadow-xl flex items-center justify-center z-40 active:scale-90 transition-transform"
+          className="fixed bottom-20 right-5 w-14 h-14 rounded-full bg-accent text-accent-foreground shadow-elev-3 flex items-center justify-center z-40 active:scale-90 transition-transform"
         >
           <Plus className="w-6 h-6" />
         </button>

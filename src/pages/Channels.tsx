@@ -38,8 +38,8 @@ const Channels = () => {
 
   const filteredPosts = activeFilter === "All" ? showcasePosts : showcasePosts.filter(p => p.category === activeFilter);
 
-  const toggleLike = (i: number) => setLikedPosts(prev => { const n = new Set(prev); n.has(i) ? n.delete(i) : n.add(i); return n; });
-  const toggleSave = (i: number) => setSavedPosts(prev => { const n = new Set(prev); n.has(i) ? n.delete(i) : n.add(i); return n; });
+  const toggleLike = (i: number) => setLikedPosts(prev => { const n = new Set(prev); if (n.has(i)) n.delete(i); else n.add(i); return n; });
+  const toggleSave = (i: number) => setSavedPosts(prev => { const n = new Set(prev); if (n.has(i)) n.delete(i); else n.add(i); return n; });
 
   return (
     <Layout>
