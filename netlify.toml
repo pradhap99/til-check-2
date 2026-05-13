@@ -1,0 +1,26 @@
+# Netlify deploy config — Phase A
+#
+# Vite SPA on bun. Netlify's bun support is built-in via the Bun runtime
+# preset; setting the build command explicitly avoids a node-vs-bun coin toss.
+
+[build]
+  command = "bun run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # Pin a bun version so PR previews stay deterministic. Bump when local does.
+  BUN_VERSION = "1.1.34"
+
+# SPA fallback — React Router handles client-side routing, every path
+# must serve index.html so /showcase, /campaigns, etc. resolve on direct visit.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Long-cache hashed assets.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
