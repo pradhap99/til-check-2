@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- til. — dark-gold variant for light/print backgrounds.
+     Solid #8B6914 deep brass; no soft champagne highlights so it stays readable on ivory. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 110" role="img" aria-label="til.">
+  <text
+    x="0" y="86"
+    fill="#8B6914"
+    font-family="'Cormorant Garamond Variable', 'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif"
+    font-style="italic"
+    font-weight="500"
+    font-size="110"
+    letter-spacing="-2"
+  >til</text>
+  <g transform="translate(192, 64)">
+    <circle cx="0" cy="0" r="20" fill="none" stroke="#8B6914" stroke-width="4.2"/>
+    <circle cx="6" cy="0" r="13" fill="#D4AF37"/>
+  </g>
+</svg>

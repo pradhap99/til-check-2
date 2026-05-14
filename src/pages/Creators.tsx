@@ -83,7 +83,7 @@ const Creators = () => {
             followers: cp.instagram_followers ? `${(cp.instagram_followers / 1000).toFixed(0)}K` : "—",
             engagement: cp.engagement_rate ? `${cp.engagement_rate}%` : "—",
             platform: "Instagram" as const,
-            location: profile?.location_city || "India",
+            location: profile?.location_city || "Chennai",
             rate: cp.rate_reel ? `₹${parseInt(cp.rate_reel).toLocaleString()}` : "Contact",
             verified: cp.verified || false, bio: "", isReal: true,
           };
@@ -137,7 +137,7 @@ const Creators = () => {
     <Layout>
       <header className="px-5 pt-6 pb-2">
         <h1 className="text-xl font-heading font-bold text-foreground">{isBrand ? "Find Creators" : "Discover"}</h1>
-        <p className="text-xs text-muted-foreground">{isBrand ? "Search from 12,400+ verified creators across India" : "Find creators & opportunities"}</p>
+        <p className="text-xs text-muted-foreground">{isBrand ? "Verified Chennai creators" : "Find creators & opportunities"}</p>
       </header>
 
       {/* Segmented Nav - Creator only */}

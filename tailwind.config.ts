@@ -21,6 +21,7 @@ export default {
         heading: ["var(--font-heading)"],
         body: ["var(--font-body)"],
         sans: ["var(--font-body)"],
+        display: ["var(--font-display)"],
         mono: ["var(--font-mono)"],
         numeric: ["var(--font-mono)"],
       },
@@ -82,7 +83,24 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
 
-        /* Brand palette — the only place these tokens are reachable. */
+        /* Brand palette — til. Black + Gold. Read via Tailwind classes
+           like `bg-gold`, `text-gold-soft`, `border-gold-deep/40`, etc.
+           The named hex values come from src/styles/tokens.css. */
+        gold: {
+          DEFAULT: "#D4AF37",   // gold-primary
+          soft: "#E8D5A0",      // champagne / hover backgrounds
+          deep: "#8B6914",      // deep brass / focused borders
+          line: "#C9A961",      // hairline dividers, secondary text
+          gradient: {
+            top: "#F5E6A8",
+            mid: "#D4AF37",
+            bot: "#8B6914",
+          },
+        },
+
+        /* Legacy aliases preserved so old utility classes / primitives
+           keep resolving. Every "champagne" / "emerald" / "onyx" reference
+           now resolves to a value in the new gold-on-black system. */
         champagne: {
           DEFAULT: "hsl(var(--champagne))",
           soft: "hsl(var(--champagne-soft))",

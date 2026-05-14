@@ -66,7 +66,7 @@ const CreatorDetail = () => {
     followers: dbCreator.instagram_followers ? `${(dbCreator.instagram_followers / 1000).toFixed(0)}K` : "—",
     engagement: dbCreator.engagement_rate ? `${dbCreator.engagement_rate}%` : "—",
     platform: "Instagram" as const,
-    location: dbProfile?.location_city || "India",
+    location: dbProfile?.location_city || "Chennai",
     rate: dbCreator.rate_reel ? `₹${parseInt(dbCreator.rate_reel).toLocaleString()}` : "Contact for rates",
     verified: dbCreator.verified || false,
     bio: dbProfile?.bio || `Creator specializing in ${dbCreator.primary_niche || "content"}`,

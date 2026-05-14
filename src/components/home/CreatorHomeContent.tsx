@@ -46,9 +46,9 @@ const campaignImages: Record<string, string> = {
 };
 
 const successStories = [
-  { name: "Priya S.", campaigns: 12, niche: "Fashion", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=160&fit=crop&crop=face", quote: "TIL got me my first brand deal in just 3 days!" },
+  { name: "Priya S.", campaigns: 12, niche: "Fashion", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=160&fit=crop&crop=face", quote: "til. got me my first brand deal in just 3 days!" },
   { name: "Vikram S.", campaigns: 8, niche: "Food", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=160&fit=crop&crop=face", quote: "Best platform for serious creators." },
-  { name: "Kavya N.", campaigns: 6, niche: "Beauty", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=160&fit=crop&crop=face", quote: "I earned more than my salary through TIL." },
+  { name: "Kavya N.", campaigns: 6, niche: "Beauty", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=160&fit=crop&crop=face", quote: "I earned more than my salary through til." },
   { name: "Arjun T.", campaigns: 15, niche: "Tech", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=160&fit=crop&crop=face", quote: "The escrow system gives me full trust." },
 ];
 

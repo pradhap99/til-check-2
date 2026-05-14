@@ -107,7 +107,7 @@ const ManagedServices = () => {
         <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center">
           <ArrowLeft className="w-5 h-5 text-foreground" />
         </button>
-        <h1 className="text-lg font-heading font-bold text-foreground">TIL Managed</h1>
+        <h1 className="text-lg font-heading font-bold text-foreground">til. Managed</h1>
       </div>
 
       {/* Section Tabs */}

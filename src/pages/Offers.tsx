@@ -49,7 +49,7 @@ const Offers = () => {
           <div className="rounded-xl border border-border bg-accent/5 p-3 flex items-start gap-2.5">
             <Info className="w-4 h-4 text-accent shrink-0 mt-0.5" />
             <p className="text-[11px] text-muted-foreground leading-relaxed">
-              Share these links with your audience. Every sale earns you a commission — tracked automatically through TIL.
+              Share these links with your audience. Every sale earns you a commission — tracked automatically through til.
             </p>
           </div>
         </div>
@@ -115,7 +115,7 @@ const Offers = () => {
                 </Button>
               </div>
 
-              <p className="text-[8px] text-muted-foreground mt-2 text-center">Powered by TIL Affiliate Network · 2% platform fee applies</p>
+              <p className="text-[8px] text-muted-foreground mt-2 text-center">Powered by til. Affiliate Network · 2% platform fee applies</p>
             </div>
           ))}
         </div>

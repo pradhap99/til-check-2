@@ -147,9 +147,9 @@ const Admin = () => {
       {/* Sidebar - desktop */}
       <aside className="hidden md:flex w-56 admin-sidebar flex-col fixed inset-y-0 left-0 z-40">
         <div className="p-5 flex items-center gap-2.5 border-b border-primary-foreground/10">
-          <div className="w-7 h-7 rounded-md bg-primary-foreground flex items-center justify-center"><span className="text-primary font-heading font-bold text-xs">T</span></div>
+          <img src="/logo-mark.svg" alt="til." className="w-7 h-7" />
           <div>
-            <span className="font-heading font-bold text-primary-foreground text-sm">TIL Admin</span>
+            <span className="font-display italic font-medium text-primary-foreground text-base">til. <span className="font-body not-italic font-bold text-xs">admin</span></span>
             <p className="text-[9px] text-primary-foreground/40">Platform Management</p>
           </div>
         </div>

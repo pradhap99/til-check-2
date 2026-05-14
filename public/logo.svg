@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- til. — primary wordmark, gold gradient on transparent.
+     Use on dark surfaces only.
+     The "." is the two-ring mark in miniature. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 110" role="img" aria-label="til.">
+  <defs>
+    <linearGradient id="til-word" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#F5E6A8"/>
+      <stop offset="45%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+    <linearGradient id="til-dot-ring" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#F5E6A8"/>
+      <stop offset="45%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+    <linearGradient id="til-dot-core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#E8D5A0"/>
+      <stop offset="100%" stop-color="#C9A961"/>
+    </linearGradient>
+  </defs>
+
+  <text
+    x="0" y="86"
+    fill="url(#til-word)"
+    font-family="'Cormorant Garamond Variable', 'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif"
+    font-style="italic"
+    font-weight="500"
+    font-size="110"
+    letter-spacing="-2"
+  >til</text>
+
+  <!-- "." is the two-ring mark, sized to baseline. -->
+  <g transform="translate(192, 64)">
+    <circle cx="0" cy="0" r="20" fill="none" stroke="url(#til-dot-ring)" stroke-width="4.2"/>
+    <circle cx="6" cy="0" r="13" fill="url(#til-dot-core)"/>
+  </g>
+</svg>

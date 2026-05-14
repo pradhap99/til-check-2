@@ -172,7 +172,7 @@ const Profile = () => {
             { icon: Users, label: "Community", to: "/community" },
             { icon: Radio, label: "Channels", to: "/channels" },
             { icon: Sparkles, label: "Managed Services", to: "/managed-services" },
-            { icon: HelpCircle, label: "How TIL Works", to: "/help" },
+            { icon: HelpCircle, label: "How til. Works", to: "/help" },
             { icon: BookOpen, label: "Platform Docs", to: "/docs" },
             { icon: HelpCircle, label: "Help & Support", to: "/support" },
             ...(isAdmin ? [{ icon: Shield, label: "Admin Panel", to: "/admin" }] : []),
@@ -202,7 +202,7 @@ const Profile = () => {
           <Button variant="outline" className="w-full h-10 text-destructive border-destructive/20 hover:bg-destructive/5" onClick={handleSignOut}>
             <LogOut className="w-4 h-4 mr-1.5" /> Sign Out
           </Button>
-          <p className="text-[10px] text-muted-foreground text-center mt-3">TIL v1.0</p>
+          <p className="text-[10px] text-muted-foreground text-center mt-3">til. v1.0</p>
         </div>
       </div>
     </Layout>

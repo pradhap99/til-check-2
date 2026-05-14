@@ -12,13 +12,13 @@ import {
 const helpSections = [
   {
     id: "what-is-til",
-    title: "What is TIL?",
-    content: "TIL (The Influencer League) is India's premier creator economy platform connecting brands with creators for paid campaigns, barter collaborations, and affiliate deals. We handle discovery, escrow payments, and performance tracking — so both sides can focus on creating great content.",
+    title: "What is til.?",
+    content: "til. is a Chennai-first marketplace where brands meet creators. We handle discovery, programmable escrow, KPI-verified payouts and content moderation — so both sides can focus on the work.",
   },
   {
     id: "escrow",
     title: "How does Escrow work?",
-    content: "When a brand posts a campaign, they fund 100% of the payout into TIL's smart escrow. Money is released in milestones based on engagement: 30% on content publication + 500 engagements, 40% on reaching 2,000 engagements within 7 days, and the final 30% on campaign completion with brand approval. If no dispute is filed, funds auto-release after 14 days. This protects both creators and brands.",
+    content: "When a brand posts a campaign, they fund 100% of the payout into til.'s smart escrow. Money is released in milestones based on engagement: 30% on content publication + 500 engagements, 40% on reaching 2,000 engagements within 7 days, and the final 30% on campaign completion with brand approval. If no dispute is filed, funds auto-release after 14 days. This protects both creators and brands.",
   },
   {
     id: "perks",
@@ -33,7 +33,7 @@ const helpSections = [
   {
     id: "affiliate",
     title: "What is the Affiliate Program?",
-    content: "TIL's affiliate program lets creators earn passive income by sharing branded links with their audience. Every sale made through your link earns you a commission (typically 6-12% depending on the brand). TIL tracks all conversions automatically and credits earnings to your wallet. A 2% platform fee applies to each affiliate transaction.",
+    content: "til.'s affiliate program lets creators earn passive income by sharing branded links with their audience. Every sale made through your link earns you a commission (typically 6-12% depending on the brand). til. tracks all conversions automatically and credits earnings to your wallet. A 2% platform fee applies to each affiliate transaction.",
   },
   {
     id: "vouchers",
@@ -53,7 +53,7 @@ const Help = () => {
             <ArrowLeft className="w-4 h-4 text-muted-foreground" />
           </button>
           <div>
-            <h1 className="text-lg font-heading font-bold text-foreground">How TIL Works</h1>
+            <h1 className="text-lg font-heading font-bold text-foreground">How til. Works</h1>
             <p className="text-[10px] text-muted-foreground">Everything you need to know</p>
           </div>
         </header>

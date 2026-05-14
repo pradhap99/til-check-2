@@ -238,7 +238,7 @@ const Escrow = () => {
         >
           <div className="pt-3 px-1">
             <p className="text-xs text-muted-foreground leading-relaxed mb-3">
-              Every campaign has its own brand-defined milestones. TIL holds funds/perks in escrow and releases them automatically when each milestone is verified. If no dispute is raised within 14 days of completion, funds auto-release. Brands set their own KPIs — views, posts, engagement, or deliverables — when creating a campaign.
+              Every campaign has its own brand-defined milestones. til. holds funds/perks in escrow and releases them automatically when each milestone is verified. If no dispute is raised within 14 days of completion, funds auto-release. Brands set their own KPIs — views, posts, engagement, or deliverables — when creating a campaign.
             </p>
             <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-2">
               {smartReleaseSteps.map((s, i) => (
@@ -363,7 +363,7 @@ const Escrow = () => {
       {/* Help & Docs links */}
       <div className="px-4 mb-6 space-y-2">
         <Button variant="outline" size="sm" className="w-full h-10 rounded-xl text-xs" onClick={() => navigate("/help")}>
-          <Info className="w-3.5 h-3.5" /> How TIL Works <ChevronRight className="w-3 h-3" />
+          <Info className="w-3.5 h-3.5" /> How til. Works <ChevronRight className="w-3 h-3" />
         </Button>
         <Button variant="outline" size="sm" className="w-full h-10 rounded-xl text-xs" onClick={() => navigate("/docs")}>
           <FileCheck className="w-3.5 h-3.5" /> Platform Documentation <ChevronRight className="w-3 h-3" />

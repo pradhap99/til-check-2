@@ -50,7 +50,7 @@ const Alerts = () => {
         <header className="px-5 pt-6 pb-1 flex items-center justify-between">
           <h1 className="text-xl font-heading font-bold text-foreground tracking-tight">Alerts</h1>
           <div className="w-9 h-9 rounded-xl bg-accent/20 flex items-center justify-center">
-            <span className="text-sm font-heading font-bold text-accent">TIL</span>
+            <img src="/logo-mark.svg" alt="til." className="w-5 h-5" />
           </div>
         </header>
 
@@ -107,7 +107,7 @@ const Alerts = () => {
               >
                 {/* Avatar */}
                 <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
-                  <span className="text-[11px] font-heading font-bold text-accent">TIL</span>
+                  <img src="/logo-mark.svg" alt="til." className="w-5 h-5" />
                 </div>
 
                 {/* Content */}

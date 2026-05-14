@@ -35,7 +35,7 @@ const brandFaqs = [
 ];
 
 const generalFaqs = [
-  { q: "Is the platform free to join?", a: "Yes! Joining TIL is completely free for both creators and brands. Creators pay nothing — the platform fee is charged to brands only on successful campaigns." },
+  { q: "Is the platform free to join?", a: "Yes! Joining til. is completely free for both creators and brands. Creators pay nothing — the platform fee is charged to brands only on successful campaigns." },
   { q: "How is payment protected?", a: "All payments go through our secure escrow system. Funds are held safely until deliverables are approved. There's a 7-day dispute window, and our mediation team handles any conflicts within 3-5 business days." },
   { q: "What are community guidelines?", a: "All content must comply with ASCI guidelines for sponsored content, Indian advertising standards, and our platform code of conduct. No hate speech, misleading claims, or plagiarized content. Violations may result in account suspension." },
 ];

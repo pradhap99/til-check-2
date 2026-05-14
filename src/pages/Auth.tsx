@@ -86,8 +86,8 @@ const Auth = () => {
       <div className="flex-1 flex flex-col items-center justify-center px-5 pb-8 relative z-10">
         {/* Logo Section */}
         <div className="text-center mb-6 animate-fade-slide-up">
-          <h1 className="text-5xl font-heading font-extrabold" style={{ color: "hsl(var(--champagne))" }}>TIL</h1>
-          <p className="text-sm text-white/60 mt-1 font-medium">India's Creator Economy Platform</p>
+          <img src="/logo.svg" alt="til." className="h-14 mx-auto" />
+          <p className="text-sm text-gold-line mt-2 font-medium tracking-wide">where brands meet people · Chennai</p>
         </div>
 
         {/* Floating Avatars */}
@@ -119,7 +119,7 @@ const Auth = () => {
             {mode === "login" ? "Welcome back" : mode === "signup" ? "Create account" : "Reset password"}
           </h2>
           <p className="text-sm text-white/50 mt-1 mb-6">
-            {mode === "login" ? "Sign in to continue" : mode === "signup" ? "Get started with TIL" : "We'll send you a reset link"}
+            {mode === "login" ? "Sign in to continue" : mode === "signup" ? "Get started with til." : "We'll send you a reset link"}
           </p>
 
           {mode === "signup" && (
@@ -221,8 +221,8 @@ const Auth = () => {
 
         {/* Trust badge */}
         <div className="mt-6 flex items-center gap-1.5 animate-fade-slide-up" style={{ animationDelay: "0.4s" }}>
-          <CheckCircle className="w-3.5 h-3.5" style={{ color: "hsl(var(--champagne))" }} />
-          <span className="text-[11px] text-white/50 font-medium">Trusted by 12,400+ creators</span>
+          <CheckCircle className="w-3.5 h-3.5 text-gold" />
+          <span className="text-[11px] text-gold-line font-medium tracking-wide">Chennai · invite-only</span>
         </div>
       </div>
     </div>

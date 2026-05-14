@@ -4,11 +4,11 @@ import Layout from "@/components/Layout";
 import { ArrowLeft, Search, CheckCircle, Star, ChevronRight } from "lucide-react";
 
 const allStories = [
-  { id: "1", name: "Priya Sharma", niche: "Fashion", campaigns: 12, quote: "TIL got me my first brand deal in just 3 days!", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&crop=face", featured: true },
+  { id: "1", name: "Priya Sharma", niche: "Fashion", campaigns: 12, quote: "til. got me my first brand deal in just 3 days!", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&crop=face", featured: true },
   { id: "2", name: "Vikram Singh", niche: "Food", campaigns: 8, quote: "Best platform for serious creators.", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face", featured: false },
-  { id: "3", name: "Kavya Nair", niche: "Beauty", campaigns: 6, quote: "I earned more than my salary through TIL.", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face", featured: false },
+  { id: "3", name: "Kavya Nair", niche: "Beauty", campaigns: 6, quote: "I earned more than my salary through til.", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face", featured: false },
   { id: "4", name: "Arjun Tandon", niche: "Tech", campaigns: 15, quote: "The escrow system gives me full trust.", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face", featured: false },
-  { id: "5", name: "Sneha Kapoor", niche: "Fashion", campaigns: 20, quote: "Went from 10K to 300K followers thanks to brand collabs on TIL.", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face", featured: false },
+  { id: "5", name: "Sneha Kapoor", niche: "Fashion", campaigns: 20, quote: "Went from 10K to 300K followers thanks to brand collabs on til.", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face", featured: false },
   { id: "6", name: "Rahul Verma", niche: "Food", campaigns: 9, quote: "Every payment lands on time. No chasing brands.", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face", featured: false },
 ];
 

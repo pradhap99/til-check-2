@@ -18,7 +18,7 @@ const ExploreBanner = () => {
         <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-accent/10 blur-3xl" />
 
         <h2 className="font-heading font-bold text-[22px] leading-tight text-white relative z-10">
-          Explore India's
+          Explore Chennai's
         </h2>
         <h2
           className="font-heading font-bold text-[28px] leading-tight relative z-10"

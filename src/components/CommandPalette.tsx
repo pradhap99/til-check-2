@@ -76,9 +76,9 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ open, onOpenChange }) =
     }
 
     items.push(
-      { id: "ai-draft-brief", label: "✨ Draft a brief with AI",  hint: "Llama 3.1 8B",          icon: Sparkles, run: go("/campaigns/create?ai=draft"), group: "AI" },
-      { id: "ai-find-like",   label: "✨ Find creators like…",     hint: "Embedding search",     icon: Sparkles, run: go("/recommendations"),          group: "AI" },
-      { id: "ai-summarize",   label: "✨ Summarize my chat",       hint: "Coming in phase F",    icon: Sparkles, run: () => {/* placeholder */},      group: "AI" },
+      { id: "ai-draft-brief", label: "Draft a brief with AI", hint: "Llama 3.1 8B",       icon: Sparkles, run: go("/campaigns/create?ai=draft"), group: "AI" },
+      { id: "ai-find-like",   label: "Find creators like…",   hint: "Embedding search",   icon: Sparkles, run: go("/recommendations"),          group: "AI" },
+      { id: "ai-summarize",   label: "Summarize my chat",     hint: "Coming in phase F",  icon: Sparkles, run: () => {/* placeholder */},      group: "AI" },
     );
 
     return items;
