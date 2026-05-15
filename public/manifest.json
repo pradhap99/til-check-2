@@ -1,0 +1,39 @@
+{
+  "name": "til. — where brands meet people",
+  "short_name": "til.",
+  "description": "Chennai marketplace where brands meet creators.",
+  "lang": "en",
+  "dir": "ltr",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "#0A0A0A",
+  "background_color": "#0A0A0A",
+  "categories": ["business", "social", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
