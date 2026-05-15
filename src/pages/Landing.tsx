@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import CountUp from "@/components/CountUp";
+import Wordmark from "@/components/Wordmark";
 import ScrollReveal from "@/components/motion/ScrollReveal";
 import Tilt3D from "@/components/motion/Tilt3D";
 import ScrollProgress from "@/components/motion/ScrollProgress";
@@ -149,7 +150,7 @@ const Landing = () => {
             <div className="w-7 h-7 rounded-md bg-foreground flex items-center justify-center transition-transform group-hover:rotate-[8deg] group-hover:scale-110">
               <span className="text-background font-heading font-bold text-xs">T</span>
             </div>
-            <img src="/logo.svg" alt="til." className="h-7" />
+            <Wordmark className="h-7" />
           </Link>
           <div className="flex gap-2">
             <Link to="/auth"><Button size="sm" variant="ghost" className="text-xs font-medium h-8 btn-micro">Log in</Button></Link>
@@ -458,7 +459,7 @@ const Landing = () => {
             <div className="w-6 h-6 rounded-md bg-foreground flex items-center justify-center">
               <span className="text-background font-heading font-bold text-[10px]">T</span>
             </div>
-            <img src="/logo.svg" alt="til." className="h-5" />
+            <Wordmark className="h-5" />
             <span className="text-xs text-muted-foreground ml-1">Chennai · invite-only</span>
           </div>
           <div className="flex gap-6 text-xs text-muted-foreground">

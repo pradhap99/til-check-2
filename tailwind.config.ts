@@ -85,16 +85,17 @@ export default {
 
         /* Brand palette — til. Black + Gold. Read via Tailwind classes
            like `bg-gold`, `text-gold-soft`, `border-gold-deep/40`, etc.
-           The named hex values come from src/styles/tokens.css. */
+           All values consume CSS variables from src/styles/tokens.css —
+           no hex literals in the Tailwind config. */
         gold: {
-          DEFAULT: "#D4AF37",   // gold-primary
-          soft: "#E8D5A0",      // champagne / hover backgrounds
-          deep: "#8B6914",      // deep brass / focused borders
-          line: "#C9A961",      // hairline dividers, secondary text
+          DEFAULT: "hsl(var(--gold-primary))",
+          soft:    "hsl(var(--gold-soft))",
+          deep:    "hsl(var(--gold-deep))",
+          line:    "hsl(var(--gold-line))",
           gradient: {
-            top: "#F5E6A8",
-            mid: "#D4AF37",
-            bot: "#8B6914",
+            top: "hsl(45 80% 80%)",
+            mid: "hsl(var(--gold-primary))",
+            bot: "hsl(var(--gold-deep))",
           },
         },
 

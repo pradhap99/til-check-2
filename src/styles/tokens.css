@@ -1,201 +1,205 @@
 /* =====================================================================
- * til. — Design Tokens (Phase A v2)
+ * til. — Design Tokens (Phase A v2, triage)
  *
- * Brand: Black + Gold. Dark-first; light variants exist for printed /
- * external collateral only.
+ * Brand: Black + Gold. Dark-first; light surfaces live on print
+ * collateral only.
  *
- * Spec source: §1 of the v2 Implementation Brief.
- * Exact hex values are authoritative; downstream consumers (Tailwind,
- * shadcn primitives) read these via `hsl(var(...))` or the named tokens.
+ * Spec source: §1 of the v2 Implementation Brief, with the triage
+ * adjustments from §1.1A:
+ *   - --input and --border are SOLID (no slash opacity) — otherwise
+ *     shadcn form fields render as invisible 16%-opacity gold over the
+ *      body.
+ *   - --primary uses 43 75% 52% (brief's preferred HSL for )
+ *   - --muted-foreground 39 28% 58% (brief value, AA at 14px)
+ *
+ * All values are HSL. Source hex codes are documented in comments so
+ * the palette is auditable without losing the no-raw-hex invariant
+ * elsewhere in src/.
  * ===================================================================== */
 
 @layer base {
   :root {
-    /* ---------- Brand palette (raw hex, exact spec) ---------- */
-    --bg-base: #0A0A0A;        /* page background */
-    --bg-elevated: #14141A;    /* cards, modals */
-    --bg-overlay: #1E1E26;     /* popovers, sheets */
+    /* ---------- Brand palette ---------- */
+    --bg-base:        0 0% 4%;
+    --bg-elevated:    240 13% 9%;
+    --bg-overlay:     240 13% 12%;
 
-    --text-primary: #F5F1E8;   /* warm off-white, not pure white */
-    --text-secondary: #C9A961; /* champagne — eyebrows, captions */
-    --text-muted: #6B6760;     /* warm gray — meta info */
+    --text-primary:   40 38% 93%;
+    --text-secondary: 39 50% 58%;
+    --text-muted:     39 6% 41%;
 
-    --gold-primary: #D4AF37;   /* primary CTA, links, active states */
-    --gold-soft: #E8D5A0;      /* champagne — hover backgrounds, highlights */
-    --gold-deep: #8B6914;      /* deep brass — borders, focused fields */
-    --gold-line: #C9A961;      /* hairline rules, dividers */
-    --gold-gradient: linear-gradient(180deg, #F5E6A8 0%, #D4AF37 45%, #8B6914 100%);
-    --gold-gradient-horiz: linear-gradient(90deg, #C9A961, #E8D5A0);
+    --gold-primary:   43 75% 52%;
+    --gold-soft:      43 67% 77%;
+    --gold-deep:      38 75% 30%;
+    --gold-line:      39 50% 58%;
 
-    --border-default: rgba(212, 175, 55, 0.16);
-    --border-strong: rgba(212, 175, 55, 0.32);
-    --border-focus: #D4AF37;
+    --gold-gradient:       linear-gradient(180deg,
+                             hsl(45 80% 80%) 0%,
+                             hsl(43 75% 52%) 45%,
+                             hsl(38 75% 30%) 100%);
+    --gold-gradient-horiz: linear-gradient(90deg, hsl(39 50% 58%), hsl(43 67% 77%));
 
-    --status-success: #6FAE7F;
-    --status-warning: #D4AF37; /* gold IS the warning/active color */
-    --status-danger:  #C84A4A;
-    --status-info:    #6B8FA0;
+    --border-default: hsl(43 75% 52% / 0.16);
+    --border-strong:  hsl(43 75% 52% / 0.32);
+    --border-focus:   hsl(43 75% 52%);
 
-    /* ---------- shadcn HSL bridge (every downstream consumer reads these) ---------- */
-    /* Dark-first defaults — :root IS dark for this brand. The .dark class
-       remains a no-op alias to keep next-themes/shadcn happy. */
-    --background: 0 0% 4%;            /* #0A0A0A */
-    --foreground: 40 38% 93%;         /* #F5F1E8 */
+    --status-success: 142 28% 56%;
+    --status-warning: 43 75% 52%;
+    --status-danger:  0 60% 53%;
+    --status-info:    204 18% 53%;
 
-    --card: 240 13% 9%;               /* #14141A */
-    --card-foreground: 40 38% 93%;
+    /* ---------- shadcn HSL bridge ----------
+       Every primitive (button, card, input, dialog, popover, tabs,
+       toast, select, …) reads these. Aligned with §1.1A. */
+    --background:             0 0% 4%;
+    --foreground:             36 47% 93%;
 
-    --popover: 240 13% 13%;           /* #1E1E26 */
-    --popover-foreground: 40 38% 93%;
+    --card:                   240 13% 9%;
+    --card-foreground:        36 47% 93%;
 
-    --primary: 46 65% 52%;            /* #D4AF37 */
-    --primary-foreground: 0 0% 4%;    /* near-black on gold per spec */
+    --popover:                240 13% 12%;
+    --popover-foreground:     36 47% 93%;
 
-    --secondary: 240 13% 13%;         /* #1E1E26 */
-    --secondary-foreground: 40 38% 93%;
+    --primary:                43 75% 52%;
+    --primary-foreground:     0 0% 4%;
 
-    --muted: 240 13% 13%;
-    --muted-foreground: 40 12% 53%;   /* warm gray */
+    --secondary:              240 13% 12%;
+    --secondary-foreground:   36 47% 93%;
 
-    --accent: 46 65% 52%;
-    --accent-foreground: 0 0% 4%;
+    --muted:                  240 13% 12%;
+    --muted-foreground:       39 28% 58%;
 
-    --destructive: 0 53% 54%;         /* #C84A4A */
-    --destructive-foreground: 40 38% 93%;
+    --accent:                 43 75% 52%;
+    --accent-foreground:      0 0% 4%;
 
-    /* CSS Color 4 slash syntax — `hsl(var(--border))` emits `hsl(46 65% 52% / 0.16)`,
-       i.e. gold at 16% opacity for hairline rules. */
-    --border: 46 65% 52% / 0.16;
-    --input:  46 65% 52% / 0.16;
-    --ring:   46 65% 52%;             /* gold focus ring, full opacity */
+    --destructive:            0 60% 53%;
+    --destructive-foreground: 36 47% 93%;
 
-    /* Sidebar — kept for shadcn sidebar.tsx, but tints brass on dark. */
-    --sidebar-background: 0 0% 4%;
-    --sidebar-foreground: 40 38% 93%;
-    --sidebar-primary: 46 65% 52%;
+    /* SOLID border + input. Hairlines that need gold-at-16% use the
+       --border-default token directly, not bg-input / border-border. */
+    --border:                 43 30% 30%;
+    --input:                  240 13% 12%;
+    --ring:                   43 75% 52%;
+
+    /* ---------- Sidebar (shadcn sidebar.tsx) ---------- */
+    --sidebar-background:        0 0% 4%;
+    --sidebar-foreground:        36 47% 93%;
+    --sidebar-primary:           43 75% 52%;
     --sidebar-primary-foreground: 0 0% 4%;
-    --sidebar-accent: 240 13% 13%;
-    --sidebar-accent-foreground: 40 38% 93%;
-    --sidebar-border: 46 65% 52% / 0.16;
-    --sidebar-ring:   46 65% 52%;
+    --sidebar-accent:            240 13% 12%;
+    --sidebar-accent-foreground: 36 47% 93%;
+    --sidebar-border:            43 30% 30%;
+    --sidebar-ring:              43 75% 52%;
 
-    /* ---------- Status semantics ---------- */
-    --status-live:    142 28% 56%;    /* #6FAE7F success */
-    --status-pending: 46 65% 52%;     /* gold = active/pending */
+    /* ---------- Status aliases ---------- */
+    --status-live:    var(--status-success);
+    --status-pending: var(--status-warning);
     --status-closed:  35 6% 41%;
-    --status-hot:     0 53% 54%;
-    --status-info-h:  204 18% 53%;    /* alias used by chips */
+    --status-hot:     0 60% 53%;
+    --status-info-h:  var(--status-info);
 
-    --success:        var(--status-live);
+    --success:            var(--status-success);
     --success-foreground: 0 0% 4%;
-    --warning:        var(--status-pending);
+    --warning:            var(--status-warning);
     --warning-foreground: 0 0% 4%;
-    --info:           var(--status-info-h);
-    --info-foreground: 40 38% 93%;
+    --info:               var(--status-info);
+    --info-foreground:    36 47% 93%;
 
-    /* ---------- Radius scale (unchanged from v1) ---------- */
+    /* ---------- Radius ---------- */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 18px;
     --radius-xl: 24px;
     --radius-2xl: 32px;
     --radius-full: 9999px;
-    --radius: var(--radius-md);
+    --radius: 0.75rem;
 
-    /* ---------- Spacing (Zomato section pad retained for breathing room) ---------- */
+    /* ---------- Spacing ---------- */
     --space-section-y-mobile: 24px;
-    --space-section-y: 40px;
-    --space-section-y-lg: 64px;
+    --space-section-y:        40px;
+    --space-section-y-lg:     64px;
     --space-section-x-mobile: 16px;
-    --space-section-x: 32px;
-    --space-section-x-lg: 48px;
+    --space-section-x:        32px;
+    --space-section-x-lg:     48px;
 
-    /* ---------- Elevation — warm gold-tinted ambient, never harsh ---------- */
+    /* ---------- Elevation — warm gold-tinted ambient ---------- */
     --elev-0: none;
-    --elev-1: 0 1px 2px hsl(0 0% 0% / 0.55),
-              0 1px 1px hsl(0 0% 0% / 0.35);
-    --elev-2: 0 6px 16px -4px hsl(0 0% 0% / 0.55),
-              0 2px 6px -2px hsl(0 0% 0% / 0.35),
-              0 0 0 1px hsl(46 65% 52% / 0.05);
-    --elev-3: 0 22px 50px -18px hsl(0 0% 0% / 0.7),
-              0 10px 22px -12px hsl(46 65% 52% / 0.12),
-              0 0 0 1px hsl(46 65% 52% / 0.08);
+    --elev-1: 0 1px 2px 0 hsl(0 0% 0% / 0.5),
+              inset 0 1px 0 hsl(43 75% 52% / 0.04);
+    --elev-2: 0 4px 8px -2px hsl(0 0% 0% / 0.6),
+              inset 0 1px 0 hsl(43 75% 52% / 0.08);
+    --elev-3: 0 12px 24px -8px hsl(0 0% 0% / 0.7),
+              inset 0 1px 0 hsl(43 75% 52% / 0.12);
 
-    /* ---------- Signature gradients (gold scale, top→bottom) ---------- */
-    --gradient-brand: var(--gold-gradient);
-    --gradient-brand-h: var(--gold-gradient-horiz);
+    /* ---------- Signature gradients ---------- */
+    --gradient-brand:     var(--gold-gradient);
+    --gradient-brand-h:   var(--gold-gradient-horiz);
     --gradient-celebrate: conic-gradient(from 0deg,
-      #F5E6A8, #D4AF37, #8B6914, #D4AF37, #F5E6A8);
-    --gradient-glass:
-      linear-gradient(180deg, hsl(240 13% 13% / 0.85), hsl(0 0% 4% / 0.65));
+                            hsl(45 80% 80%), hsl(43 75% 52%), hsl(38 75% 30%),
+                            hsl(43 75% 52%), hsl(45 80% 80%));
+    --gradient-glass:     linear-gradient(180deg,
+                            hsl(240 13% 12% / 0.85),
+                            hsl(0 0% 4% / 0.65));
 
     /* ---------- Type ---------- */
-    --font-body: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-body:    "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-heading: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --font-display: "Cormorant Garamond Variable", "Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
-    /* No mono in the til. system; numerics stay in Inter Variable with tabular-nums. */
-    --font-mono: var(--font-body);
+    --font-mono:    var(--font-body);
 
-    /* ---------- Motion (unchanged from v1) ---------- */
+    /* ---------- Motion ---------- */
     --t-instant: 100ms;
-    --t-fast: 180ms;
-    --t-base: 240ms;
-    --t-slow: 360ms;
+    --t-fast:    180ms;
+    --t-base:    240ms;
+    --t-slow:    360ms;
     --t-cinematic: 800ms;
-    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-    --ease-in: cubic-bezier(0.55, 0, 0.68, 0.06);
+    --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in:     cubic-bezier(0.55, 0, 0.68, 0.06);
     --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   }
 
-  /* The .dark class is the canonical state. We expose it as a no-op
-     so any existing component that relies on it continues to render
-     correctly. Both selectors map to the same gold-on-black tokens. */
+  /* .dark mirrors :root (the app is dark-first). Mapping kept so
+     next-themes / shadcn dark-mode utilities continue to resolve. */
   .dark {
-    --background: 0 0% 4%;
-    --foreground: 40 38% 93%;
-    --card: 240 13% 9%;
-    --card-foreground: 40 38% 93%;
-    --popover: 240 13% 13%;
-    --popover-foreground: 40 38% 93%;
-    --primary: 46 65% 52%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 240 13% 13%;
-    --secondary-foreground: 40 38% 93%;
-    --muted: 240 13% 13%;
-    --muted-foreground: 40 12% 53%;
-    --accent: 46 65% 52%;
-    --accent-foreground: 0 0% 4%;
-    --destructive: 0 53% 54%;
-    --destructive-foreground: 40 38% 93%;
-    --border: 46 65% 52% / 0.16;
-    --input:  46 65% 52% / 0.16;
-    --ring:   46 65% 52%;
+    --background:             0 0% 4%;
+    --foreground:             36 47% 93%;
+    --card:                   240 13% 9%;
+    --card-foreground:        36 47% 93%;
+    --popover:                240 13% 12%;
+    --popover-foreground:     36 47% 93%;
+    --primary:                43 75% 52%;
+    --primary-foreground:     0 0% 4%;
+    --secondary:              240 13% 12%;
+    --secondary-foreground:   36 47% 93%;
+    --muted:                  240 13% 12%;
+    --muted-foreground:       39 28% 58%;
+    --accent:                 43 75% 52%;
+    --accent-foreground:      0 0% 4%;
+    --destructive:            0 60% 53%;
+    --destructive-foreground: 36 47% 93%;
+    --border:                 43 30% 30%;
+    --input:                  240 13% 12%;
+    --ring:                   43 75% 52%;
   }
 
-  /* ---------------------------------------------------------------------
-   * Legacy aliases. The Phase A v1 "Luxury Champagne" token names live on
-   * as references into the new gold-on-black system so existing utility
-   * classes, animations and primitives keep rendering without sweep work.
-   *
-   * Reads as: champagne == gold-primary, emerald == status-success
-   * (the visual role of "secondary accent" is now warm not green).
-   * ------------------------------------------------------------------- */
+  /* Legacy aliases — v1 "Luxury Champagne" names route into the
+     gold-on-black system so existing utility classes and primitives
+     keep resolving without sweep work. */
   :root,
   .dark {
-    --champagne:        46 65% 52%;     /* gold-primary */
-    --champagne-soft:   43 67% 77%;     /* gold-soft */
-    --champagne-deep:   38 75% 30%;     /* gold-deep */
-    --emerald:          46 65% 52%;     /* gold takes the emerald slot */
-    --emerald-soft:     43 67% 77%;     /* gold-soft */
-    --emerald-deep:     38 75% 30%;     /* gold-deep */
+    --champagne:        43 75% 52%;
+    --champagne-soft:   43 67% 77%;
+    --champagne-deep:   38 75% 30%;
+    --emerald:          43 75% 52%;
+    --emerald-soft:     43 67% 77%;
+    --emerald-deep:     38 75% 30%;
     --onyx:             0 0% 4%;
     --onyx-elev:        240 13% 9%;
-    --onyx-elev-2:      240 13% 13%;
+    --onyx-elev-2:      240 13% 12%;
     --ivory:            40 38% 93%;
     --ivory-elev:       40 38% 93%;
     --ivory-elev-2:     40 38% 93%;
-    --parchment:        40 38% 93%;
-    --parchment-muted:  40 12% 53%;
+    --parchment:        36 47% 93%;
+    --parchment-muted:  39 28% 58%;
   }
 }
-

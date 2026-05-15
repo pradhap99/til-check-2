@@ -1,37 +1,37 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { ReactNode } from "react";
+import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from "next-themes";
 
-type Theme = "dark" | "light";
+/**
+ * ThemeProvider — wraps `next-themes` with the til. v2 policy.
+ *
+ * Phase A v2 spec: dark-first, no toggle. `forcedTheme="dark"` makes
+ * `document.documentElement` carry `class="dark"` from first paint
+ * (preventing the input-on-input contrast bug from a stale localStorage
+ * "light" preference). Light variants exist for print collateral only.
+ *
+ * The legacy `useTheme()` + `toggleTheme()` API is preserved so existing
+ * call sites (Profile, etc.) keep working. `toggleTheme` is now a no-op;
+ * Phase I will wire light mode behind a Settings → Appearance switch and
+ * re-enable it then.
+ */
+export const ThemeProvider = ({ children }: { children: ReactNode }) => (
+  <NextThemesProvider
+    attribute="class"
+    defaultTheme="dark"
+    forcedTheme="dark"
+    enableSystem={false}
+    disableTransitionOnChange
+  >
+    {children}
+  </NextThemesProvider>
+);
 
-interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
-}
-
-const ThemeContext = createContext<ThemeContextType>({ theme: "dark", toggleTheme: () => {} });
-
-export const useTheme = () => useContext(ThemeContext);
-
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const stored = localStorage.getItem("til-theme");
-    return (stored === "light" || stored === "dark") ? stored : "dark";
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-    localStorage.setItem("til-theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () => setTheme(prev => prev === "dark" ? "light" : "dark");
-
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+export const useTheme = () => {
+  const { resolvedTheme } = useNextTheme();
+  return {
+    theme: (resolvedTheme === "light" ? "light" : "dark") as "dark" | "light",
+    toggleTheme: () => {
+      /* No-op in v2 — dark is forced. Phase I unlocks light mode. */
+    },
+  };
 };

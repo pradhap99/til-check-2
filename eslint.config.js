@@ -28,6 +28,24 @@ export default tseslint.config(
       // Phase A debt — one occurrence in brand/PostCampaign; fixed when
       // the create-campaign flow is rebuilt in phase E.
       "no-constant-binary-expression": "warn",
+      // §1.4 guard — ban hex color literals in JS/TS source.
+      // Use CSS variables (hsl(var(--token))) or Tailwind classes that
+      // reference the tokens. The palette source lives in
+      // src/styles/tokens.css.
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "Literal[value=/^#[0-9a-fA-F]{3,8}$/]",
+          message:
+            "Hex color literals are banned in JS/TS. Use design tokens (hsl(var(--token))) or Tailwind classes.",
+        },
+      ],
     },
+  },
+  {
+    /* recharts attribute selectors target SVG output by colour string
+       (e.g. [stroke='#ccc']) — they are pattern matchers, not values. */
+    files: ["src/components/ui/chart.tsx"],
+    rules: { "no-restricted-syntax": "off" },
   },
 );
