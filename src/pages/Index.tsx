@@ -1,145 +1,205 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Bell, MessageCircle, Search } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import CreatorHomeContent from "@/components/home/CreatorHomeContent";
-import BrandHomeContent from "@/components/home/BrandHomeContent";
-import { Bell, Search, MessageCircle, SlidersHorizontal } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { getCreatorLevel } from "@/lib/creatorLevels";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Chip } from "@/components/ui/chip";
+import CampaignCard from "@/components/CampaignCard";
 
-const LEVEL_EMOJIS: Record<number, string> = {
-  1: "✨", 2: "🌟", 3: "🔥", 4: "💫", 5: "👑", 6: "🥇",
-};
+/**
+ * /home — mobile-first authenticated home.
+ *
+ * Per Mobile-First Mandate §2.7:
+ *   1. Greeting hero  (auto-shrinks on scroll; compact header on small)
+ *   2. Niche chips strip (horizontally scrolling, snap-x)
+ *   3. Feed of full-width campaign cards (1 column, image-dominant)
+ *
+ * No "Top creators carousel" / "Recent applications" / "Saved campaigns"
+ * pile-up on the same screen. Each gets its own tab in the bottom nav.
+ */
+
+interface Campaign {
+  id: string;
+  title: string;
+  category: string;
+  budget?: string | number | null;
+  deadline?: string | null;
+  cover_image_url?: string | null;
+  brand_user_id?: string | null;
+  niche_targeting?: string[] | null;
+  location_targeting?: string[] | null;
+  status?: string | null;
+}
+
+const NICHE_OPTIONS = ["All", "Beauty", "Fashion", "Food", "Fitness", "Tech", "Travel", "Lifestyle"];
+
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 5) return "Good evening";
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+}
 
 const Index = () => {
   const { user, role } = useAuth();
   const navigate = useNavigate();
-  const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "there";
-  const avatarUrl = user?.user_metadata?.avatar_url;
+  const firstName = (user?.user_metadata as { full_name?: string } | undefined)?.full_name?.split(" ")[0] || "there";
+  const avatarUrl = (user?.user_metadata as { avatar_url?: string } | undefined)?.avatar_url;
   const initials = firstName.charAt(0).toUpperCase();
+
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeNiche, setActiveNiche] = useState("All");
   const [unreadNotifs, setUnreadNotifs] = useState(0);
   const [unreadMsgs, setUnreadMsgs] = useState(0);
-  const [statsLoading, setStatsLoading] = useState(true);
-  const [userCity, setUserCity] = useState<string | undefined>();
-  const [stats, setStats] = useState({
-    totalEarnings: 0,
-    pendingPayments: 0,
-    activeCampaigns: 0,
-    applicationsCount: 0,
-  });
-
-  const levelData = getCreatorLevel(45000, 5.2, 3);
-  const levelEmoji = LEVEL_EMOJIS[levelData.current.level] || "✨";
 
   useEffect(() => {
     if (!user) return;
+    void (async () => {
+      const { data } = await supabase
+        .from("campaigns")
+        .select("id, title, category, budget, deadline, cover_image_url, brand_user_id, niche_targeting, location_targeting, status")
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .limit(24);
+      setCampaigns((data as Campaign[] | null) ?? []);
+      setLoading(false);
+    })();
 
-    supabase.from("notifications").select("*", { count: "exact", head: true })
-      .eq("user_id", user.id).eq("read", false)
-      .then(({ count }) => setUnreadNotifs(count || 0));
-    supabase.from("messages").select("*", { count: "exact", head: true })
-      .neq("sender_id", user.id).is("read_at", null)
-      .then(({ count }) => setUnreadMsgs(count || 0));
+    void supabase
+      .from("notifications")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("read", false)
+      .then(({ count }) => setUnreadNotifs(count ?? 0));
 
-    supabase.from("profiles").select("location_city, avatar_url").eq("user_id", user.id).maybeSingle()
-      .then(({ data }) => { if (data?.location_city) setUserCity(data.location_city); });
+    void supabase
+      .from("messages")
+      .select("*", { count: "exact", head: true })
+      .eq("recipient_user_id", user.id)
+      .eq("read", false)
+      .then(({ count }) => setUnreadMsgs(count ?? 0));
+  }, [user]);
 
-    const loadStats = async () => {
-      if (role === "creator") {
-        const { data: txs } = await supabase.from("transactions").select("amount, status").eq("payee_user_id", user.id);
-        const totalEarnings = (txs || []).filter(t => t.status === "completed").reduce((s, t) => s + Number(t.amount), 0);
-        const pendingPayments = (txs || []).filter(t => t.status === "pending").reduce((s, t) => s + Number(t.amount), 0);
-        const { count: appsCount } = await supabase.from("campaign_applications").select("*", { count: "exact", head: true }).eq("creator_user_id", user.id);
-        const { count: activeCount } = await supabase.from("campaign_applications").select("*", { count: "exact", head: true }).eq("creator_user_id", user.id).eq("status", "accepted");
-        setStats({ totalEarnings, pendingPayments, activeCampaigns: activeCount || 0, applicationsCount: appsCount || 0 });
-      } else {
-        const { data: txs } = await supabase.from("transactions").select("amount, status").eq("payer_user_id", user.id);
-        const totalEarnings = (txs || []).filter(t => t.status === "completed").reduce((s, t) => s + Number(t.amount), 0);
-        const { count: campCount } = await supabase.from("campaigns").select("*", { count: "exact", head: true }).eq("brand_user_id", user.id).eq("status", "active");
-        const { data: myCampaigns } = await supabase.from("campaigns").select("id").eq("brand_user_id", user.id);
-        let appsCount = 0;
-        if (myCampaigns && myCampaigns.length > 0) {
-          const { count } = await supabase.from("campaign_applications").select("*", { count: "exact", head: true }).in("campaign_id", myCampaigns.map(c => c.id)).eq("status", "pending");
-          appsCount = count || 0;
-        }
-        setStats({ totalEarnings, pendingPayments: 0, activeCampaigns: campCount || 0, applicationsCount: appsCount });
-      }
-      setStatsLoading(false);
-    };
-    loadStats();
-  }, [user, role]);
+  const filtered = useMemo(() => {
+    if (activeNiche === "All") return campaigns;
+    return campaigns.filter(
+      (c) =>
+        c.category === activeNiche ||
+        (c.niche_targeting && c.niche_targeting.includes(activeNiche)),
+    );
+  }, [campaigns, activeNiche]);
 
   return (
     <Layout>
-      <div className="radial-gradient-bg">
-        {/* Header */}
-        <header className="px-5 pt-6 pb-1 flex items-center justify-between">
-          <div className="flex items-center gap-3 opacity-0 animate-fade-up" style={{ animationFillMode: "forwards" }}>
-            <Avatar className="w-9 h-9 border-2 border-accent/40 animate-float-up">
+      <div className="pt-[env(safe-area-inset-top)]">
+        {/* Section 1 — Greeting */}
+        <header className="px-5 pt-4 pb-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <Avatar className="size-11 ring-1 ring-border">
               <AvatarImage src={avatarUrl} alt={firstName} />
-              <AvatarFallback className="bg-accent/20 text-accent font-heading font-bold text-sm">{initials}</AvatarFallback>
+              <AvatarFallback className="bg-secondary text-secondary-foreground font-medium text-sm">{initials}</AvatarFallback>
             </Avatar>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <h1 className="text-base font-heading font-bold text-foreground tracking-tight leading-tight">{firstName}</h1>
-                <span className="animate-sparkle-emoji" style={{ fontSize: "1.2em", lineHeight: 1 }}>{levelEmoji}</span>
-              </div>
-              <p className="text-[11px] text-muted-foreground leading-none mt-0.5">{levelData.current.name}</p>
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground leading-none">{greeting()},</p>
+              <h1 className="text-xl font-medium text-foreground tracking-tight leading-tight truncate">{firstName}</h1>
             </div>
           </div>
-          <div className="flex items-center gap-1">
-            <Link to="/messages" className="w-9 h-9 rounded-lg flex items-center justify-center relative hover:bg-secondary transition-colors btn-micro">
-              <MessageCircle className="w-[18px] h-[18px] text-muted-foreground" />
-              {unreadMsgs > 0 && <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-destructive animate-pulse" />}
-            </Link>
-            <Link to="/alerts" className="w-9 h-9 rounded-lg flex items-center justify-center relative hover:bg-secondary transition-colors btn-micro">
-              <Bell className="w-[18px] h-[18px] text-muted-foreground" />
-              {unreadNotifs > 0 && <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-destructive animate-pulse" />}
-            </Link>
-            <Link to="/profile" className="ml-0.5 btn-micro">
-              <Avatar className="w-8 h-8 ring-[1.5px] ring-accent/50 ring-offset-1 ring-offset-background">
-                <AvatarImage src={avatarUrl} alt={firstName} />
-                <AvatarFallback className="bg-accent/20 text-accent font-heading font-bold text-[11px]">{initials}</AvatarFallback>
-              </Avatar>
-            </Link>
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              type="button"
+              onClick={() => navigate("/messages")}
+              aria-label="Messages"
+              className="relative inline-flex items-center justify-center size-11 rounded-full text-foreground hover:bg-secondary active:scale-95"
+            >
+              <MessageCircle className="size-5" aria-hidden />
+              {unreadMsgs > 0 && (
+                <span aria-hidden className="absolute right-2 top-2 size-2 rounded-full bg-status-hot ring-2 ring-background" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/notifications")}
+              aria-label="Notifications"
+              className="relative inline-flex items-center justify-center size-11 rounded-full text-foreground hover:bg-secondary active:scale-95"
+            >
+              <Bell className="size-5" aria-hidden />
+              {unreadNotifs > 0 && (
+                <span aria-hidden className="absolute right-2 top-2 size-2 rounded-full bg-status-hot ring-2 ring-background" />
+              )}
+            </button>
           </div>
         </header>
 
-        {/* Premium Search Bar */}
-        <div className="px-5 mt-4">
-          <div onClick={() => navigate(role === "brand" ? "/creators" : "/campaigns")} className="cursor-pointer">
-            <div className="relative search-bar-premium rounded-full p-[1.5px]">
-              <div className="relative flex items-center w-full h-11 rounded-full bg-card">
-                <Search className="absolute left-3.5 w-4 h-4 text-accent" />
-                <div className="w-full h-full pl-10 pr-12 flex items-center">
-                  <span className="text-sm text-muted-foreground/70 italic font-light">Search</span>
-                </div>
-                <button className="absolute right-2 w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center hover:bg-accent/20 transition-colors">
-                  <SlidersHorizontal className="w-3.5 h-3.5 text-accent" />
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent" />
-                </button>
-              </div>
-            </div>
-          </div>
+        <p className="px-5 -mt-1 pb-3 text-sm text-muted-foreground">
+          {loading ? "Loading Chennai campaigns…" : `${filtered.length} ${filtered.length === 1 ? "campaign" : "campaigns"} near you`}
+        </p>
+
+        {/* Search trigger — opens /campaigns search */}
+        <div className="px-5 pb-3">
+          <button
+            type="button"
+            onClick={() => navigate(role === "brand" ? "/creators" : "/campaigns")}
+            className="flex h-12 w-full items-center gap-2 rounded-full bg-card border border-border px-4 text-left active:scale-[0.98]"
+            aria-label="Search campaigns and creators"
+          >
+            <Search className="size-4 text-muted-foreground" aria-hidden />
+            <span className="text-sm text-muted-foreground">
+              {role === "brand" ? "Find a Chennai creator" : "Find a campaign"}
+            </span>
+          </button>
         </div>
 
-        {/* Role-specific content */}
-        {role === "brand" ? (
-          <BrandHomeContent stats={stats} statsLoading={statsLoading} />
-        ) : (
-          <CreatorHomeContent stats={stats} statsLoading={statsLoading} userCity={userCity} />
-        )}
-
-        {/* Brand redirect hint */}
-        {role === "brand" && (
-          <div className="px-5 mt-2 mb-4">
-            <button onClick={() => navigate("/brand/dashboard")} className="w-full rounded-xl p-3 text-center border border-accent/20 text-xs font-heading text-accent btn-hover-lift" style={{ background: "rgba(245,158,11,0.05)" }}>
-              Go to Brand Dashboard →
+        {/* Section 2 — Niche chips */}
+        <nav
+          aria-label="Filter by niche"
+          className="px-5 pb-3 flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+        >
+          {NICHE_OPTIONS.map((niche) => (
+            <button
+              key={niche}
+              type="button"
+              onClick={() => setActiveNiche(niche)}
+              className="snap-start shrink-0 min-h-11"
+            >
+              <Chip
+                variant={activeNiche === niche ? "selected" : "outline"}
+                size="md"
+              >
+                {niche}
+              </Chip>
             </button>
-          </div>
-        )}
+          ))}
+        </nav>
+
+        {/* Section 3 — Feed */}
+        <section className="px-5 pb-6 space-y-3">
+          {loading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-44 w-full rounded-2xl" />
+            ))
+          ) : filtered.length === 0 ? (
+            <EmptyState
+              title="No campaigns match this niche"
+              description="Try a different niche, or browse everything."
+              action={{ label: "Browse all", onClick: () => setActiveNiche("All") }}
+            />
+          ) : (
+            filtered.map((c, i) => (
+              <CampaignCard
+                key={c.id}
+                /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+                campaign={c as any}
+                index={i}
+              />
+            ))
+          )}
+        </section>
       </div>
     </Layout>
   );

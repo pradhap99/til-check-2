@@ -15,7 +15,8 @@ import Pinned3DScene from "@/components/motion/Pinned3DScene";
 import ParallaxLayer from "@/components/motion/ParallaxLayer";
 import VelocityField from "@/components/motion/VelocityField";
 import { useSceneProgress, mapRange, clamp } from "@/components/motion/SceneProgressContext";
-import HeroSceneContent, { HeroSceneFallback } from "@/components/landing/HeroScene";
+import HeroSceneContent from "@/components/landing/HeroScene";
+import MobileHero from "@/components/landing/MobileHero";
 import HowItWorksSceneContent, { HowItWorksFallback } from "@/components/landing/HowItWorksScene";
 import { TOP_CATEGORIES } from "@/data/experienceCategories";
 
@@ -142,8 +143,8 @@ const Landing = () => {
       <ScrollProgress />
       <VelocityField selector=".velocity-orb" />
 
-      {/* Sticky nav */}
-      <nav className="sticky top-0 z-40 px-5 py-3 backdrop-blur-xl bg-background/70 border-b border-border/40">
+      {/* Sticky nav — desktop only. MobileHero ships its own top chrome. */}
+      <nav className="hidden md:block sticky top-0 z-40 px-5 py-3 backdrop-blur-xl bg-background/70 border-b border-border/40">
         <div className="flex items-center justify-between max-w-5xl mx-auto">
           <Link to="/" className="flex items-center gap-2 group">
             <img src="/logo.svg" alt="til" className="h-8 w-auto transition-transform group-hover:scale-105" />
@@ -155,17 +156,9 @@ const Landing = () => {
         </div>
       </nav>
 
-      {/* ===== HERO — pinned 3D on desktop, flat fallback on mobile ===== */}
+      {/* ===== HERO — mobile-first image hero on ≤md, pinned 3D on md+ ===== */}
       <div className="md:hidden">
-        <HeroSceneFallback
-          audience={audience}
-          setAudience={setAudience}
-          title={hero.title}
-          subtitle={hero.subtitle}
-          cta={hero.cta}
-          ctaSecondary={hero.ctaSecondary}
-          stats={hero.stats}
-        />
+        <MobileHero />
       </div>
       <div className="hidden md:block">
         <Pinned3DScene height="260vh">
