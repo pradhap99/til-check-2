@@ -171,7 +171,7 @@ const Admin = () => {
       {/* Mobile top bar */}
       <div className="md:hidden fixed top-0 inset-x-0 z-40 admin-sidebar border-b border-primary-foreground/10">
         <div className="px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2"><div className="w-6 h-6 rounded-md bg-primary-foreground flex items-center justify-center"><span className="text-primary font-heading font-bold text-[10px]">T</span></div><span className="font-heading font-bold text-primary-foreground text-sm">Admin</span></div>
+          <div className="flex items-center gap-2"><img src="/logo-mark.svg" alt="til" className="w-6 h-6" /><span className="font-heading italic font-medium text-primary-foreground text-base">til. <span className="font-body not-italic font-bold text-xs">admin</span></span></div>
           <Badge className="bg-destructive/20 text-destructive border-0 text-[9px]"><Shield className="w-3 h-3 mr-0.5" /> Admin</Badge>
         </div>
         <div className="px-3 pb-2 overflow-x-auto">

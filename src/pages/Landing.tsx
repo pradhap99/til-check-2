@@ -7,7 +7,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import CountUp from "@/components/CountUp";
-import Wordmark from "@/components/Wordmark";
 import ScrollReveal from "@/components/motion/ScrollReveal";
 import Tilt3D from "@/components/motion/Tilt3D";
 import ScrollProgress from "@/components/motion/ScrollProgress";
@@ -147,10 +146,7 @@ const Landing = () => {
       <nav className="sticky top-0 z-40 px-5 py-3 backdrop-blur-xl bg-background/70 border-b border-border/40">
         <div className="flex items-center justify-between max-w-5xl mx-auto">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-7 h-7 rounded-md bg-foreground flex items-center justify-center transition-transform group-hover:rotate-[8deg] group-hover:scale-110">
-              <span className="text-background font-heading font-bold text-xs">T</span>
-            </div>
-            <Wordmark className="h-7" />
+            <img src="/logo.svg" alt="til" className="h-8 w-auto transition-transform group-hover:scale-105" />
           </Link>
           <div className="flex gap-2">
             <Link to="/auth"><Button size="sm" variant="ghost" className="text-xs font-medium h-8 btn-micro">Log in</Button></Link>
@@ -159,16 +155,18 @@ const Landing = () => {
         </div>
       </nav>
 
-      {/* ===== HERO PINNED SCENE (desktop) + flat fallback (mobile) ===== */}
-      <HeroSceneFallback
-        audience={audience}
-        setAudience={setAudience}
-        title={hero.title}
-        subtitle={hero.subtitle}
-        cta={hero.cta}
-        ctaSecondary={hero.ctaSecondary}
-        stats={hero.stats}
-      />
+      {/* ===== HERO — pinned 3D on desktop, flat fallback on mobile ===== */}
+      <div className="md:hidden">
+        <HeroSceneFallback
+          audience={audience}
+          setAudience={setAudience}
+          title={hero.title}
+          subtitle={hero.subtitle}
+          cta={hero.cta}
+          ctaSecondary={hero.ctaSecondary}
+          stats={hero.stats}
+        />
+      </div>
       <div className="hidden md:block">
         <Pinned3DScene height="260vh">
           <HeroSceneContent
@@ -456,10 +454,7 @@ const Landing = () => {
       <footer className="px-5 mt-12 pb-10 max-w-4xl mx-auto border-t border-border pt-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-foreground flex items-center justify-center">
-              <span className="text-background font-heading font-bold text-[10px]">T</span>
-            </div>
-            <Wordmark className="h-5" />
+            <img src="/logo.svg" alt="til" className="h-6 w-auto" />
             <span className="text-xs text-muted-foreground ml-1">Chennai · invite-only</span>
           </div>
           <div className="flex gap-6 text-xs text-muted-foreground">

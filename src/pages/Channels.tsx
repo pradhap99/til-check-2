@@ -132,9 +132,7 @@ const Channels = () => {
           {adminPosts.map((post, i) => (
             <div key={i} className="border border-border rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-7 h-7 rounded-lg bg-foreground flex items-center justify-center">
-                  <span className="text-background font-heading font-bold text-[10px]">T</span>
-                </div>
+                <img src="/logo-mark.svg" alt="til" className="w-7 h-7" />
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-heading font-semibold text-foreground">til. Team</span>

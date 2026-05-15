@@ -18,11 +18,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["var(--font-heading)"],
-        body: ["var(--font-body)"],
-        sans: ["var(--font-body)"],
-        display: ["var(--font-display)"],
-        mono: ["var(--font-mono)"],
+        heading: ['"Cormorant Garamond"', "Georgia", "serif"],
+        display: ['"Cormorant Garamond"', "Georgia", "serif"],
+        body:    ['"Inter Variable"', "Inter", "system-ui", "-apple-system", "sans-serif"],
+        sans:    ['"Inter Variable"', "Inter", "system-ui", "-apple-system", "sans-serif"],
+        mono:    ["var(--font-mono)"],
         numeric: ["var(--font-mono)"],
       },
       colors: {

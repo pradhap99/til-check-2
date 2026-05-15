@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Mail, Lock, User, CheckCircle } from "lucide-react";
-import Wordmark from "@/components/Wordmark";
 
 type Mode = "login" | "signup" | "forgot";
 type Role = "creator" | "brand";
@@ -87,7 +86,7 @@ const Auth = () => {
       <div className="flex-1 flex flex-col items-center justify-center px-5 pb-8 relative z-10">
         {/* Logo Section */}
         <div className="text-center mb-6 animate-fade-slide-up">
-          <Wordmark className="h-14 mx-auto" />
+          <img src="/logo.svg" alt="til" className="h-14 w-auto mx-auto" />
           <p className="text-sm text-gold-line mt-2 font-medium tracking-wide">where brands meet people · Chennai</p>
         </div>
 

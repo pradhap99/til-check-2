@@ -101,7 +101,7 @@ const HeroSceneContent = ({
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/80 backdrop-blur text-muted-foreground text-xs font-medium mb-6 chip-float border border-border/60">
             <Sparkles className="w-3 h-3 text-accent" /> Chennai · invite-only marketplace
           </div>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-extrabold leading-[1.05] tracking-tight">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading italic font-medium leading-[1.0] tracking-tight">
             {title}
           </h1>
           <p
@@ -289,7 +289,7 @@ export const HeroSceneFallback = ({
       <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-muted-foreground text-xs font-medium mb-5">
         <Sparkles className="w-3 h-3 text-accent" /> Chennai · invite-only marketplace
       </div>
-      <h1 className="text-4xl font-heading font-extrabold leading-[1.05] tracking-tight">{title}</h1>
+      <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading italic font-medium leading-[1.0] tracking-tight">{title}</h1>
       <p className="text-muted-foreground text-base mt-4 max-w-md mx-auto leading-relaxed">{subtitle}</p>
       <div className="flex flex-col gap-3 justify-center mt-6">
         <Link to="/auth"><Button size="lg" className="w-full h-12 rounded-full">{cta} <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
