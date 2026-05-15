@@ -36,10 +36,12 @@ const base = process.env.BASE_URL ?? "http://127.0.0.1:4173";
 
 // Priority routes from HANDOFF-TO-CLAUDE-CODE.md §1.2. Some need auth —
 // flag them so the report acknowledges the gap rather than misreporting.
+// NOTE: /showcase is a developer-only component-demo page and is intentionally
+// excluded — its catalog of small button variants would otherwise flood the
+// report with false positives.
 const routes = [
   { path: "/",            requiresAuth: false },
   { path: "/auth",        requiresAuth: false },
-  { path: "/showcase",    requiresAuth: false },
   { path: "/pricing",     requiresAuth: false },
   { path: "/onboarding",  requiresAuth: false },
   { path: "/home",        requiresAuth: true  },

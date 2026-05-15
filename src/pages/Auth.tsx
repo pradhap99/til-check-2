@@ -78,7 +78,7 @@ const Auth = () => {
 
       {/* Back + Logo */}
       <div className="px-5 pt-5 flex items-center gap-3 relative z-10">
-        <button onClick={() => navigate("/")} className="text-white/60 hover:text-white transition-colors">
+        <button onClick={() => navigate("/")} aria-label="Back" className="inline-flex size-11 -ml-3 items-center justify-center rounded-full text-white/60 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </button>
       </div>
@@ -148,6 +148,8 @@ const Auth = () => {
                   <Input
                     id="name" value={fullName} onChange={(e) => setFullName(e.target.value)}
                     placeholder="Your full name"
+                    autoComplete="name"
+                    autoCapitalize="words"
                     className="pl-9 h-11 rounded-xl border-white/10 text-white placeholder:text-white/25"
                     style={{ background: "rgba(255,255,255,0.06)" }}
                     required
@@ -163,6 +165,11 @@ const Auth = () => {
                 <Input
                   id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
+                  inputMode="email"
+                  autoComplete="email"
+                  autoCapitalize="off"
+                  autoCorrect="off"
+                  spellCheck={false}
                   className="pl-9 h-11 rounded-xl border-white/10 text-white placeholder:text-white/25 focus:border-amber-500"
                   style={{ background: "rgba(255,255,255,0.06)" }}
                   required
@@ -175,7 +182,7 @@ const Auth = () => {
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="text-xs font-medium text-white/70">Password</Label>
                   {mode === "login" && (
-                    <button type="button" onClick={() => setMode("forgot")} className="text-xs text-white/40 hover:text-white transition-colors">
+                    <button type="button" onClick={() => setMode("forgot")} className="inline-flex min-h-11 items-center px-2 -mr-2 text-xs text-white/40 hover:text-white transition-colors">
                       Forgot?
                     </button>
                   )}
@@ -185,6 +192,7 @@ const Auth = () => {
                   <Input
                     id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}
                     placeholder="Min 6 characters"
+                    autoComplete={mode === "login" ? "current-password" : "new-password"}
                     className="pl-9 h-11 rounded-xl border-white/10 text-white placeholder:text-white/25 focus:border-amber-500"
                     style={{ background: "rgba(255,255,255,0.06)" }}
                     required minLength={6}
@@ -205,13 +213,13 @@ const Auth = () => {
 
           <p className="text-center text-sm text-white/40 mt-5">
             {mode === "forgot" ? (
-              <button onClick={() => setMode("login")} className="text-white font-medium hover:underline">
+              <button onClick={() => setMode("login")} className="inline-flex min-h-11 items-center px-3 text-white font-medium hover:underline">
                 Back to sign in
               </button>
             ) : (
               <>
                 {mode === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
-                <button onClick={() => setMode(mode === "login" ? "signup" : "login")} className="font-medium hover:underline" style={{ color: "hsl(var(--champagne))" }}>
+                <button onClick={() => setMode(mode === "login" ? "signup" : "login")} className="inline-flex min-h-11 items-center px-2 font-medium hover:underline" style={{ color: "hsl(var(--champagne))" }}>
                   {mode === "login" ? "Sign up" : "Sign in"}
                 </button>
               </>

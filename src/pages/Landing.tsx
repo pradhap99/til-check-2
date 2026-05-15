@@ -427,7 +427,7 @@ const Landing = () => {
                 A curated Chennai marketplace — early access.
               </p>
               <div className="mt-6">
-                <Link to="/auth">
+                <Link to="/auth" className="inline-block">
                   <Button size="lg" className="bg-background text-foreground hover:bg-background/90 h-12 px-8 rounded-full">
                     Get Started Free <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
@@ -450,10 +450,10 @@ const Landing = () => {
             <img src="/logo.svg" alt="til" className="h-6 w-auto" />
             <span className="text-xs text-muted-foreground ml-1">Chennai · invite-only</span>
           </div>
-          <div className="flex gap-6 text-xs text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+          <div className="flex gap-2 text-xs text-muted-foreground">
+            <a href="#" className="inline-flex min-h-11 items-center px-3 hover:text-foreground transition-colors">Terms</a>
+            <a href="#" className="inline-flex min-h-11 items-center px-3 hover:text-foreground transition-colors">Privacy</a>
+            <a href="#" className="inline-flex min-h-11 items-center px-3 hover:text-foreground transition-colors">Contact</a>
           </div>
         </div>
         <p className="text-center text-[11px] text-muted-foreground mt-6">© 2026 til. All rights reserved.</p>

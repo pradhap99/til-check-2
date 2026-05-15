@@ -167,7 +167,7 @@ const ChatConversation = () => {
       )}
 
       {/* Input */}
-      <div className="px-4 pb-5 pt-2 glass-card border-t border-border/50">
+      <div className="px-4 pt-2 pb-[max(env(safe-area-inset-bottom),1.25rem)] glass-card border-t border-border/50">
         <div className="flex items-end gap-2">
           <button className="w-11 h-11 rounded-2xl bg-secondary flex items-center justify-center shrink-0">
             <Paperclip className="w-4 h-4 text-muted-foreground" />
@@ -178,6 +178,8 @@ const ChatConversation = () => {
               onChange={e => setNewMessage(e.target.value)}
               onKeyDown={e => e.key === "Enter" && !e.shiftKey && handleSend()}
               placeholder="Type a message..."
+              autoComplete="off"
+              enterKeyHint="send"
               className="w-full h-11 pl-4 pr-10 rounded-2xl bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border/50 focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
             <button className="absolute right-3 top-1/2 -translate-y-1/2">

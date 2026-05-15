@@ -157,7 +157,7 @@ const Creators = () => {
       <div className="px-5 mt-3 flex gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input type="text" placeholder={isBrand ? "Search by name, niche, or location..." : "Search creators, brands, niches..."} value={search} onChange={(e) => setSearch(e.target.value)} className="w-full h-[52px] pl-11 pr-4 rounded-full bg-card text-foreground placeholder:text-muted-foreground text-sm border border-border focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent/50 shadow-elev-1 transition-all" />
+          <input type="search" inputMode="search" enterKeyHint="search" autoComplete="off" autoCapitalize="off" autoCorrect="off" spellCheck={false} placeholder={isBrand ? "Search by name, niche, or location..." : "Search creators, brands, niches..."} value={search} onChange={(e) => setSearch(e.target.value)} className="w-full h-[52px] pl-11 pr-4 rounded-full bg-card text-foreground placeholder:text-muted-foreground text-sm border border-border focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent/50 shadow-elev-1 transition-all" />
         </div>
         <button onClick={() => setShowFilters(!showFilters)} className={`w-[52px] h-[52px] rounded-full flex items-center justify-center shrink-0 border transition-all relative shadow-elev-1 ${showFilters ? "bg-foreground border-foreground" : "border-border bg-card"}`}>
           <SlidersHorizontal className={`w-4 h-4 ${showFilters ? "text-background" : "text-muted-foreground"}`} />

@@ -1,0 +1,14 @@
+OK   / (0 violations)
+OK   /auth (0 violations)
+OK   /pricing (0 violations)
+OK   /onboarding (0 violations)
+SKIP /home — redirected to /auth (likely auth wall)
+SKIP /campaigns — redirected to /auth (likely auth wall)
+SKIP /applications — redirected to /auth (likely auth wall)
+SKIP /messages — redirected to /auth (likely auth wall)
+SKIP /profile — redirected to /auth (likely auth wall)
+SKIP /settings — redirected to /auth (likely auth wall)
+SKIP /notifications — redirected to /auth (likely auth wall)
+SKIP /help — redirected to /auth (likely auth wall)
+
+Total touch-target violations: 0

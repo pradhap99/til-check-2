@@ -101,7 +101,7 @@ const Pricing = () => {
   return (
     <div className="min-h-screen bg-background max-w-lg mx-auto pb-8">
       <div className="px-4 pt-4 flex items-center gap-3">
-        <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-secondary flex items-center justify-center">
+        <button onClick={() => navigate(-1)} aria-label="Back" className="size-11 -ml-1 rounded-xl bg-secondary flex items-center justify-center">
           <ArrowLeft className="w-5 h-5 text-foreground" />
         </button>
         <h1 className="text-lg font-heading font-bold text-foreground">Plans & Pricing</h1>
@@ -119,8 +119,8 @@ const Pricing = () => {
       {/* Billing toggle */}
       <div className="flex justify-center mt-5">
         <div className="inline-flex bg-secondary rounded-full p-1 gap-1">
-          <button onClick={() => setBilling("monthly")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all ${billing === "monthly" ? "bg-foreground text-background" : "text-muted-foreground"}`}>Monthly</button>
-          <button onClick={() => setBilling("annual")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all ${billing === "annual" ? "bg-foreground text-background" : "text-muted-foreground"}`}>
+          <button onClick={() => setBilling("monthly")} className={`min-h-11 px-5 py-2 rounded-full text-xs font-heading font-semibold transition-all ${billing === "monthly" ? "bg-foreground text-background" : "text-muted-foreground"}`}>Monthly</button>
+          <button onClick={() => setBilling("annual")} className={`min-h-11 px-5 py-2 rounded-full text-xs font-heading font-semibold transition-all ${billing === "annual" ? "bg-foreground text-background" : "text-muted-foreground"}`}>
             Annual <span className="text-emerald-500 text-[9px]">Save 17%</span>
           </button>
         </div>
@@ -159,7 +159,7 @@ const Pricing = () => {
             </div>
 
             <Button
-              className="w-full mt-4 h-10 rounded-xl font-heading text-sm"
+              className="w-full mt-4 h-11 rounded-xl font-heading text-sm"
               variant={plan.ctaVariant}
               onClick={() => {
                 if (plan.name === "Enterprise") navigate("/support");
