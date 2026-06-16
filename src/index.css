@@ -46,6 +46,15 @@
 }
 
 @layer utilities {
+  /* ---- Hide horizontal scrollbar (chip strips, niche scrollers) ---- */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* ---- Signature gradients (champagne → onyx diagonal) ---- */
   .gradient-primary       { background: var(--gradient-brand); }
   .gradient-primary-dark  { background: var(--gradient-brand); }

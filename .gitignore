@@ -25,3 +25,8 @@ dist-ssr
 
 # Local-only showcase screenshots (Phase A demos).
 showcase-*.png
+v2-*.png
+triage-*.png
+triage2-*.png
+mobile-*.png
+desktop-*.png

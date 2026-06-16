@@ -69,7 +69,7 @@ const CreatorOnboarding = () => {
       content: (
         <div className="grid grid-cols-3 gap-2">
           {niches.map(n => (
-            <button key={n} onClick={() => setPrimaryNiche(n)} className={`p-3 rounded-lg text-xs font-medium transition-all border ${primaryNiche === n ? "bg-foreground text-background border-foreground" : "border-border text-foreground hover:bg-secondary"}`}>
+            <button key={n} onClick={() => setPrimaryNiche(n)} className={`min-h-11 px-3 py-3 rounded-lg text-xs font-medium transition-all border ${primaryNiche === n ? "bg-foreground text-background border-foreground" : "border-border text-foreground hover:bg-secondary"}`}>
               {n}
             </button>
           ))}

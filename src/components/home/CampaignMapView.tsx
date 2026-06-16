@@ -39,13 +39,13 @@ const mapPins = [
 ];
 
 const filterCategories = [
-  { label: "All", key: "All" },
-  { label: "☕ Cafés", key: "Cafés" },
-  { label: "🍽 Dining", key: "Dining" },
-  { label: "🌄 Staycations", key: "Staycations" },
-  { label: "👗 Fashion", key: "Fashion" },
-  { label: "✨ Beauty", key: "Beauty" },
-  { label: "📱 Tech", key: "Tech" },
+  { label: "All",          key: "All" },
+  { label: "Cafés",        key: "Cafés" },
+  { label: "Dining",       key: "Dining" },
+  { label: "Staycations",  key: "Staycations" },
+  { label: "Fashion",      key: "Fashion" },
+  { label: "Beauty",       key: "Beauty" },
+  { label: "Tech",         key: "Tech" },
 ];
 const filterToCategory: Record<string, string[]> = {
   "All": [], "Cafés": ["Cafe"], "Dining": ["Dining", "Food"], "Staycations": ["Staycation"],

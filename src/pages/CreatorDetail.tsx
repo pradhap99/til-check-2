@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import {
   Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerTrigger, DrawerClose,
 } from "@/components/ui/drawer";
+import { StickyBottomCTA } from "@/components/ui/sticky-bottom-cta";
 
 const platformIcon: Record<string, any> = {
   Instagram, YouTube: Youtube, Twitter,
@@ -66,7 +67,7 @@ const CreatorDetail = () => {
     followers: dbCreator.instagram_followers ? `${(dbCreator.instagram_followers / 1000).toFixed(0)}K` : "—",
     engagement: dbCreator.engagement_rate ? `${dbCreator.engagement_rate}%` : "—",
     platform: "Instagram" as const,
-    location: dbProfile?.location_city || "India",
+    location: dbProfile?.location_city || "Chennai",
     rate: dbCreator.rate_reel ? `₹${parseInt(dbCreator.rate_reel).toLocaleString()}` : "Contact for rates",
     verified: dbCreator.verified || false,
     bio: dbProfile?.bio || `Creator specializing in ${dbCreator.primary_niche || "content"}`,
@@ -137,7 +138,7 @@ const CreatorDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background max-w-lg mx-auto">
+    <div className="min-h-screen bg-background max-w-lg mx-auto pb-32">
       {/* Header */}
       <div className="relative">
         <div className="h-32 gradient-primary relative">
@@ -285,13 +286,12 @@ const CreatorDetail = () => {
         )}
       </div>
 
-      {/* CTA */}
-      <div className="px-4 py-5 pb-24">
-        <div className="flex gap-2">
-          <Button variant="outline" className="flex-1 h-11 rounded-lg font-heading" onClick={handleMessage} disabled={startingChat}>
-            <MessageCircle className="w-4 h-4" /> Message
-          </Button>
-          {role === "brand" && isRealUser && campaigns.length > 0 ? (
+      {/* Sticky bottom CTA — Mobile-First Mandate §2.4 */}
+      <StickyBottomCTA aboveBottomNav={false}>
+        <Button variant="outline" className="h-11 rounded-lg font-heading" onClick={handleMessage} disabled={startingChat}>
+          <MessageCircle className="w-4 h-4" /> Message
+        </Button>
+        {role === "brand" && isRealUser && campaigns.length > 0 ? (
             <Drawer open={inviteOpen} onOpenChange={setInviteOpen}>
               <DrawerTrigger asChild>
                 <Button className="flex-1 h-11 rounded-lg font-heading">
@@ -329,16 +329,15 @@ const CreatorDetail = () => {
                 </DrawerFooter>
               </DrawerContent>
             </Drawer>
-          ) : (
-            <Button className="flex-1 h-11 rounded-lg font-heading" onClick={() => {
-              if (role === "brand") navigate("/campaigns/create");
-              else toast.info("Collaboration feature coming soon");
-            }}>
-              <Briefcase className="w-4 h-4" /> {role === "brand" ? "Create Campaign" : "Collaborate"}
-            </Button>
-          )}
-        </div>
-      </div>
+        ) : (
+          <Button className="h-11 rounded-lg font-heading" onClick={() => {
+            if (role === "brand") navigate("/campaigns/create");
+            else toast.info("Collaboration feature coming soon");
+          }}>
+            <Briefcase className="w-4 h-4" /> {role === "brand" ? "Create Campaign" : "Collaborate"}
+          </Button>
+        )}
+      </StickyBottomCTA>
     </div>
   );
 };

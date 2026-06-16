@@ -69,7 +69,7 @@ const CalendarEvents = () => {
             <div>
               <p className="text-xs text-muted-foreground">Campaign Calendar</p>
               <h1 className="text-xl font-heading font-bold text-foreground tracking-tight">
-                Upcoming in India 🇮🇳
+                Upcoming in Chennai
               </h1>
             </div>
             <CalendarDays className="w-5 h-5 text-accent" />

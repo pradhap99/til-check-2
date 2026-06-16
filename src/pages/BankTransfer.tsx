@@ -63,31 +63,31 @@ const BankTransfer = () => {
             <>
               <div className="space-y-1.5">
                 <Label className="text-xs">Account Holder Name</Label>
-                <Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Full name as per bank" required />
+                <Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Full name as per bank" autoComplete="name" autoCapitalize="words" required />
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">Bank Name</Label>
-                <Input value={form.bank} onChange={e => setForm({ ...form, bank: e.target.value })} placeholder="e.g. HDFC Bank" required />
+                <Input value={form.bank} onChange={e => setForm({ ...form, bank: e.target.value })} placeholder="e.g. HDFC Bank" autoComplete="off" required />
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">Account Number</Label>
-                <Input value={form.account} onChange={e => setForm({ ...form, account: e.target.value })} placeholder="••••••••1234" type="password" required />
+                <Input value={form.account} onChange={e => setForm({ ...form, account: e.target.value })} placeholder="••••••••1234" type="password" inputMode="numeric" autoComplete="off" required />
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">IFSC Code</Label>
-                <Input value={form.ifsc} onChange={e => setForm({ ...form, ifsc: e.target.value })} placeholder="e.g. HDFC0001234" required />
+                <Input value={form.ifsc} onChange={e => setForm({ ...form, ifsc: e.target.value })} placeholder="e.g. HDFC0001234" autoComplete="off" autoCapitalize="characters" autoCorrect="off" spellCheck={false} required />
               </div>
             </>
           ) : (
             <div className="space-y-1.5">
               <Label className="text-xs">UPI ID</Label>
-              <Input value={form.upiId} onChange={e => setForm({ ...form, upiId: e.target.value })} placeholder="yourname@upi" required />
+              <Input value={form.upiId} onChange={e => setForm({ ...form, upiId: e.target.value })} placeholder="yourname@upi" autoComplete="off" autoCapitalize="off" autoCorrect="off" spellCheck={false} required />
             </div>
           )}
 
           <div className="space-y-1.5">
             <Label className="text-xs">Amount to Transfer</Label>
-            <Input value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} placeholder="₹" type="number" required min={100} />
+            <Input value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} placeholder="₹" type="number" inputMode="decimal" autoComplete="off" required min={100} />
             <p className="text-[10px] text-muted-foreground">Min ₹100 · Available: ₹47,500</p>
           </div>
 

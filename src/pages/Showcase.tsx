@@ -309,15 +309,15 @@ const Showcase: React.FC = () => {
         <Section title="Gradient + Typography">
           <Card>
             <CardContent className="py-8 text-center">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-champagne">
-                Luxury Champagne
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+                til. — Black + Gold
               </p>
-              <h1 className="mt-2 text-4xl sm:text-6xl font-semibold tracking-tight">
-                <span className="gradient-text-hero">Quiet, premium, refined.</span>
+              <h1 className="mt-2 text-5xl sm:text-7xl font-display italic font-medium tracking-tight">
+                <span className="gradient-text-hero">where brands meet people.</span>
               </h1>
               <p className="mt-3 text-sm text-muted-foreground">
-                Inter Variable for UI. Geist Mono for{" "}
-                <span data-numeric="true" className="font-numeric tabular-nums">128,495 numerics</span>.
+                Cormorant Garamond italic for display. Inter Variable everywhere else, with{" "}
+                <span className="tabular-nums">128,495</span> tabular numerics.
               </p>
               <div className="mt-4 flex items-center justify-center gap-2">
                 <Heart aria-hidden className="size-5 text-status-hot" />

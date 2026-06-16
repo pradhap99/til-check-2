@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { StickyBottomCTA } from "@/components/ui/sticky-bottom-cta";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, ArrowRight, CheckCircle, Upload, Eye, Sparkles, Ban, Lock, AlertTriangle } from "lucide-react";
@@ -189,7 +190,7 @@ const CreateCampaign = () => {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Creator Slots</label>
-              <Input value={slotsTotal} onChange={e => setSlotsTotal(e.target.value)} type="number" min="1" className="h-11 rounded-xl" />
+              <Input value={slotsTotal} onChange={e => setSlotsTotal(e.target.value)} type="number" inputMode="numeric" pattern="\d*" min="1" className="h-11 rounded-xl" />
             </div>
             <div>
               <label className="text-xs font-heading font-medium text-foreground mb-1.5 block">Deadline</label>
@@ -283,7 +284,7 @@ const CreateCampaign = () => {
                 <div className="flex items-center gap-3 mt-2 pl-7">
                   <div className="flex items-center gap-1.5">
                     <label className="text-[10px] text-muted-foreground">Qty:</label>
-                    <Input value={d.quantity} onChange={e => updateDeliverableQty(idx, parseInt(e.target.value) || 1)} type="number" min="1" className="w-16 h-8 rounded-lg text-xs" />
+                    <Input value={d.quantity} onChange={e => updateDeliverableQty(idx, parseInt(e.target.value) || 1)} type="number" inputMode="numeric" pattern="\d*" min="1" className="w-16 h-8 rounded-lg text-xs" />
                   </div>
                   {d.duration !== undefined && (
                     <div className="flex items-center gap-1.5">
@@ -409,22 +410,23 @@ const CreateCampaign = () => {
         </div>
       </div>
 
-      <div className="flex-1 px-4 pt-5 pb-4 overflow-y-auto">
+      <div className="flex-1 px-4 pt-5 pb-32 overflow-y-auto">
         <h1 className="text-xl font-heading font-bold text-foreground">{currentStep.title}</h1>
         <p className="text-sm text-muted-foreground mt-1 mb-5">{currentStep.subtitle}</p>
         {currentStep.content}
       </div>
 
-      <div className="px-4 pb-8 pt-4 flex gap-2">
+      {/* Sticky bottom CTA — fixed across all steps. Last step shows Save Draft + Publish. */}
+      <StickyBottomCTA aboveBottomNav={false}>
         {isLastStep && (
-          <Button variant="outline" className="flex-1 h-12 rounded-2xl font-heading" disabled={loading} onClick={() => handlePublish(true)}>
+          <Button variant="outline" className="h-12 rounded-2xl font-heading" disabled={loading} onClick={() => handlePublish(true)}>
             Save Draft
           </Button>
         )}
-        <Button className="flex-1 h-12 rounded-2xl font-heading bg-accent text-accent-foreground hover:bg-accent/90" disabled={!currentStep.valid || loading} onClick={() => isLastStep ? handlePublish(false) : setStep(s => s + 1)}>
+        <Button className="h-12 rounded-2xl font-heading bg-accent text-accent-foreground hover:bg-accent/90" disabled={!currentStep.valid || loading} onClick={() => isLastStep ? handlePublish(false) : setStep(s => s + 1)}>
           {isLastStep ? <>Publish Campaign <Sparkles className="w-4 h-4" /></> : <>Continue <ArrowRight className="w-4 h-4" /></>}
         </Button>
-      </div>
+      </StickyBottomCTA>
     </div>
   );
 };

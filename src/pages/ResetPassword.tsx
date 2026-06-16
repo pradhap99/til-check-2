@@ -57,6 +57,7 @@ const ResetPassword = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
+                autoComplete="new-password"
                 className="pl-9 h-11 rounded-xl bg-secondary border-border/50"
                 required
                 minLength={6}

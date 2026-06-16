@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import {
   Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerTrigger, DrawerClose,
 } from "@/components/ui/drawer";
+import { StickyBottomCTA } from "@/components/ui/sticky-bottom-cta";
 
 interface CampaignData {
   id: string; title: string; brand: string; logo: string; budget: string;
@@ -143,7 +144,7 @@ const CampaignDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background max-w-lg mx-auto pb-4">
+    <div className="min-h-screen bg-background max-w-lg mx-auto pb-32">
       {/* Header */}
       <div className="px-4 pt-4 flex items-center justify-between">
         <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><ArrowLeft className="w-5 h-5 text-foreground" /></button>
@@ -384,22 +385,12 @@ const CampaignDetail = () => {
         </div>
       )}
 
-      {/* CTA */}
-      <div className="px-4 py-5">
+      {/* Sticky bottom CTA — per Mobile-First Mandate §2.4 */}
+      <StickyBottomCTA aboveBottomNav={false}>
         {isOwner ? (
-          <div className="space-y-2">
-            <Button variant="gradient" className="w-full h-12 rounded-xl font-heading text-base" onClick={() => navigate(`/campaigns/${id}/manage`)}>
-              <Users className="w-4 h-4" /> Manage Applications ({recentActivity.length})
-            </Button>
-            <div className="flex gap-2">
-              <Button variant="outline" className="flex-1 h-10 rounded-xl text-xs font-heading" onClick={() => navigate(`/campaigns/create?edit=${id}`)}>
-                <Edit className="w-3.5 h-3.5" /> Edit Campaign
-              </Button>
-              <Button variant="outline" className={`flex-1 h-10 rounded-xl text-xs font-heading ${campaign.status === "active" ? "border-yellow-500/30 text-yellow-600" : "border-primary/30 text-primary"}`} onClick={handleTogglePause}>
-                {campaign.status === "active" ? <><Pause className="w-3.5 h-3.5" /> Pause</> : <><Play className="w-3.5 h-3.5" /> Resume</>}
-              </Button>
-            </div>
-          </div>
+          <Button variant="gradient" className="h-12 rounded-xl font-heading text-base" onClick={() => navigate(`/campaigns/${id}/manage`)}>
+            <Users className="w-4 h-4" /> Manage ({recentActivity.length})
+          </Button>
         ) : role === "creator" ? (
           alreadyApplied ? (
             <Button disabled className="w-full h-12 rounded-xl font-heading text-base">
@@ -426,7 +417,7 @@ const CampaignDetail = () => {
                   </div>
                   <div>
                     <label className="text-xs font-heading font-medium text-foreground mb-1 block">Proposed Rate (₹)</label>
-                    <input value={proposedRate} onChange={e => setProposedRate(e.target.value)} placeholder="e.g. 25000" type="number" className="w-full h-11 px-3 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                    <input value={proposedRate} onChange={e => setProposedRate(e.target.value)} placeholder="e.g. 25000" type="number" inputMode="decimal" autoComplete="off" className="w-full h-11 px-3 rounded-lg bg-secondary text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-primary/30" />
                   </div>
                 </div>
                 <DrawerFooter>
@@ -441,16 +432,15 @@ const CampaignDetail = () => {
             </Drawer>
           )
         ) : role === "brand" ? (
-          <Button variant="gradient" className="w-full h-12 rounded-xl font-heading text-base" onClick={() => navigate(`/campaigns/${id}/manage`)}>
+          <Button variant="gradient" className="h-12 rounded-xl font-heading text-base" onClick={() => navigate(`/campaigns/${id}/manage`)}>
             Manage Applications
           </Button>
         ) : (
-          <Button variant="outline" className="w-full h-12 rounded-xl font-heading text-base" onClick={() => navigate("/campaigns")}>
+          <Button variant="outline" className="h-12 rounded-xl font-heading text-base" onClick={() => navigate("/campaigns")}>
             Browse Campaigns
           </Button>
         )}
-        <p className="text-[10px] text-muted-foreground text-center mt-2">By applying, you agree to the campaign terms & conditions</p>
-      </div>
+      </StickyBottomCTA>
     </div>
   );
 };

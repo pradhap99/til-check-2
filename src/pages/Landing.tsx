@@ -15,14 +15,15 @@ import Pinned3DScene from "@/components/motion/Pinned3DScene";
 import ParallaxLayer from "@/components/motion/ParallaxLayer";
 import VelocityField from "@/components/motion/VelocityField";
 import { useSceneProgress, mapRange, clamp } from "@/components/motion/SceneProgressContext";
-import HeroSceneContent, { HeroSceneFallback } from "@/components/landing/HeroScene";
+import HeroSceneContent from "@/components/landing/HeroScene";
+import MobileHero from "@/components/landing/MobileHero";
 import HowItWorksSceneContent, { HowItWorksFallback } from "@/components/landing/HowItWorksScene";
 import { TOP_CATEGORIES } from "@/data/experienceCategories";
 
 const faqs = [
   { q: "How quickly do creators get paid?", a: "Instant UPI transfers with zero platform fee. Bank transfers process within 1–2 business days. Standard payment split: 50% on acceptance, 50% on deliverable approval." },
   { q: "How does GST & TDS compliance work?", a: "GST registration is optional but recommended for ₹40L+ earners. All invoices auto-generate with GSTIN fields. TDS is computed automatically for payments exceeding ₹30,000." },
-  { q: "What does TIL charge?", a: "A transparent 10% service fee on successful collaborations. No subscription fees, no hidden charges. Creators keep 90%+ of every rupee." },
+  { q: "What does til. charge?", a: "A transparent 10% service fee on successful collaborations. No subscription fees, no hidden charges. Creators keep 90%+ of every rupee." },
   { q: "How are disputes resolved?", a: "Payments are held in escrow with a 7-day dispute window post-publication. Our mediation team reviews all evidence within 3–5 business days." },
   { q: "Which platforms are supported?", a: "Instagram (Reels, Stories, Feed), YouTube (Shorts, Videos), TikTok, and Twitter/X. Full cross-platform analytics included." },
 ];
@@ -83,7 +84,7 @@ const CTAOutroContent = () => {
           </div>
           <h2 className="text-2xl md:text-4xl font-heading font-bold text-background tracking-tight">Start growing today</h2>
           <p className="text-background/60 text-sm mt-3 max-w-md mx-auto">
-            Join 12,000+ creators and 800+ brands already using TIL to power their influencer marketing.
+            A Chennai-first marketplace where brands meet creators. Apply for early access.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
             <MagneticButton>
@@ -105,27 +106,27 @@ const Landing = () => {
   const [audience, setAudience] = useState<"creator" | "brand">("creator");
 
   const creatorHero = {
-    title: <>Where brands meet<br /><span className="text-shimmer">India's best creators</span></>,
-    subtitle: "Performance-based collaborations with instant UPI payments, built-in content approval, and GST-compliant invoicing.",
-    cta: "Join as Creator",
+    title: <>Where brands meet<br /><span className="text-shimmer">Chennai's people</span></>,
+    subtitle: "Programmable escrow, KPI-verified payouts, and curated briefs — built for Chennai's creator economy.",
+    cta: "Apply as Creator",
     ctaSecondary: "I'm a Brand",
     stats: [
-      { label: "Verified Creators", value: 12400, suffix: "+" },
-      { label: "Campaigns Delivered", value: 8200, suffix: "+" },
-      { label: "Avg Engagement Rate", value: 58, suffix: "%" },
-      { label: "Paid to Creators", value: 25, prefix: "₹", suffix: "Cr+" },
+      { label: "City", value: "Chennai" },
+      { label: "Model", value: "Invite-only" },
+      { label: "Escrow", value: "Programmable" },
+      { label: "Payout", value: "KPI-verified" },
     ],
   };
   const brandHero = {
-    title: <>Find India's top creators<br /><span className="text-shimmer">for your brand</span></>,
-    subtitle: "AI-powered creator matching, secure escrow payments, real-time analytics, and end-to-end campaign management.",
-    cta: "Get Started as Brand",
+    title: <>Find Chennai's top creators<br /><span className="text-shimmer">for your brand</span></>,
+    subtitle: "Verified Chennai creators, pre-built campaign templates, and escrow that releases on KPI.",
+    cta: "Apply as Brand",
     ctaSecondary: "I'm a Creator",
     stats: [
-      { label: "Verified Creators", value: 26000, suffix: "+" },
-      { label: "Industries Covered", value: 12, suffix: "" },
-      { label: "Paid to Creators", value: 25, prefix: "₹", suffix: "Cr+" },
-      { label: "Verified Brands", value: 800, suffix: "+" },
+      { label: "City", value: "Chennai" },
+      { label: "Tiers", value: "Single / 5-pack / 20-cast" },
+      { label: "Escrow", value: "Razorpay Route" },
+      { label: "Verification", value: "IG Graph API" },
     ],
   };
   const hero = audience === "creator" ? creatorHero : brandHero;
@@ -142,14 +143,11 @@ const Landing = () => {
       <ScrollProgress />
       <VelocityField selector=".velocity-orb" />
 
-      {/* Sticky nav */}
-      <nav className="sticky top-0 z-40 px-5 py-3 backdrop-blur-xl bg-background/70 border-b border-border/40">
+      {/* Sticky nav — desktop only. MobileHero ships its own top chrome. */}
+      <nav className="hidden md:block sticky top-0 z-40 px-5 py-3 backdrop-blur-xl bg-background/70 border-b border-border/40">
         <div className="flex items-center justify-between max-w-5xl mx-auto">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-7 h-7 rounded-md bg-foreground flex items-center justify-center transition-transform group-hover:rotate-[8deg] group-hover:scale-110">
-              <span className="text-background font-heading font-bold text-xs">T</span>
-            </div>
-            <span className="font-heading font-bold text-foreground text-lg tracking-tight">TIL</span>
+            <img src="/logo.svg" alt="til" className="h-8 w-auto transition-transform group-hover:scale-105" />
           </Link>
           <div className="flex gap-2">
             <Link to="/auth"><Button size="sm" variant="ghost" className="text-xs font-medium h-8 btn-micro">Log in</Button></Link>
@@ -158,16 +156,10 @@ const Landing = () => {
         </div>
       </nav>
 
-      {/* ===== HERO PINNED SCENE (desktop) + flat fallback (mobile) ===== */}
-      <HeroSceneFallback
-        audience={audience}
-        setAudience={setAudience}
-        title={hero.title}
-        subtitle={hero.subtitle}
-        cta={hero.cta}
-        ctaSecondary={hero.ctaSecondary}
-        stats={hero.stats}
-      />
+      {/* ===== HERO — mobile-first image hero on ≤md, pinned 3D on md+ ===== */}
+      <div className="md:hidden">
+        <MobileHero />
+      </div>
       <div className="hidden md:block">
         <Pinned3DScene height="260vh">
           <HeroSceneContent
@@ -205,7 +197,7 @@ const Landing = () => {
       {audience === "brand" && (
         <section className="px-5 mt-16 max-w-4xl mx-auto">
           <ScrollReveal>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">Why TIL</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">Why til.</p>
             <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight mb-10">Everything your brand needs</h2>
           </ScrollReveal>
           <div className="grid grid-cols-2 gap-3 perspective-1200">
@@ -263,16 +255,16 @@ const Landing = () => {
         <div className="grid md:grid-cols-2 gap-4">
           {[
             { label: "For Creators", items: [
-              { icon: IndianRupee, label: "Avg ₹45,000/campaign" },
-              { icon: Clock, label: "3-day payment turnaround" },
-              { icon: Award, label: "58% acceptance rate" },
-              { icon: Target, label: "1,200+ active campaigns" },
+              { icon: IndianRupee, label: "Transparent rate cards" },
+              { icon: Clock, label: "Auto-release on KPI" },
+              { icon: Award, label: "Verified Chennai badge" },
+              { icon: Target, label: "Pre-vetted brand briefs" },
             ]},
             { label: "For Brands", items: [
-              { icon: TrendingUp, label: "8.2% avg engagement" },
-              { icon: BarChart3, label: "3X better ROI" },
-              { icon: CheckCircle, label: "800+ verified brands" },
-              { icon: Users, label: "12,400+ creators" },
+              { icon: TrendingUp, label: "Verified Chennai creators" },
+              { icon: BarChart3, label: "Programmable escrow" },
+              { icon: CheckCircle, label: "Pre-vetted briefs" },
+              { icon: Users, label: "Curated, not crowded" },
             ]},
           ].map((col, ci) => (
             <ScrollReveal key={ci} delay={ci * 120} variant={ci === 0 ? "left" : "right"}>
@@ -350,7 +342,7 @@ const Landing = () => {
       <section className="mt-24 max-w-full overflow-hidden">
         <ScrollReveal>
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2 px-5">Testimonials</p>
-          <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight px-5">Trusted by 12,000+ creators & 800+ brands</h2>
+          <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight px-5">What Chennai creators say</h2>
         </ScrollReveal>
         <div className="mt-10 marquee-3d relative">
           {/* Back row — receded depth, slower, reverse */}
@@ -432,10 +424,10 @@ const Landing = () => {
             <div className="bg-foreground rounded-3xl p-10 text-center relative overflow-hidden">
               <h2 className="text-2xl font-heading font-bold text-background tracking-tight">Start growing today</h2>
               <p className="text-background/60 text-sm mt-3">
-                Join 12,000+ creators and 800+ brands already using TIL.
+                A curated Chennai marketplace — early access.
               </p>
               <div className="mt-6">
-                <Link to="/auth">
+                <Link to="/auth" className="inline-block">
                   <Button size="lg" className="bg-background text-foreground hover:bg-background/90 h-12 px-8 rounded-full">
                     Get Started Free <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
@@ -455,19 +447,16 @@ const Landing = () => {
       <footer className="px-5 mt-12 pb-10 max-w-4xl mx-auto border-t border-border pt-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-foreground flex items-center justify-center">
-              <span className="text-background font-heading font-bold text-[10px]">T</span>
-            </div>
-            <span className="font-heading font-semibold text-sm text-foreground">TIL</span>
-            <span className="text-xs text-muted-foreground ml-1">India's Creator Marketplace</span>
+            <img src="/logo.svg" alt="til" className="h-6 w-auto" />
+            <span className="text-xs text-muted-foreground ml-1">Chennai · invite-only</span>
           </div>
-          <div className="flex gap-6 text-xs text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+          <div className="flex gap-2 text-xs text-muted-foreground">
+            <a href="#" className="inline-flex min-h-11 items-center px-3 hover:text-foreground transition-colors">Terms</a>
+            <a href="#" className="inline-flex min-h-11 items-center px-3 hover:text-foreground transition-colors">Privacy</a>
+            <a href="#" className="inline-flex min-h-11 items-center px-3 hover:text-foreground transition-colors">Contact</a>
           </div>
         </div>
-        <p className="text-center text-[11px] text-muted-foreground mt-6">© 2026 TIL. All rights reserved.</p>
+        <p className="text-center text-[11px] text-muted-foreground mt-6">© 2026 til. All rights reserved.</p>
       </footer>
     </div>
   );

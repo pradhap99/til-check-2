@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- til. — the two-ring dot mark.
+     Outer brass ring (#D4AF37) for the brand.
+     Inner champagne fill (#E8D5A0) for the creator.
+     The two meet at one tangent point — the marketplace where they connect.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="til. dot mark">
+  <defs>
+    <linearGradient id="til-mark-ring" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#F5E6A8"/>
+      <stop offset="45%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+    <linearGradient id="til-mark-core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#E8D5A0"/>
+      <stop offset="100%" stop-color="#C9A961"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer ring: cx=50, cy=50, r=42, stroke-width=8 -> inner edge at r=38 -->
+  <circle cx="50" cy="50" r="42" fill="none" stroke="url(#til-mark-ring)" stroke-width="8"/>
+  <!-- Inner circle: offset to cx=60, r=28 -> right edge at 88 = outer inner edge.
+       Brand and creator meeting at one point. -->
+  <circle cx="60" cy="50" r="28" fill="url(#til-mark-core)"/>
+</svg>

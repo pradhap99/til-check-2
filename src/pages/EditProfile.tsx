@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type HTMLAttributes } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -84,10 +84,10 @@ const EditProfile = () => {
     setLoading(false);
   };
 
-  const Field = ({ label, value, onChange, placeholder, type = "text" }: { label: string; value: string; onChange: (v: string) => void; placeholder: string; type?: string }) => (
+  const Field = ({ label, value, onChange, placeholder, type = "text", inputMode, autoComplete }: { label: string; value: string; onChange: (v: string) => void; placeholder: string; type?: string; inputMode?: HTMLAttributes<HTMLInputElement>["inputMode"]; autoComplete?: string }) => (
     <div>
       <label className="text-xs font-medium text-foreground mb-1.5 block">{label}</label>
-      <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} type={type} className="w-full h-11 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
+      <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} type={type} inputMode={inputMode} autoComplete={autoComplete} className="w-full h-11 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
     </div>
   );
 
@@ -115,9 +115,9 @@ const EditProfile = () => {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <input placeholder={handlePlaceholder} value={handle} onChange={e => setHandle(e.target.value)} className="w-full h-10 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
+          <input placeholder={handlePlaceholder} value={handle} onChange={e => setHandle(e.target.value)} autoCapitalize="off" autoCorrect="off" spellCheck={false} autoComplete="off" className="w-full h-10 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
           {setFollowers && (
-            <input placeholder="Followers" value={followers} onChange={e => setFollowers(e.target.value)} type="number" className="w-full h-10 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
+            <input placeholder="Followers" value={followers} onChange={e => setFollowers(e.target.value)} type="number" inputMode="numeric" pattern="\d*" className="w-full h-10 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
           )}
         </div>
       </div>
@@ -145,16 +145,16 @@ const EditProfile = () => {
 
       <div className="px-5 mt-6 space-y-4">
         <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">Basic Info</p>
-        <Field label="Full Name" value={fullName} onChange={setFullName} placeholder="Your name" />
+        <Field label="Full Name" value={fullName} onChange={setFullName} placeholder="Your name" autoComplete="name" />
         <div>
           <label className="text-xs font-medium text-foreground mb-1.5 block">Bio</label>
           <textarea value={bio} onChange={e => setBio(e.target.value)} placeholder="Tell people about yourself..." rows={3} className="w-full px-3 py-2 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20 resize-none" />
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="City" value={city} onChange={setCity} placeholder="Mumbai" />
-          <Field label="State" value={state} onChange={setState} placeholder="Maharashtra" />
+          <Field label="City" value={city} onChange={setCity} placeholder="Chennai" autoComplete="address-level2" />
+          <Field label="State" value={state} onChange={setState} placeholder="Tamil Nadu" autoComplete="address-level1" />
         </div>
-        <Field label="Phone" value={phone} onChange={setPhone} placeholder="+91 98765 43210" type="tel" />
+        <Field label="Phone" value={phone} onChange={setPhone} placeholder="+91 98765 43210" type="tel" inputMode="tel" autoComplete="tel" />
       </div>
 
       {role === "creator" ? (

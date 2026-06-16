@@ -8,7 +8,7 @@ import { useSceneProgress, mapRange, clamp } from "@/components/motion/SceneProg
 
 interface HeroStat {
   label: string;
-  value: number;
+  value: number | string;
   prefix?: string;
   suffix?: string;
 }
@@ -99,9 +99,9 @@ const HeroSceneContent = ({
           }}
         >
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/80 backdrop-blur text-muted-foreground text-xs font-medium mb-6 chip-float border border-border/60">
-            <Sparkles className="w-3 h-3 text-accent" /> India's #1 Creator-Brand Marketplace
+            <Sparkles className="w-3 h-3 text-accent" /> Chennai · invite-only marketplace
           </div>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-extrabold leading-[1.05] tracking-tight">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading italic font-medium leading-[1.0] tracking-tight">
             {title}
           </h1>
           <p
@@ -239,7 +239,9 @@ const HeroSceneContent = ({
             {stats.map((stat, i) => (
               <div key={i} className="text-center relative" style={{ transform: `translateZ(${20 + i * 4}px)` }}>
                 <p className="font-heading font-bold text-2xl md:text-3xl text-primary-foreground">
-                  <CountUp end={stat.value} duration={2000} prefix={stat.prefix} suffix={stat.suffix} />
+                  {typeof stat.value === "number"
+                    ? <CountUp end={stat.value} duration={2000} prefix={stat.prefix} suffix={stat.suffix} />
+                    : <>{stat.prefix}{stat.value}{stat.suffix}</>}
                 </p>
                 <p className="text-xs text-primary-foreground/50 mt-0.5">{stat.label}</p>
               </div>
@@ -285,9 +287,9 @@ export const HeroSceneFallback = ({
         </div>
       </div>
       <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-muted-foreground text-xs font-medium mb-5">
-        <Sparkles className="w-3 h-3 text-accent" /> India's #1 Creator-Brand Marketplace
+        <Sparkles className="w-3 h-3 text-accent" /> Chennai · invite-only marketplace
       </div>
-      <h1 className="text-4xl font-heading font-extrabold leading-[1.05] tracking-tight">{title}</h1>
+      <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading italic font-medium leading-[1.0] tracking-tight">{title}</h1>
       <p className="text-muted-foreground text-base mt-4 max-w-md mx-auto leading-relaxed">{subtitle}</p>
       <div className="flex flex-col gap-3 justify-center mt-6">
         <Link to="/auth"><Button size="lg" className="w-full h-12 rounded-full">{cta} <ArrowRight className="w-4 h-4 ml-1" /></Button></Link>
@@ -308,7 +310,9 @@ export const HeroSceneFallback = ({
         {stats.map((stat, i) => (
           <div key={i} className="text-center">
             <p className="font-heading font-bold text-xl text-primary-foreground">
-              <CountUp end={stat.value} duration={2000} prefix={stat.prefix} suffix={stat.suffix} />
+              {typeof stat.value === "number"
+                ? <CountUp end={stat.value} duration={2000} prefix={stat.prefix} suffix={stat.suffix} />
+                : <>{stat.prefix}{stat.value}{stat.suffix}</>}
             </p>
             <p className="text-[11px] text-primary-foreground/50">{stat.label}</p>
           </div>

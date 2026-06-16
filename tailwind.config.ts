@@ -18,10 +18,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["var(--font-heading)"],
-        body: ["var(--font-body)"],
-        sans: ["var(--font-body)"],
-        mono: ["var(--font-mono)"],
+        heading: ['"Cormorant Garamond"', "Georgia", "serif"],
+        display: ['"Cormorant Garamond"', "Georgia", "serif"],
+        body:    ['"Inter Variable"', "Inter", "system-ui", "-apple-system", "sans-serif"],
+        sans:    ['"Inter Variable"', "Inter", "system-ui", "-apple-system", "sans-serif"],
+        mono:    ["var(--font-mono)"],
         numeric: ["var(--font-mono)"],
       },
       colors: {
@@ -82,7 +83,25 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
 
-        /* Brand palette — the only place these tokens are reachable. */
+        /* Brand palette — til. Black + Gold. Read via Tailwind classes
+           like `bg-gold`, `text-gold-soft`, `border-gold-deep/40`, etc.
+           All values consume CSS variables from src/styles/tokens.css —
+           no hex literals in the Tailwind config. */
+        gold: {
+          DEFAULT: "hsl(var(--gold-primary))",
+          soft:    "hsl(var(--gold-soft))",
+          deep:    "hsl(var(--gold-deep))",
+          line:    "hsl(var(--gold-line))",
+          gradient: {
+            top: "hsl(45 80% 80%)",
+            mid: "hsl(var(--gold-primary))",
+            bot: "hsl(var(--gold-deep))",
+          },
+        },
+
+        /* Legacy aliases preserved so old utility classes / primitives
+           keep resolving. Every "champagne" / "emerald" / "onyx" reference
+           now resolves to a value in the new gold-on-black system. */
         champagne: {
           DEFAULT: "hsl(var(--champagne))",
           soft: "hsl(var(--champagne-soft))",

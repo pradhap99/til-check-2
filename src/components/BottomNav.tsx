@@ -1,42 +1,116 @@
-import { useLocation, Link } from "react-router-dom";
-import { Home, FileText, Briefcase, TrendingUp, User } from "lucide-react";
+import * as React from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { motion, useReducedMotion } from "framer-motion";
+import { Home, Compass, Inbox, MessageSquare, User, Megaphone, ShieldCheck } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 
-const BottomNav = () => {
+/**
+ * BottomNav — mobile-first primary navigation.
+ *
+ * Fixed to the bottom of the viewport with safe-area-inset padding.
+ * 5 items derived from `user.role`. Active item indicator slides via
+ * framer-motion `layoutId`. Tap feedback: scale + 8ms haptic vibration.
+ *
+ * Hidden on: landing (/), /auth, /onboarding. Layout decides; this
+ * component only renders when mounted.
+ *
+ * Per the Mobile-First Mandate §1:
+ *  - fixed bottom (never top — iOS Safari moves the chrome and breaks fixed-top)
+ *  - pb-[env(safe-area-inset-bottom)] for the iPhone notch / Android gesture bar
+ *  - 16px row min height with 44×44 touch targets per item
+ *  - 11–12px label, outlined icon stack
+ */
+type Role = "creator" | "brand" | "admin";
+
+interface NavItem {
+  label: string;
+  to: string;
+  icon: React.ComponentType<{ className?: string }>;
+  match?: (pathname: string) => boolean;
+}
+
+const navByRole: Record<Role, NavItem[]> = {
+  creator: [
+    { label: "Home",     to: "/home",         icon: Home,          match: (p) => p === "/home" },
+    { label: "Discover", to: "/campaigns",    icon: Compass,       match: (p) => p.startsWith("/campaigns") },
+    { label: "Apps",     to: "/applications", icon: Inbox,         match: (p) => p.startsWith("/applications") || p.startsWith("/workspace") },
+    { label: "Messages", to: "/messages",     icon: MessageSquare, match: (p) => p.startsWith("/messages") },
+    { label: "Me",       to: "/profile",      icon: User,          match: (p) => p.startsWith("/profile") || p === "/settings" || p === "/earnings" },
+  ],
+  brand: [
+    { label: "Home",         to: "/home",          icon: Home,          match: (p) => p === "/home" },
+    { label: "Campaigns",    to: "/campaigns",     icon: Megaphone,     match: (p) => p.startsWith("/campaigns") },
+    { label: "Applications", to: "/applications",  icon: Inbox,         match: (p) => p.startsWith("/applications") },
+    { label: "Messages",     to: "/messages",      icon: MessageSquare, match: (p) => p.startsWith("/messages") },
+    { label: "Me",           to: "/profile",       icon: User,          match: (p) => p.startsWith("/profile") || p === "/settings" || p === "/saved" },
+  ],
+  admin: [
+    { label: "Home",     to: "/home",         icon: Home,          match: (p) => p === "/home" },
+    { label: "Admin",    to: "/admin",        icon: ShieldCheck,   match: (p) => p.startsWith("/admin") },
+    { label: "Apps",     to: "/applications", icon: Inbox,         match: (p) => p.startsWith("/applications") },
+    { label: "Messages", to: "/messages",     icon: MessageSquare, match: (p) => p.startsWith("/messages") },
+    { label: "Me",       to: "/profile",      icon: User,          match: (p) => p.startsWith("/profile") || p === "/settings" },
+  ],
+};
+
+const tapHaptic = () => {
+  if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
+    navigator.vibrate(8);
+  }
+};
+
+const BottomNav: React.FC = () => {
+  const { role } = useAuth();
   const location = useLocation();
-
-  const tabs = [
-    { icon: Home, label: "Home", to: "/home" },
-    { icon: FileText, label: "Applications", to: "/applications" },
-    { icon: Briefcase, label: "Campaigns", to: "/campaigns" },
-    { icon: TrendingUp, label: "Earnings", to: "/earnings" },
-    { icon: User, label: "Profile", to: "/profile" },
-  ];
+  const reduced = useReducedMotion();
+  const items = navByRole[(role ?? "creator") as Role];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-lg border-t border-border">
-      <div className="max-w-lg mx-auto flex items-center justify-around h-14">
-        {tabs.map((tab) => {
-          const isActive = location.pathname === tab.to || location.pathname.startsWith(tab.to + "/");
+    <nav
+      aria-label="Primary"
+      className={cn(
+        "fixed bottom-0 inset-x-0 z-40",
+        "border-t border-border bg-card/95 backdrop-blur",
+        "pb-[max(env(safe-area-inset-bottom),0.25rem)] pt-1",
+      )}
+    >
+      <ul className="flex items-stretch justify-around max-w-screen-sm mx-auto">
+        {items.map((it) => {
+          const active = it.match ? it.match(location.pathname) : location.pathname === it.to;
+          const Icon = it.icon;
           return (
-            <Link
-              key={tab.to}
-              to={tab.to}
-              className={`flex flex-col items-center justify-center gap-0.5 w-14 py-1 nav-icon-active transition-all duration-200 ${
-                isActive ? "text-accent" : "text-[hsl(var(--muted-foreground))]"
-              }`}
-            >
-              <tab.icon
-                className={`w-[18px] h-[18px] transition-transform duration-200 ${isActive ? "scale-110" : ""}`}
-                strokeWidth={isActive ? 2.5 : 1.5}
-              />
-              <span className={`text-[10px] ${isActive ? "font-bold" : "font-normal"}`}>{tab.label}</span>
-              {isActive && (
-                <span className="absolute -bottom-0 w-6 h-0.5 rounded-full bg-accent" />
-              )}
-            </Link>
+            <li key={it.to} className="flex-1">
+              <NavLink
+                to={it.to}
+                aria-label={it.label}
+                aria-current={active ? "page" : undefined}
+                onClick={tapHaptic}
+                className={({ isActive }) =>
+                  cn(
+                    "relative flex h-16 min-w-11 flex-col items-center justify-center gap-1 px-1",
+                    "transition-colors duration-fast ease-out-soft",
+                    "active:scale-[0.95]",
+                    (isActive || active) ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+                  )
+                }
+              >
+                {active && (
+                  <motion.span
+                    layoutId={reduced ? undefined : "bottom-nav-active"}
+                    className="absolute top-0 h-0.5 w-10 rounded-full bg-gold"
+                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                  />
+                )}
+                <Icon className={cn("size-6 shrink-0", active && "text-gold")} aria-hidden />
+                <span className={cn("text-[11px] leading-none", active ? "font-medium" : "font-normal")}>
+                  {it.label}
+                </span>
+              </NavLink>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </nav>
   );
 };

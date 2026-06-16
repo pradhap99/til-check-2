@@ -24,7 +24,7 @@ const adminPosts = [
   { type: "Opportunity", color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400", title: "ONDC Integration Live", content: "Brands can now run creator campaigns linked to ONDC storefronts. This opens up a new revenue channel for creators in the e-commerce space.", date: "Mar 6, 2026", hasImage: false },
   { type: "Platform Update", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400", title: "New Escrow Milestone Feature", content: "Payments can now be split into multiple milestones instead of just 50/50. Brands and creators can negotiate custom payment splits for each deliverable.", date: "Mar 5, 2026", hasImage: false },
   { type: "Event", color: "bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400", title: "Connect & Create Creator Summit Chennai", content: "Join 500+ creators and 100+ brands at India's largest creator economy summit. Workshops, networking, and exclusive brand deals. April 15, 2026 — Registration open now!", date: "Mar 4, 2026", hasImage: true },
-  { type: "Regulatory", color: "bg-destructive/10 text-destructive", title: "GST Compliance for Influencers", content: "Creators earning above ₹20L annually must register for GST. TIL now auto-generates GST-compliant invoices. Update your PAN and GST details in Settings.", date: "Mar 1, 2026", hasImage: false },
+  { type: "Regulatory", color: "bg-destructive/10 text-destructive", title: "GST Compliance for Influencers", content: "Creators earning above ₹20L annually must register for GST. til. now auto-generates GST-compliant invoices. Update your PAN and GST details in Settings.", date: "Mar 1, 2026", hasImage: false },
 ];
 
 const filterOptions = ["All", "Beauty", "Fashion", "Tech", "Food", "Fitness"];
@@ -128,16 +128,14 @@ const Channels = () => {
       {/* Official Updates */}
       {tab === "updates" && (
         <div className="px-4 mt-4 space-y-3 pb-4">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Official announcements from TIL team</p>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Official announcements from til. team</p>
           {adminPosts.map((post, i) => (
             <div key={i} className="border border-border rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-7 h-7 rounded-lg bg-foreground flex items-center justify-center">
-                  <span className="text-background font-heading font-bold text-[10px]">T</span>
-                </div>
+                <img src="/logo-mark.svg" alt="til" className="w-7 h-7" />
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-heading font-semibold text-foreground">TIL Team</span>
+                    <span className="text-xs font-heading font-semibold text-foreground">til. Team</span>
                     <Badge className="text-[8px] border-0 bg-accent/10 text-accent">Official</Badge>
                   </div>
                   <span className="text-[10px] text-muted-foreground">{post.date}</span>
