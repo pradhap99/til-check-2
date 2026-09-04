@@ -10,12 +10,12 @@ export interface CreatorLevel {
 }
 
 export const CREATOR_LEVELS: CreatorLevel[] = [
-  { level: 1, name: "Rising Star", minFollowers: 0, maxFollowers: 50000, basePay: "₹5K-₹15K", badgeColor: "text-amber-700", badgeGradient: "from-amber-600 to-amber-800", unlockedBrands: "Local cafés, salons, fitness studios, small D2C brands" },
-  { level: 2, name: "Emerging Creator", minFollowers: 50000, maxFollowers: 100000, basePay: "₹15K-₹35K", badgeColor: "text-gray-400", badgeGradient: "from-gray-300 to-gray-500", unlockedBrands: "Mid-tier restaurants, fashion boutiques, regional brands" },
-  { level: 3, name: "Established Creator", minFollowers: 100000, maxFollowers: 250000, basePay: "₹35K-₹75K", badgeColor: "text-yellow-500", badgeGradient: "from-yellow-400 to-amber-500", unlockedBrands: "Premium hotels, Mamaearth, Sugar, mid-tier electronics" },
-  { level: 4, name: "Top Creator", minFollowers: 250000, maxFollowers: 500000, basePay: "₹75K-₹1.5L", badgeColor: "text-blue-300", badgeGradient: "from-blue-300 to-indigo-400", unlockedBrands: "boAt, Lenskart, Myntra partners, luxury hotels" },
-  { level: 5, name: "Elite Creator", minFollowers: 500000, maxFollowers: 1000000, basePay: "₹1.5L-₹3L", badgeColor: "text-cyan-300", badgeGradient: "from-cyan-300 to-blue-500", unlockedBrands: "Top-tier brands, exclusive partnerships" },
-  { level: 6, name: "Celebrity Creator", minFollowers: 1000000, maxFollowers: Infinity, basePay: "₹3L+", badgeColor: "text-red-400", badgeGradient: "from-red-400 to-pink-600", unlockedBrands: "ALL brands + exclusive invites + ambassadorships" },
+  { level: 1, name: "Rising Star", minFollowers: 0, maxFollowers: 10000, basePay: "₹2K-₹5K", badgeColor: "text-amber-700", badgeGradient: "from-amber-600 to-amber-800", unlockedBrands: "Local cafés, salons, fitness studios, small D2C brands" },
+  { level: 2, name: "Emerging Creator", minFollowers: 10000, maxFollowers: 50000, basePay: "₹5K-₹12K", badgeColor: "text-gray-400", badgeGradient: "from-gray-300 to-gray-500", unlockedBrands: "Mid-tier restaurants, fashion boutiques, regional brands" },
+  { level: 3, name: "Established Creator", minFollowers: 50000, maxFollowers: 100000, basePay: "₹12K-₹30K", badgeColor: "text-yellow-500", badgeGradient: "from-yellow-400 to-amber-500", unlockedBrands: "Premium hotels, Mamaearth, Sugar, mid-tier electronics" },
+  { level: 4, name: "Top Creator", minFollowers: 100000, maxFollowers: 250000, basePay: "₹30K-₹60K", badgeColor: "text-blue-300", badgeGradient: "from-blue-300 to-indigo-400", unlockedBrands: "boAt, Lenskart, Myntra partners, luxury hotels" },
+  { level: 5, name: "Elite Creator", minFollowers: 250000, maxFollowers: 500000, basePay: "₹60K-₹1.2L", badgeColor: "text-cyan-300", badgeGradient: "from-cyan-300 to-blue-500", unlockedBrands: "Top-tier brands, exclusive partnerships" },
+  { level: 6, name: "Celebrity Creator", minFollowers: 500000, maxFollowers: Infinity, basePay: "₹1.2L+", badgeColor: "text-red-400", badgeGradient: "from-red-400 to-pink-600", unlockedBrands: "ALL brands + exclusive invites + ambassadorships" },
 ];
 
 export function getCreatorLevel(followers: number, engagementRate: number = 0, completedCampaigns: number = 0): {
@@ -57,10 +57,9 @@ export function getCreatorLevel(followers: number, engagementRate: number = 0, c
 
 export function getLevelRequiredForCampaign(budgetStr: string): number {
   const budget = parseInt(budgetStr.replace(/[^\d]/g, "")) || 0;
-  if (budget >= 300000) return 6;
-  if (budget >= 150000) return 5;
+  if (budget >= 100000) return 5;
   if (budget >= 75000) return 4;
-  if (budget >= 35000) return 3;
-  if (budget >= 15000) return 2;
+  if (budget >= 40000) return 3;
+  if (budget >= 25000) return 2;
   return 1;
 }
