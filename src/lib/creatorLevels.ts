@@ -57,10 +57,9 @@ export function getCreatorLevel(followers: number, engagementRate: number = 0, c
 
 export function getLevelRequiredForCampaign(budgetStr: string): number {
   const budget = parseInt(budgetStr.replace(/[^\d]/g, "")) || 0;
-  if (budget >= 300000) return 6;
-  if (budget >= 150000) return 5;
+  if (budget >= 100000) return 5;
   if (budget >= 75000) return 4;
-  if (budget >= 35000) return 3;
-  if (budget >= 15000) return 2;
+  if (budget >= 40000) return 3;
+  if (budget >= 25000) return 2;
   return 1;
 }
