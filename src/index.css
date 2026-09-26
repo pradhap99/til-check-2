@@ -473,4 +473,155 @@
   .animate-fade-up {
     animation: fadeUp 0.5s ease both;
   }
+
+  /* ===== LANDING PAGE REDESIGN STYLES ===== */
+
+  /* Vivid violet → pink → cyan gradient text */
+  .gradient-text-landing {
+    background: linear-gradient(135deg, #a78bfa 0%, #ec4899 55%, #67e8f9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Landing glassmorphism card */
+  .landing-glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
+  }
+  .landing-glass-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(167, 139, 250, 0.35);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(124, 58, 237, 0.18);
+  }
+
+  /* Phone mockup 3D floating */
+  @keyframes phone-float-3d {
+    0%, 100% { transform: perspective(1200px) rotateX(6deg) rotateY(-12deg) translateY(0px); }
+    50%       { transform: perspective(1200px) rotateX(6deg) rotateY(-12deg) translateY(-14px); }
+  }
+  .phone-mockup-3d {
+    animation: phone-float-3d 4s ease-in-out infinite;
+    will-change: transform;
+    filter: drop-shadow(0 40px 60px rgba(124, 58, 237, 0.35));
+  }
+
+  /* Background orb drift animations */
+  @keyframes orb-drift-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%       { transform: translate(55px, -40px) scale(1.12); }
+    66%       { transform: translate(-28px, 28px) scale(0.92); }
+  }
+  @keyframes orb-drift-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    40%       { transform: translate(-48px, 38px) scale(1.08); }
+    70%       { transform: translate(32px, -18px) scale(0.96); }
+  }
+  @keyframes orb-drift-3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    30%       { transform: translate(28px, 44px) scale(1.06); }
+    60%       { transform: translate(-40px, -22px) scale(1.1); }
+  }
+
+  /* Scroll reveal */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+    will-change: opacity, transform;
+  }
+  .scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .scroll-reveal.delay-0   { transition-delay: 0ms; }
+  .scroll-reveal.delay-100 { transition-delay: 100ms; }
+  .scroll-reveal.delay-150 { transition-delay: 150ms; }
+  .scroll-reveal.delay-200 { transition-delay: 200ms; }
+  .scroll-reveal.delay-300 { transition-delay: 300ms; }
+  .scroll-reveal.delay-400 { transition-delay: 400ms; }
+  /* Landing horizontal scroll strip */
+  .landing-scroll-strip {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+  }
+  .landing-scroll-strip::-webkit-scrollbar { display: none; }
+  .landing-scroll-strip > * { scroll-snap-align: start; }
+
+  /* Pill tab active sliding indicator */
+  @keyframes tab-slide {
+    from { transform: scaleX(0.8); }
+    to   { transform: scaleX(1); }
+  }
+
+  /* FAQ max-height transition */
+  .faq-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.38s ease, padding 0.2s ease;
+  }
+  .faq-body.open {
+    max-height: 500px;
+  }
+
+  /* Category card zoom on hover */
+  .category-tile {
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
+  }
+  .category-tile:hover {
+    transform: scale(1.04);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .category-tile img {
+    transition: transform 0.5s ease;
+  }
+  .category-tile:hover img {
+    transform: scale(1.08);
+  }
+
+  /* Landing primary gradient button */
+  .btn-landing-primary {
+    background: linear-gradient(135deg, #7C3AED, #EC4899);
+    color: white;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+  }
+  .btn-landing-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(124, 58, 237, 0.55);
+  }
+  .btn-landing-primary:active { transform: scale(0.97); }
+
+  /* Landing ghost button */
+  .btn-landing-ghost {
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  .btn-landing-ghost:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+  .btn-landing-ghost:active { transform: scale(0.97); }
+
+  /* Zone card gradient connector */
+  .zone-connector {
+    background: linear-gradient(90deg, rgba(124,58,237,0.6), rgba(236,72,153,0.6), rgba(6,182,212,0.6));
+  }
+
+  /* Glow circle for step numbers */
+  .step-glow-circle {
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2), 0 0 20px rgba(124, 58, 237, 0.3);
+  }
 }
