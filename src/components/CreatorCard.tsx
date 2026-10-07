@@ -10,7 +10,7 @@ interface CreatorCardProps {
 const CreatorCard = ({ creator, index = 0 }: CreatorCardProps) => {
   return (
     <div
-      className="border border-border rounded-xl p-3.5 flex items-center gap-3.5 cursor-pointer hover-lift btn-micro opacity-0 animate-fade-up active:scale-[0.97] transition-transform duration-150"
+      className="bg-card border border-border/80 rounded-2xl p-4 flex items-center gap-3.5 cursor-pointer hover-lift-lg opacity-0 animate-fade-up active:scale-[0.98] transition-all duration-300 shadow-sm hover:border-accent/40"
       style={{ animationDelay: `${index * 50}ms`, animationFillMode: "forwards" }}
     >
       {/* Gradient ring avatar */}

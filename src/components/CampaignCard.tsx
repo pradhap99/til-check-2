@@ -73,7 +73,7 @@ const CampaignCard = ({ campaign, index = 0, userLevel = 1 }: CampaignCardProps)
 
   return (
     <div
-      className={`rounded-2xl overflow-hidden bg-card border border-border shadow-sm cursor-pointer active:scale-[0.97] transition-transform duration-150 opacity-0 animate-fade-up category-strip ${categoryColors[campaign.category] || ""}`}
+      className={`rounded-2xl overflow-hidden bg-card border border-border/80 shadow-sm cursor-pointer hover-lift-lg transition-all duration-300 opacity-0 animate-fade-up category-strip ${categoryColors[campaign.category] || ""}`}
       style={{ animationDelay: `${index * 50}ms`, animationFillMode: "forwards" }}
     >
       {/* Image Header */}

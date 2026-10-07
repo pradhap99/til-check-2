@@ -78,31 +78,35 @@ const Landing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background noise-overlay">
+    <div className="min-h-screen bg-background noise-overlay relative overflow-x-hidden">
+      {/* Glowing background ambient orbs */}
+      <div className="absolute top-12 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-accent/15 blur-[120px] rounded-full pointer-events-none -z-10 animate-drift-orb" />
+      <div className="absolute top-80 right-10 w-[300px] h-[300px] bg-primary/10 blur-[100px] rounded-full pointer-events-none -z-10" />
+
       {/* Navbar */}
-      <nav className="px-5 py-4 flex items-center justify-between max-w-5xl mx-auto">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-md bg-foreground flex items-center justify-center">
-            <span className="text-background font-heading font-bold text-xs">T</span>
+      <nav className="sticky top-0 z-50 px-5 py-3.5 flex items-center justify-between max-w-5xl mx-auto glass-nav transition-all">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+          <div className="w-8 h-8 rounded-lg bg-foreground flex items-center justify-center shadow-md">
+            <span className="text-background font-heading font-bold text-sm">T</span>
           </div>
-          <span className="font-heading font-bold text-foreground text-lg tracking-tight">TIL</span>
+          <span className="font-heading font-bold text-foreground text-xl tracking-tight">TIL</span>
         </div>
-        <div className="flex gap-2">
-          <Link to="/auth"><Button size="sm" variant="ghost" className="text-xs font-medium h-8 btn-micro">Log in</Button></Link>
-          <Link to="/auth"><Button size="sm" className="text-xs font-medium h-8 btn-micro">Get Started</Button></Link>
+        <div className="flex gap-2.5 items-center">
+          <Link to="/auth"><Button size="sm" variant="ghost" className="text-xs font-medium h-9 px-4 btn-micro hover:bg-secondary">Log in</Button></Link>
+          <Link to="/auth"><Button size="sm" className="text-xs font-medium h-9 px-4 btn-micro btn-shimmer-hover bg-foreground text-background hover:bg-foreground/90 shadow-md">Get Started</Button></Link>
         </div>
       </nav>
 
       {/* Audience Toggle */}
-      <div className="flex justify-center mt-4">
-        <div className="inline-flex bg-secondary rounded-full p-1 gap-1">
-          <button onClick={() => setAudience("creator")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all ${audience === "creator" ? "bg-foreground text-background shadow-sm" : "text-muted-foreground"}`}>For Creators</button>
-          <button onClick={() => setAudience("brand")} className={`px-4 py-1.5 rounded-full text-xs font-heading font-semibold transition-all ${audience === "brand" ? "bg-foreground text-background shadow-sm" : "text-muted-foreground"}`}>For Brands</button>
+      <div className="flex justify-center mt-6">
+        <div className="inline-flex bg-secondary/80 backdrop-blur-md border border-border/60 rounded-full p-1.5 gap-1.5 shadow-inner">
+          <button onClick={() => setAudience("creator")} className={`px-5 py-1.5 rounded-full text-xs font-heading font-bold transition-all duration-300 ${audience === "creator" ? "bg-foreground text-background shadow-md scale-105" : "text-muted-foreground hover:text-foreground"}`}>For Creators</button>
+          <button onClick={() => setAudience("brand")} className={`px-5 py-1.5 rounded-full text-xs font-heading font-bold transition-all duration-300 ${audience === "brand" ? "bg-foreground text-background shadow-md scale-105" : "text-muted-foreground hover:text-foreground"}`}>For Brands</button>
         </div>
       </div>
 
       {/* Hero */}
-      <section className="px-5 pt-10 pb-16 max-w-3xl mx-auto text-center relative dot-grid-bg">
+      <section className="px-5 pt-12 pb-16 max-w-3xl mx-auto text-center relative dot-grid-bg">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-muted-foreground text-xs font-medium mb-6 animate-fade-up">
           <Zap className="w-3 h-3" /> India's #1 Creator-Brand Marketplace
         </div>
