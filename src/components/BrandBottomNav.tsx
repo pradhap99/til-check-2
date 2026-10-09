@@ -21,6 +21,8 @@ const BrandBottomNav = () => {
             <Link
               key={tab.to}
               to={tab.to}
+              aria-label={tab.label}
+              aria-current={isActive ? "page" : undefined}
               className={`flex flex-col items-center justify-center gap-0.5 w-14 py-1 transition-all duration-200 ${
                 isActive ? "text-accent" : "text-[#52525B]"
               }`}

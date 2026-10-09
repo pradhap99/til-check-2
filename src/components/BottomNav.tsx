@@ -22,6 +22,8 @@ const BottomNav = () => {
               <Link
                 key={tab.to}
                 to={tab.to}
+                aria-label={tab.label}
+                aria-current={isActive ? "page" : undefined}
                 className={`relative flex flex-col items-center justify-center gap-0.5 w-14 py-1.5 rounded-xl transition-all duration-300 active:scale-90 ${
                   isActive ? "text-accent font-bold" : "text-muted-foreground hover:text-foreground font-medium"
                 }`}
