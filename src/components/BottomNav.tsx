@@ -13,7 +13,7 @@ const BottomNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 px-3 pb-3 pt-1 pointer-events-none">
+    <nav aria-label="Main navigation" className="fixed bottom-0 left-0 right-0 z-50 px-3 pb-3 pt-1 pointer-events-none">
       <div className="max-w-md mx-auto glass-nav rounded-2xl border border-border/80 shadow-2xl backdrop-blur-xl pointer-events-auto">
         <div className="flex items-center justify-around h-14 px-2">
           {tabs.map((tab) => {
@@ -22,7 +22,8 @@ const BottomNav = () => {
               <Link
                 key={tab.to}
                 to={tab.to}
-                className={`relative flex flex-col items-center justify-center gap-0.5 w-14 py-1.5 rounded-xl transition-all duration-300 active:scale-90 ${
+                aria-current={isActive ? "page" : undefined}
+                className={`relative flex flex-col items-center justify-center gap-0.5 w-14 py-1.5 rounded-xl transition-all duration-300 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   isActive ? "text-accent font-bold" : "text-muted-foreground hover:text-foreground font-medium"
                 }`}
               >
@@ -34,6 +35,7 @@ const BottomNav = () => {
                     isActive ? "scale-110 text-accent" : "scale-100"
                   }`}
                   strokeWidth={isActive ? 2.5 : 1.75}
+                  aria-hidden="true"
                 />
                 <span className="text-[10px] leading-tight tracking-tight relative z-10">{tab.label}</span>
               </Link>
