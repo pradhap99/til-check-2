@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 import {
   ArrowLeft, Users, CheckCircle, XCircle, Clock, MessageCircle,
   Eye, ThumbsUp, ThumbsDown, Star, Send, ChevronRight, Upload,
@@ -149,7 +150,8 @@ const CampaignManage = () => {
         reference_id: id,
       });
 
-      // Auto-create deliverable submissions & escrow payment when accepted
+      // Auto-create deliverable submissions when accepted. Payments are coming soon, so no
+      // transaction row or payment notification is written here.
       if (status === "accepted") {
         const { data: deliverables } = await supabase
           .from("campaign_deliverables").select("id")
@@ -163,33 +165,6 @@ const CampaignManage = () => {
             status: "not_started",
           }));
           await supabase.from("deliverable_submissions").insert(submissionRows);
-        }
-
-        // Create upfront escrow payment (50%)
-        const rate = parseInt(app.proposed_rate || "0");
-        if (rate > 0 && user) {
-          const upfrontAmount = Math.round(rate * 0.5);
-          await supabase.from("transactions").insert({
-            amount: upfrontAmount,
-            payer_user_id: user.id,
-            payee_user_id: app.creator_user_id,
-            campaign_id: app.campaign_id,
-            application_id: appId,
-            status: "completed",
-            description: `Upfront payment (50%) for "${campaign?.title}"`,
-            payment_method: "escrow",
-            currency: "INR",
-          });
-
-          // Notify creator about payment
-          await supabase.from("notifications").insert({
-            user_id: app.creator_user_id,
-            title: "Payment Released! 💰",
-            message: `₹${upfrontAmount.toLocaleString("en-IN")} upfront payment released for "${campaign?.title}"`,
-            type: "payment",
-            reference_type: "campaign",
-            reference_id: id,
-          });
         }
 
         // Update campaign slots_filled
@@ -235,63 +210,7 @@ const CampaignManage = () => {
     const updatedSubs = submissions.map(s => s.id === selectedSubmission.id ? { ...s, status: action, review_feedback: feedback } : s);
     setSubmissions(updatedSubs);
 
-    // Check if all deliverables for this creator are now approved → trigger completion payment
-    if (action === "approved" && user) {
-      const app = applications.find(a => a.creator_user_id === selectedSubmission.creator_user_id && a.status === "accepted");
-      if (app) {
-        const creatorSubs = updatedSubs.filter(s => {
-          const matchApp = applications.find(a => a.creator_user_id === selectedSubmission.creator_user_id && a.status === "accepted");
-          return matchApp !== undefined;
-        });
-        
-        const { data: totalDels } = await supabase
-          .from("campaign_deliverables").select("id")
-          .eq("campaign_id", app.campaign_id);
-        
-        const approvedCount = creatorSubs.filter(s => ["approved", "published"].includes(s.status)).length;
-        
-        if (totalDels && approvedCount >= totalDels.length && totalDels.length > 0) {
-          // All deliverables approved — release completion payment
-          const rate = parseInt(app.proposed_rate || "0");
-          const completionAmount = Math.round(rate * 0.5);
-          
-          if (completionAmount > 0) {
-            // Check if completion payment already exists
-            const { data: existingTx } = await supabase
-              .from("transactions")
-              .select("id")
-              .eq("application_id", app.id)
-              .ilike("description", "%Completion%")
-              .maybeSingle();
-            
-            if (!existingTx) {
-              await supabase.from("transactions").insert({
-                amount: completionAmount,
-                payer_user_id: user.id,
-                payee_user_id: app.creator_user_id,
-                campaign_id: app.campaign_id,
-                application_id: app.id,
-                status: "completed",
-                description: `Completion payment (50%) for "${campaign?.title}"`,
-                payment_method: "escrow",
-                currency: "INR",
-              });
-
-              await supabase.from("notifications").insert({
-                user_id: app.creator_user_id,
-                title: "Final Payment Released! 🎉",
-                message: `₹${completionAmount.toLocaleString("en-IN")} completion payment released. All deliverables approved!`,
-                type: "payment",
-                reference_type: "campaign",
-                reference_id: id,
-              });
-
-              toast.success("All deliverables approved — completion payment released!");
-            }
-          }
-        }
-      }
-    }
+    // Payments are coming soon: approving content never creates a transaction or a payment notification.
 
     toast.success(action === "approved" ? "Content approved!" : action === "revision_requested" ? "Revision requested" : "Submission rejected");
     setReviewOpen(false);
@@ -359,6 +278,12 @@ const CampaignManage = () => {
           <h1 className="font-heading font-semibold text-sm text-foreground truncate">{campaign?.title || "Campaign"}</h1>
           <p className="text-[10px] text-muted-foreground">{applications.length} applications • {acceptedApps.length}/{campaign?.slots_total || 0} slots filled</p>
         </div>
+      </div>
+
+      <div className="px-4 mt-3">
+        <PaymentsComingSoonNotice>
+          Accepting a creator or approving content does not move money yet. Escrow and payouts are coming soon, so agree payment terms with the creator directly.
+        </PaymentsComingSoonNotice>
       </div>
 
       {/* Stats */}

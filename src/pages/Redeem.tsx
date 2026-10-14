@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Gift, Check } from "lucide-react";
-import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import SampleBadge from "@/components/SampleBadge";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 
 // Placeholder voucher brands only. These are sample rows, not real voucher partners.
 const HERO_BRAND = "Sample Marketplace";
@@ -19,17 +20,8 @@ const vouchers = [
 
 const Redeem = () => {
   const navigate = useNavigate();
+  // Sample balance only. Voucher redemption is not live, so nothing can be redeemed or deducted.
   const [balance] = useState(47500);
-  const [redeemed, setRedeemed] = useState(0);
-
-  const handleRedeem = (brand: string, amount: number) => {
-    if (redeemed + amount > balance) {
-      toast.error("Insufficient balance");
-      return;
-    }
-    setRedeemed(prev => prev + amount);
-    toast.success(`₹${amount} ${brand} voucher redeemed!`);
-  };
 
   const getBonusAmount = (amount: number) => Math.round(amount * 1.2);
 
@@ -44,14 +36,16 @@ const Redeem = () => {
             <h1 className="text-lg font-heading font-bold text-foreground">Redeem as Voucher</h1>
             <div className="flex items-center gap-1.5">
               <p className="text-[10px] text-muted-foreground">Choose a voucher</p>
+              <ComingSoonBadge />
               <SampleBadge />
             </div>
           </div>
         </header>
 
-        {/* Urgency text */}
         <div className="px-5 mt-3">
-          <p className="text-[10px] text-accent font-heading font-medium">🔥 Voucher bonus available until Mar 31</p>
+          <PaymentsComingSoonNotice>
+            Voucher redemption is coming soon. Nothing can be redeemed yet, and no balance is deducted. The vouchers below are samples of what is planned.
+          </PaymentsComingSoonNotice>
         </div>
 
         {/* Balance */}
@@ -62,18 +56,20 @@ const Redeem = () => {
               <span className="text-xs text-muted-foreground">Remaining balance</span>
               <SampleBadge />
             </div>
-            <span className="font-heading font-bold text-foreground">₹{(balance - redeemed).toLocaleString("en-IN")}</span>
+            <span className="font-heading font-bold text-foreground">₹{balance.toLocaleString("en-IN")}</span>
           </div>
         </div>
 
         {/* Hero ₹2000 card */}
         <div className="px-5 mt-4">
           <div
-            className="rounded-2xl border-2 border-accent p-4 relative overflow-hidden btn-shimmer-hover cursor-pointer active:scale-[0.98] transition-transform"
+            aria-disabled="true"
+            title="Coming soon"
+            data-testid="redeem-hero-voucher"
+            className="rounded-2xl border-2 border-accent p-4 relative overflow-hidden opacity-60 cursor-not-allowed"
             style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02))" }}
-            onClick={() => handleRedeem(HERO_BRAND, 2000)}
           >
-            <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground border-0 text-[8px] font-heading">BEST VALUE</Badge>
+            <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground border-0 text-[8px] font-heading">PLANNED · BEST VALUE</Badge>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center">
                 <span className="text-white font-heading font-bold text-lg">S</span>
@@ -95,8 +91,10 @@ const Redeem = () => {
               return (
                 <button
                   key={`${v.brand}-${amt}`}
-                  onClick={() => handleRedeem(v.brand, amt)}
-                  className={`border rounded-xl p-3 text-center transition-all active:scale-95 relative ${isBest ? "border-accent bg-accent/5" : "border-border hover:border-accent"}`}
+                  disabled
+                  title="Coming soon"
+                  data-testid="redeem-voucher-option"
+                  className={`border rounded-xl p-3 text-center relative opacity-60 cursor-not-allowed ${isBest ? "border-accent bg-accent/5" : "border-border"}`}
                 >
                   {isBest && (
                     <Badge className="absolute -top-2 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground border-0 text-[7px] font-heading px-1.5 py-0">
@@ -128,7 +126,7 @@ const Redeem = () => {
                   <span className="text-[10px] font-heading font-bold text-accent">Voucher</span>
                 </div>
                 <p className="text-sm font-heading font-bold text-foreground">₹12,000</p>
-                <p className="text-[8px] text-muted-foreground">value for ₹10K</p>
+                <p className="text-[8px] text-muted-foreground">planned value for ₹10K</p>
               </div>
               <div className="w-px bg-border" />
               <div className="flex-1 text-center opacity-60">

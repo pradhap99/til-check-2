@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import Layout from "@/components/Layout";
 import SampleBadge from "@/components/SampleBadge";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 import {
   ArrowLeft, HelpCircle, MessageCircle, AlertTriangle, Search,
   ChevronRight, Send, Shield, Mail, Phone, Plus,
@@ -18,26 +20,28 @@ import {
   DrawerFooter, DrawerTrigger, DrawerClose,
 } from "@/components/ui/drawer";
 
-const creatorFaqs = [
+interface Faq { q: string; a: string; soon?: boolean }
+
+const creatorFaqs: Faq[] = [
   { q: "How do I get approved to join the platform?", a: "Sign up, complete your profile with social handles and follower counts, and submit for review. Our team reviews applications within 24-48 hours. Make sure your profile is complete with a bio, location, and at least one social platform connected." },
-  { q: "How does the escrow payment system work?", a: "When a brand accepts you for a campaign, 50% of the payment is placed in escrow. After you deliver approved content, the remaining 50% is released. There's a 7-day dispute window after content goes live. Payments via UPI are instant and free." },
+  { q: "How does the escrow payment system work?", a: "When a brand accepts you for a campaign, 50% of the payment is placed in escrow. After you deliver approved content, the remaining 50% is released. There's a 7-day dispute window after content goes live. Payments via UPI are instant and free.", soon: true },
   { q: "What is the level system and how do I level up?", a: "Creator levels (1-6) are based on followers (70%), engagement rate (20%), and completed campaigns (10%). Higher levels unlock premium brands and higher base pay. Level 3+ requires minimum 3% engagement and 5+ completed campaigns." },
   { q: "How long does campaign approval take?", a: "After you apply to a campaign, brands typically review applications within 3-5 days. You'll receive a notification when your application is accepted, rejected, or shortlisted." },
   { q: "Can I apply to multiple campaigns at once?", a: "Yes! You can apply to as many campaigns as you'd like. However, make sure you can deliver quality content on time for each accepted campaign. Overcommitting may affect your platform rating." },
-  { q: "What happens if a brand cancels a campaign?", a: "If a brand cancels after accepting you, any escrowed payment is released to you. If cancelled before acceptance, there's no financial impact. Our dispute resolution team handles any issues." },
+  { q: "What happens if a brand cancels a campaign?", a: "If a brand cancels after accepting you, any escrowed payment is released to you. If cancelled before acceptance, there's no financial impact. Our dispute resolution team handles any issues.", soon: true },
 ];
 
-const brandFaqs = [
+const brandFaqs: Faq[] = [
   { q: "How do I list a campaign?", a: "Go to Campaigns → Create Campaign. Fill in the wizard: basics, budget, target audience, deliverables, and guidelines. You can save as draft or publish immediately. Published campaigns are visible to creators matching your criteria." },
   { q: "How does creator matching work?", a: "Our AI algorithm matches creators based on niche, follower count, engagement rate, location, content style, and past campaign performance. You'll see a match score (0-100%) for each applicant." },
-  { q: "What is the platform fee?", a: "Free plan: 5% per campaign. Starter: 3%. Growth: 2%. Enterprise: custom. There are no hidden fees. All pricing is transparent and applied only to successful campaigns." },
-  { q: "How do I verify deliverables?", a: "When creators submit content, you'll see it in the campaign management dashboard. Review each deliverable, request revisions (up to 2 per piece), or approve. Approved content triggers the remaining payment release." },
+  { q: "What is the platform fee?", a: "Free plan: 5% per campaign. Starter: 3%. Growth: 2%. Enterprise: custom. There are no hidden fees. All pricing is transparent and applied only to successful campaigns.", soon: true },
+  { q: "How do I verify deliverables?", a: "When creators submit content, you'll see it in the campaign management dashboard. Review each deliverable, request revisions (up to 2 per piece), or approve. Approved content triggers the remaining payment release.", soon: true },
   { q: "Can I run multiple campaigns simultaneously?", a: "Yes! Free plan allows 3 active campaigns, Starter allows 10, Growth allows unlimited. You can manage all campaigns from a single dashboard." },
 ];
 
-const generalFaqs = [
-  { q: "Is the platform free to join?", a: "Yes! Joining TIL is completely free for both creators and brands. Creators pay nothing — the platform fee is charged to brands only on successful campaigns." },
-  { q: "How is payment protected?", a: "All payments go through our secure escrow system. Funds are held safely until deliverables are approved. There's a 7-day dispute window, and our mediation team handles any conflicts within 3-5 business days." },
+const generalFaqs: Faq[] = [
+  { q: "Is the platform free to join?", a: "Yes! Joining TIL is completely free for both creators and brands. Creators pay nothing — the platform fee is charged to brands only on successful campaigns.", soon: true },
+  { q: "How is payment protected?", a: "All payments go through our secure escrow system. Funds are held safely until deliverables are approved. There's a 7-day dispute window, and our mediation team handles any conflicts within 3-5 business days.", soon: true },
   { q: "What are community guidelines?", a: "All content must comply with ASCI guidelines for sponsored content, Indian advertising standards, and our platform code of conduct. No hate speech, misleading claims, or plagiarized content. Violations may result in account suspension." },
 ];
 
@@ -136,6 +140,9 @@ const Support = () => {
       {/* FAQ Section */}
       {activeSection === "faq" && (
         <div className="px-4 mt-4 mb-8">
+          <PaymentsComingSoonNotice className="mb-3">
+            Payments, escrow, fees and vouchers are coming soon. Answers marked "Coming soon" describe how they will work once payments launch.
+          </PaymentsComingSoonNotice>
           {/* Category tabs */}
           <div className="flex gap-1.5 mb-3">
             {([
@@ -152,7 +159,7 @@ const Support = () => {
             {filteredFaqs.map((faq, i) => (
               <div key={i} className="border border-border rounded-xl overflow-hidden">
                 <button onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)} className="w-full flex items-center justify-between p-3.5 text-left">
-                  <span className="font-heading font-medium text-sm text-foreground pr-2">{faq.q}</span>
+                  <span className="font-heading font-medium text-sm text-foreground pr-2 flex items-center gap-2 flex-wrap">{faq.q}{faq.soon && <ComingSoonBadge />}</span>
                   <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform shrink-0 ${openFaqIndex === i ? "rotate-180" : ""}`} />
                 </button>
                 {openFaqIndex === i && (

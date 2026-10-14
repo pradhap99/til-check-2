@@ -5,22 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Building2, Smartphone } from "lucide-react";
-import { toast } from "sonner";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 
 const BankTransfer = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"bank" | "upi">("bank");
   const [form, setForm] = useState({ name: "", bank: "", account: "", ifsc: "", amount: "", upiId: "" });
-  const [submitting, setSubmitting] = useState(false);
 
+  // Bank and UPI transfers are not live: there is no payment provider, so submitting does nothing.
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    setTimeout(() => {
-      toast.success("Transfer initiated! Processed within 2-3 business days.");
-      setSubmitting(false);
-      navigate("/earnings");
-    }, 1500);
   };
 
   return (
@@ -32,9 +27,18 @@ const BankTransfer = () => {
           </button>
           <div>
             <h1 className="text-lg font-heading font-bold text-foreground">Transfer to Bank</h1>
-            <p className="text-[10px] text-muted-foreground">Send to bank account or UPI</p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-[10px] text-muted-foreground">Send to bank account or UPI</p>
+              <ComingSoonBadge />
+            </div>
           </div>
         </header>
+
+        <div className="px-5 mt-3">
+          <PaymentsComingSoonNotice>
+            Bank and UPI transfers are coming soon. This form is switched off and nothing you type here is saved or sent. Until payments launch, creators and brands settle payment directly.
+          </PaymentsComingSoonNotice>
+        </div>
 
         {/* Mode Toggle */}
         <div className="px-5 mt-4">
@@ -58,7 +62,8 @@ const BankTransfer = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-5 mt-5 space-y-4 pb-6">
+        <form onSubmit={handleSubmit} className="px-5 mt-5 pb-6">
+          <fieldset disabled className="space-y-4 border-0 p-0 m-0 min-w-0 opacity-70">
           {mode === "bank" ? (
             <>
               <div className="space-y-1.5">
@@ -88,18 +93,21 @@ const BankTransfer = () => {
           <div className="space-y-1.5">
             <Label className="text-xs">Amount to Transfer</Label>
             <Input value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} placeholder="₹" type="number" required min={100} />
-            <p className="text-[10px] text-muted-foreground">Min ₹100 · Available: ₹47,500</p>
+            <p className="text-[10px] text-muted-foreground">Min ₹100</p>
           </div>
 
           <Button
             type="submit"
-            className="w-full h-12 rounded-xl font-heading font-bold bg-amber-500 hover:bg-amber-600 text-white btn-hover-lift btn-shimmer-hover"
-            disabled={submitting}
+            title="Coming soon"
+            data-testid="bank-transfer-submit"
+            className="w-full h-12 rounded-xl font-heading font-bold bg-amber-500 hover:bg-amber-600 text-white"
+            disabled
           >
-            {submitting ? "Processing..." : "Initiate Transfer"}
+            Initiate Transfer · Coming soon
           </Button>
 
-          <p className="text-[10px] text-muted-foreground text-center">Transfers processed within 2-3 business days</p>
+          <p className="text-[10px] text-muted-foreground text-center">Bank and UPI transfers are coming soon</p>
+          </fieldset>
         </form>
       </div>
     </Layout>

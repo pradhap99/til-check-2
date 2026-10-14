@@ -2,6 +2,8 @@ import { ArrowLeft, CheckCircle, X, Sparkles, ArrowRight, Crown } from "lucide-r
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 
 const plans = [
   {
@@ -11,7 +13,7 @@ const plans = [
     description: "Pay-per-campaign. Perfect for getting started.",
     badge: null,
     features: [
-      { label: "5% platform fee per campaign", included: true },
+      { label: "5% platform fee per campaign", included: true, soon: true },
       { label: "3 active campaigns max", included: true },
       { label: "Basic analytics", included: true },
       { label: "Standard support (24-48hr)", included: true },
@@ -33,13 +35,13 @@ const plans = [
     description: "For small brands & D2C startups scaling their creator marketing.",
     badge: null,
     features: [
-      { label: "3% platform fee (save 2%)", included: true },
+      { label: "3% platform fee (save 2%)", included: true, soon: true },
       { label: "10 active campaigns", included: true },
       { label: "Advanced analytics & ROI tracking", included: true },
       { label: "Priority support (12hr response)", included: true },
       { label: "AI-powered creator recommendations", included: true },
       { label: "Campaign templates library", included: true },
-      { label: "Basic escrow (7-day window)", included: true },
+      { label: "Basic escrow (7-day window)", included: true, soon: true },
       { label: "Bulk messaging (up to 50)", included: true },
       { label: "Dedicated account manager", included: false },
     ],
@@ -55,13 +57,13 @@ const plans = [
     description: "For growing brands running multiple campaigns simultaneously.",
     badge: "Recommended",
     features: [
-      { label: "2% platform fee (save 3%)", included: true },
+      { label: "2% platform fee (save 3%)", included: true, soon: true },
       { label: "Unlimited active campaigns", included: true },
       { label: "Real-time analytics dashboard", included: true },
       { label: "Priority support (4hr response)", included: true },
       { label: "Advanced AI matching + recommendations", included: true },
       { label: "Custom campaign templates", included: true },
-      { label: "Express escrow (3-day window)", included: true },
+      { label: "Express escrow (3-day window)", included: true, soon: true },
       { label: "Unlimited bulk messaging", included: true },
       { label: "Team seats (up to 5)", included: true },
       { label: "Competitor campaign insights", included: true },
@@ -78,14 +80,14 @@ const plans = [
     description: "For large brands & agencies with custom requirements.",
     badge: null,
     features: [
-      { label: "Custom platform fee", included: true },
+      { label: "Custom platform fee", included: true, soon: true },
       { label: "Everything in Growth", included: true },
       { label: "Dedicated account manager", included: true },
       { label: "Custom integrations (API, webhooks)", included: true },
       { label: "White-label reports", included: true },
       { label: "SLA guarantees", included: true },
       { label: "Onboarding & training", included: true },
-      { label: "Invoice-based billing", included: true },
+      { label: "Invoice-based billing", included: true, soon: true },
       { label: "Multi-brand management", included: true },
     ],
     cta: "Contact Sales",
@@ -114,6 +116,12 @@ const Pricing = () => {
         </div>
         <h2 className="text-xl font-heading font-extrabold text-foreground">Scale Your Creator Marketing</h2>
         <p className="text-sm text-muted-foreground mt-2">Choose the plan that fits your brand's growth stage.</p>
+      </div>
+
+      <div className="px-5 mt-5">
+        <PaymentsComingSoonNotice>
+          Paid plans, platform fees, escrow and invoice billing are coming soon. No payment provider is connected yet, so nothing is charged today.
+        </PaymentsComingSoonNotice>
       </div>
 
       {/* Billing toggle */}
@@ -147,13 +155,14 @@ const Pricing = () => {
 
             <div className="mt-4 space-y-2">
               {plan.features.map((f, j) => (
-                <div key={j} className="flex items-start gap-2">
+                <div key={j} className="flex items-start gap-2 flex-wrap">
                   {f.included ? (
                     <CheckCircle className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
                   ) : (
                     <X className="w-3.5 h-3.5 text-muted-foreground/30 mt-0.5 shrink-0" />
                   )}
                   <span className={`text-xs ${f.included ? "text-foreground" : "text-muted-foreground/50"}`}>{f.label}</span>
+                  {"soon" in f && f.soon && <ComingSoonBadge className="ml-1" />}
                 </div>
               ))}
             </div>

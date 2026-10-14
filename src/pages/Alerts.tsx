@@ -18,7 +18,7 @@ const personalised: Notification[] = [
   { id: "p4", title: "Review Request", preview: "Thanks for completing the Example Skincare Co. campaign. Please rate your experience working with them.", date: "1d ago", unread: false },
   { id: "p5", title: "Campaign Confirmation", preview: "Perfect! You have confirmed your participation in Sample Pay's rewards campaign.", date: "2d ago", unread: false },
   { id: "p6", title: "Campaign Full", preview: "The Placeholder Cosmetics campaign is now full. Check similar campaigns in Beauty & Skincare.", date: "2d ago", unread: true },
-  { id: "p7", title: "Payment Released", preview: "Your payment of ₹15,000 for Demo Audio Summer Launch has been released to your account.", date: "3d ago", unread: false },
+  { id: "p7", title: "Payments are coming soon", preview: "UPI payouts and escrow are not live yet. We'll tell you here when payouts go live.", date: "3d ago", unread: false },
 ];
 
 const general: Notification[] = [

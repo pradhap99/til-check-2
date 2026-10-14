@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { ArrowLeft, HelpCircle, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 import {
   Accordion,
   AccordionContent,
@@ -13,10 +15,11 @@ const helpSections = [
   {
     id: "what-is-til",
     title: "What is TIL?",
-    content: "TIL (The Influencer League) is a creator-brand marketplace built for India, connecting brands with creators for paid campaigns, barter collaborations, and affiliate deals. We handle discovery, escrow payments, and performance tracking — so both sides can focus on creating great content.",
+    content: "TIL (The Influencer League) is a creator-brand marketplace built for India, connecting brands with creators for paid campaigns, barter collaborations, and affiliate deals. We handle discovery and performance tracking, with escrow payments coming soon — so both sides can focus on creating great content.",
   },
   {
     id: "escrow",
+    soon: true,
     title: "How does Escrow work?",
     content: "When a brand posts a campaign, they fund 100% of the payout into TIL's smart escrow. Money is released in milestones based on engagement: 30% on content publication + 500 engagements, 40% on reaching 2,000 engagements within 7 days, and the final 30% on campaign completion with brand approval. If no dispute is filed, funds auto-release after 14 days. This protects both creators and brands.",
   },
@@ -32,11 +35,13 @@ const helpSections = [
   },
   {
     id: "affiliate",
+    soon: true,
     title: "What is the Affiliate Program?",
     content: "TIL's affiliate program lets creators earn passive income by sharing branded links with their audience. Every sale made through your link earns you a commission (typically 6-12% depending on the brand). TIL tracks all conversions automatically and credits earnings to your wallet. A 2% platform fee applies to each affiliate transaction.",
   },
   {
     id: "vouchers",
+    soon: true,
     title: "How do Vouchers work?",
     content: "When you redeem your wallet balance as vouchers (shopping, food delivery and more), you get up to 20% bonus value — meaning ₹10,000 balance becomes ₹12,000 in vouchers. This is significantly better than a direct bank transfer where you receive the exact amount. Vouchers are delivered instantly to your email.",
   },
@@ -59,6 +64,9 @@ const Help = () => {
         </header>
 
         <div className="px-5 mt-4 pb-6">
+          <PaymentsComingSoonNotice className="mb-3">
+            Escrow, the affiliate program and vouchers are coming soon. Those answers describe how they will work once payments launch.
+          </PaymentsComingSoonNotice>
           <Accordion type="single" collapsible className="w-full space-y-2">
             {helpSections.map((section, i) => (
               <AccordionItem
@@ -68,7 +76,10 @@ const Help = () => {
                 style={{ animationDelay: `${i * 60}ms` }}
               >
                 <AccordionTrigger className="text-sm font-heading font-semibold text-foreground hover:no-underline py-3">
-                  {section.title}
+                  <span className="flex items-center gap-2 text-left">
+                    {section.title}
+                    {"soon" in section && section.soon && <ComingSoonBadge />}
+                  </span>
                 </AccordionTrigger>
                 <AccordionContent className="text-xs text-muted-foreground leading-relaxed pb-3">
                   {section.content}

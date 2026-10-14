@@ -87,7 +87,7 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
           style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02))" }}
         >
           <Flame className="w-4 h-4 text-accent shrink-0" />
-          <span className="text-xs font-heading font-medium text-foreground flex-1 text-left">New Affiliate Offers Available → Earn commissions</span>
+          <span className="text-xs font-heading font-medium text-foreground flex-1 text-left">Affiliate offers → Commissions are coming soon</span>
           <ChevronRight className="w-3.5 h-3.5 text-accent" />
         </button>
       </div>

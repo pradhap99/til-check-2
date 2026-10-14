@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
 import {
   ArrowLeft, Upload, CheckCircle, Clock, FileText, ExternalLink,
   Send, RotateCcw, AlertCircle, Link2, MessageCircle, IndianRupee
@@ -216,9 +217,10 @@ const CreatorWorkspace = () => {
               <p className="text-[10px] text-muted-foreground">Agreed Rate</p>
               <p className="font-heading font-bold text-base text-foreground">₹{parseInt(application.proposed_rate).toLocaleString("en-IN")}</p>
             </div>
-            <div className="text-right">
-              <p className="text-[10px] text-muted-foreground">Payment Structure</p>
-              <p className="text-xs font-heading font-medium text-foreground">50% upfront + 50% on approval</p>
+            <div className="text-right max-w-[55%]">
+              <p className="text-[10px] text-muted-foreground">Payment</p>
+              <div className="flex justify-end"><ComingSoonBadge className="mt-0.5" /></div>
+              <p className="text-[10px] text-muted-foreground mt-1">Planned: 50% upfront + 50% on approval. Until payments launch, settle directly with the brand.</p>
             </div>
           </div>
         </div>

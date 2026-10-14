@@ -6,12 +6,13 @@ import {
   IndianRupee, Target, Handshake, MessageCircle, Megaphone, UserPlus
 } from "lucide-react";
 import { useState } from "react";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
 
 const faqs = [
-  { q: "How quickly do creators get paid?", a: "Instant UPI transfers with zero platform fee. Bank transfers process within 1–2 business days. Standard payment split: 50% on acceptance, 50% on deliverable approval." },
-  { q: "How does GST & TDS compliance work?", a: "GST registration is optional but recommended for ₹40L+ earners. All invoices auto-generate with GSTIN fields. TDS is computed automatically for payments exceeding ₹30,000." },
-  { q: "What does TIL charge?", a: "A transparent 10% service fee on successful collaborations. No subscription fees, no hidden charges. Creators keep 90%+ of every rupee." },
-  { q: "How are disputes resolved?", a: "Payments are held in escrow with a 7-day dispute window post-publication. Our mediation team reviews all evidence within 3–5 business days." },
+  { q: "How do creators get paid?", a: "UPI payouts and escrow are coming soon. Until then, creators and brands settle payment directly. The planned payment split is 50% on acceptance and 50% on deliverable approval." },
+  { q: "How does GST & TDS compliance work?", a: "GST-ready invoicing and automatic TDS calculation are coming soon, along with payments. GST registration is optional but recommended for ₹40L+ earners. When payments launch, invoices will carry GSTIN fields and TDS will be computed for payments above ₹30,000." },
+  { q: "What does TIL charge?", a: "Payments are coming soon, so nothing is charged today. At launch the fee will be a transparent 10% service fee on successful collaborations. No subscription fees, no hidden charges. Creators keep 90%+ of every rupee." },
+  { q: "How are disputes resolved?", a: "Escrow is coming soon. Once it launches, payments will be held in escrow with a 7-day dispute window post-publication, and our mediation team will review all evidence within 3–5 business days. Until then, creators and brands settle payment directly." },
   { q: "Which platforms are supported?", a: "Instagram (Reels, Stories, Feed), YouTube (Shorts, Videos), TikTok, and Twitter/X. Full cross-platform analytics included." },
 ];
 
@@ -49,23 +50,23 @@ const Landing = () => {
 
   const creatorHero = {
     title: <>Where brands<br /><span className="gradient-text">meet creators</span></>,
-    subtitle: "Performance-based collaborations with instant UPI payments, built-in content approval, and GST-compliant invoicing.",
+    subtitle: "Performance-based collaborations with built-in content approval. UPI payouts, escrow and GST-ready invoicing are coming soon.",
     cta: "Join as Creator",
     ctaSecondary: "I'm a Brand",
   };
   const brandHero = {
     title: <>Find creators<br /><span className="gradient-text">for your brand</span></>,
-    subtitle: "AI-powered creator matching, secure escrow payments, real-time analytics, and end-to-end campaign management.",
+    subtitle: "AI-powered creator matching, real-time analytics, and end-to-end campaign management. Secure escrow payments are coming soon.",
     cta: "Get Started as Brand",
     ctaSecondary: "I'm a Creator",
   };
   const hero = audience === "creator" ? creatorHero : brandHero;
 
   const brandFeatures = [
-    { icon: Target, title: "AI-Powered Matching", desc: "Algorithm matches your brand with ideal creators by niche, audience, and engagement." },
-    { icon: Lock, title: "Secure Escrow", desc: "Payments held safely until deliverables approved. 7-day dispute window." },
-    { icon: BarChart3, title: "Real-Time Analytics", desc: "Track reach, engagement, CPE, and ROI across all campaigns." },
-    { icon: Handshake, title: "End-to-End Management", desc: "From brief to payment. Content approval, revisions, invoicing — all in one place." },
+    { icon: Target, title: "AI-Powered Matching", desc: "Algorithm matches your brand with ideal creators by niche, audience, and engagement.", soon: false },
+    { icon: Lock, title: "Secure Escrow", desc: "Payments will be held safely until deliverables are approved, with a 7-day dispute window.", soon: true },
+    { icon: BarChart3, title: "Real-Time Analytics", desc: "Track reach, engagement, CPE, and ROI across all campaigns.", soon: false },
+    { icon: Handshake, title: "End-to-End Management", desc: "From brief to approved content, with revisions and approvals in one place. Payments and invoicing are coming soon.", soon: false },
   ];
 
   return (
@@ -137,7 +138,10 @@ const Landing = () => {
                 <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center mb-3">
                   <f.icon className="w-4 h-4 text-accent" />
                 </div>
-                <p className="font-heading font-semibold text-sm text-foreground">{f.title}</p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="font-heading font-semibold text-sm text-foreground">{f.title}</p>
+                  {f.soon && <ComingSoonBadge />}
+                </div>
                 <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">{f.desc}</p>
               </div>
             ))}
@@ -189,18 +193,21 @@ const Landing = () => {
         <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight">Everything you need, nothing you don't</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-10">
           {[
-            { icon: BarChart3, title: "Smart Matching", desc: "Algorithm-driven creator-brand matching based on niche, engagement, and audience.", span: "md:col-span-2" },
-            { icon: CreditCard, title: "Instant UPI", desc: "Zero-fee UPI transfers with GST-compliant invoices.", span: "" },
-            { icon: Shield, title: "Escrow Protection", desc: "Secure payments with 7-day dispute window.", span: "" },
-            { icon: CheckCircle, title: "Verified Profiles", desc: "API-verified metrics. No inflated numbers.", span: "" },
-            { icon: TrendingUp, title: "Performance Analytics", desc: "Track ROI, CPE, reach, and sales attribution in real time.", span: "" },
-            { icon: Lock, title: "Content Approval", desc: "Built-in review workflow with version history and revision tracking.", span: "md:col-span-2" },
+            { icon: BarChart3, title: "Smart Matching", desc: "Algorithm-driven creator-brand matching based on niche, engagement, and audience.", span: "md:col-span-2", soon: false },
+            { icon: CreditCard, title: "UPI Payouts", desc: "Zero-fee UPI transfers with GST-compliant invoices, coming soon.", span: "", soon: true },
+            { icon: Shield, title: "Escrow Protection", desc: "Secure payments with a 7-day dispute window, coming soon.", span: "", soon: true },
+            { icon: CheckCircle, title: "Verified Profiles", desc: "API-verified metrics. No inflated numbers.", span: "", soon: false },
+            { icon: TrendingUp, title: "Performance Analytics", desc: "Track ROI, CPE, reach, and sales attribution in real time.", span: "", soon: false },
+            { icon: Lock, title: "Content Approval", desc: "Built-in review workflow with version history and revision tracking.", span: "md:col-span-2", soon: false },
           ].map((feature, i) => (
             <div key={i} className={`border border-border rounded-xl p-5 hover-lift-lg transition-all group ${feature.span}`}>
               <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center mb-3 group-hover:bg-accent/10 transition-colors">
                 <feature.icon className="w-4 h-4 text-foreground group-hover:text-accent transition-colors" />
               </div>
-              <p className="font-heading font-semibold text-sm text-foreground">{feature.title}</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="font-heading font-semibold text-sm text-foreground">{feature.title}</p>
+                {feature.soon && <ComingSoonBadge />}
+              </div>
               <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">{feature.desc}</p>
             </div>
           ))}
@@ -210,20 +217,20 @@ const Landing = () => {
       {/* How it works */}
       <section className="px-5 mt-20 max-w-4xl mx-auto">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest text-center mb-2">Step by step</p>
-        <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight">From signup to payout in four steps</h2>
+        <h2 className="font-heading font-bold text-2xl md:text-3xl text-center text-foreground tracking-tight">How a collaboration works, in four steps</h2>
         <div className="grid md:grid-cols-2 gap-4 mt-10">
           {[
             { label: "For Creators", steps: [
-              { step: "01", title: "Build your profile", desc: "Connect social accounts, set niche & rate card" },
-              { step: "02", title: "Discover campaigns", desc: "AI-matched brand deals by niche, budget, location" },
-              { step: "03", title: "Deliver content", desc: "Submit work for brand review through built-in tools" },
-              { step: "04", title: "Get paid via UPI", desc: "Instant payments, zero fee, GST-ready invoices" },
+              { step: "01", title: "Build your profile", desc: "Connect social accounts, set niche & rate card", soon: false },
+              { step: "02", title: "Discover campaigns", desc: "AI-matched brand deals by niche, budget, location", soon: false },
+              { step: "03", title: "Deliver content", desc: "Submit work for brand review through built-in tools", soon: false },
+              { step: "04", title: "Get paid via UPI", desc: "UPI payouts and GST-ready invoices are coming soon.", soon: true },
             ]},
             { label: "For Brands", steps: [
-              { step: "01", title: "Post a campaign", desc: "Define budget, deliverables, and target audience" },
-              { step: "02", title: "Review applications", desc: "Sort by match score, engagement rate, reach" },
-              { step: "03", title: "Approve content", desc: "Review submissions with version tracking" },
-              { step: "04", title: "Track ROI", desc: "Real-time analytics on reach, engagement, sales" },
+              { step: "01", title: "Post a campaign", desc: "Define budget, deliverables, and target audience", soon: false },
+              { step: "02", title: "Review applications", desc: "Sort by match score, engagement rate, reach", soon: false },
+              { step: "03", title: "Approve content", desc: "Review submissions with version tracking", soon: false },
+              { step: "04", title: "Track ROI", desc: "Real-time analytics on reach, engagement, sales", soon: false },
             ]},
           ].map((section, si) => (
             <div key={si} className="border border-border rounded-xl p-6 hover-lift">
@@ -233,7 +240,10 @@ const Landing = () => {
                   <div key={item.step} className="flex items-start gap-4">
                     <span className="text-[10px] font-heading font-bold text-muted-foreground mt-1 w-5 shrink-0">{item.step}</span>
                     <div>
-                      <p className="font-heading font-semibold text-sm text-foreground">{item.title}</p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-heading font-semibold text-sm text-foreground">{item.title}</p>
+                        {item.soon && <ComingSoonBadge />}
+                      </div>
                       <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
                     </div>
                   </div>

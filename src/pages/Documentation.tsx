@@ -3,13 +3,15 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { ArrowLeft, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 
 const sections = [
-  { id: "levels", label: "Creator Levels" },
-  { id: "escrow", label: "Escrow Rules" },
-  { id: "campaigns", label: "Campaign & Perks" },
-  { id: "affiliate", label: "Affiliate Program" },
-  { id: "policies", label: "Platform Policies" },
+  { id: "levels", label: "Creator Levels", soon: false },
+  { id: "escrow", label: "Escrow Rules", soon: true },
+  { id: "campaigns", label: "Campaign & Perks", soon: false },
+  { id: "affiliate", label: "Affiliate Program", soon: true },
+  { id: "policies", label: "Platform Policies", soon: false },
 ];
 
 const levels = [
@@ -105,6 +107,12 @@ const Documentation = () => {
           </div>
         </header>
 
+        <div className="px-5 mt-3">
+          <PaymentsComingSoonNotice>
+            Escrow and the affiliate program are coming soon. Those sections describe the planned rules, not features that are live today.
+          </PaymentsComingSoonNotice>
+        </div>
+
         {/* Section Tabs */}
         <div className="px-5 mt-4 flex gap-2 overflow-x-auto no-scrollbar pb-2">
           {sections.map(s => (
@@ -116,6 +124,7 @@ const Documentation = () => {
               }`}
             >
               {s.label}
+              {s.soon && <ComingSoonBadge className="ml-1.5" />}
             </button>
           ))}
         </div>

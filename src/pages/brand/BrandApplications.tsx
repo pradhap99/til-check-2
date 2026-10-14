@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import BrandBottomNav from "@/components/BrandBottomNav";
 import SampleBadge from "@/components/SampleBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 
 const tabs = ["All", "Pending", "Accepted", "Declined"];
 
@@ -40,6 +41,12 @@ const BrandApplications = () => {
               </div>
             </div>
           </header>
+
+          <div className="px-5 mt-3">
+            <PaymentsComingSoonNotice>
+              Releasing payments is coming soon. Until then, agree payment terms with creators directly.
+            </PaymentsComingSoonNotice>
+          </div>
 
           {/* Tabs */}
           <div className="px-5 mt-4 flex gap-2 overflow-x-auto no-scrollbar pb-1">
@@ -84,8 +91,8 @@ const BrandApplications = () => {
                       </Button>
                     </>
                   ) : app.status === "Accepted" ? (
-                    <Button size="sm" className="flex-1 h-8 rounded-xl text-[11px] bg-accent hover:bg-accent/90 text-accent-foreground font-heading">
-                      Release Payment
+                    <Button size="sm" disabled title="Coming soon" data-testid="brand-release-payment" className="flex-1 h-8 rounded-xl text-[11px] bg-accent hover:bg-accent/90 text-accent-foreground font-heading">
+                      Release Payment · Coming soon
                     </Button>
                   ) : null}
                   <Button size="sm" variant="ghost" className="h-8 px-3 rounded-xl text-[11px] font-heading">

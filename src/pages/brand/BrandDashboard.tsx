@@ -145,7 +145,7 @@ const BrandDashboard = () => {
               {[
                 { label: "Post New Campaign", icon: Plus, to: "/brand/post-campaign", primary: true },
                 { label: "View All Applicants", icon: Users, to: "/campaigns" },
-                { label: "Escrow Payments", icon: IndianRupee, to: "/escrow" },
+                { label: "Escrow (coming soon)", icon: IndianRupee, to: "/escrow" },
                 { label: "Analytics", icon: BarChart3, to: "/analytics" },
               ].map((a, i) => (
                 <Button

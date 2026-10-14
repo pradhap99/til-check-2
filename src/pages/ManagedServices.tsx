@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import Layout from "@/components/Layout";
 import SampleBadge from "@/components/SampleBadge";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 
 const tiers = [
   {
@@ -20,7 +22,7 @@ const tiers = [
       "Campaign strategy & brief creation",
       "Creator shortlisting (5-10 best matches)",
       "Contract management",
-      "Payment & escrow handling",
+      "Payment & escrow handling (coming soon)",
       "Basic performance report",
     ],
     youDo: "Approve creators, Review content",
@@ -92,7 +94,7 @@ const ManagedServices = () => {
     const c = parseInt(eligCampaigns) || 0;
     const p = parseInt(eligProfile) || 0;
     if (f >= 50000 && c >= 3 && p >= 70) {
-      toast.success("🎉 You're eligible! Apply for a cash advance on your next accepted campaign.");
+      toast.info("You meet the criteria. Cash advances are coming soon, so there is nothing to apply for yet.");
     } else {
       const reasons: string[] = [];
       if (f < 50000) reasons.push("50K+ followers needed");
@@ -138,7 +140,7 @@ const ManagedServices = () => {
           <div className="px-4 flex gap-2 justify-center mb-4">
             {[
               { icon: Users, label: "Creator shortlisting" },
-              { icon: Star, label: "Escrow handling" },
+              { icon: Star, label: "Escrow (coming soon)" },
               { icon: Shield, label: "Brand safety" },
             ].map((b, i) => (
               <div key={i} className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary text-[9px] font-medium text-muted-foreground">
@@ -250,9 +252,16 @@ const ManagedServices = () => {
             <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-3">
               <Banknote className="w-6 h-6 text-emerald-500" />
             </div>
-            <h2 className="text-xl font-heading font-extrabold text-foreground">Creator Cash Advance</h2>
-            <p className="text-xs text-muted-foreground mt-2 max-w-sm mx-auto">Get paid upfront for accepted campaigns before deliverables are complete.</p>
+            <div className="flex items-center justify-center gap-2 flex-wrap">
+              <h2 className="text-xl font-heading font-extrabold text-foreground">Creator Cash Advance</h2>
+              <ComingSoonBadge />
+            </div>
+            <p className="text-xs text-muted-foreground mt-2 max-w-sm mx-auto">Planned: get paid upfront for accepted campaigns before deliverables are complete.</p>
           </div>
+
+          <PaymentsComingSoonNotice>
+            Cash advances are coming soon. No advance can be requested or paid out yet. You can check your eligibility below.
+          </PaymentsComingSoonNotice>
 
           {/* How it works */}
           <div className="border border-border rounded-xl p-4 space-y-3">

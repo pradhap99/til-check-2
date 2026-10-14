@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import SampleBadge from "@/components/SampleBadge";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 import {
   ArrowLeft, Shield, Lock, Unlock, CheckCircle, Clock, AlertTriangle,
   ArrowRight, IndianRupee, FileCheck, ChevronRight, ChevronDown, ChevronUp,
@@ -170,19 +172,6 @@ const Escrow = () => {
     load();
   }, [user, role]);
 
-  const totalInEscrow = escrows.reduce((sum, e) => {
-    let held = 0;
-    if (e.upfront_status === "held") held += e.upfront_amount;
-    if (e.completion_status === "held") held += e.completion_amount;
-    return sum + held;
-  }, 0);
-  const totalReleased = escrows.reduce((sum, e) => {
-    let released = 0;
-    if (e.upfront_status === "released") released += e.upfront_amount;
-    if (e.completion_status === "released") released += e.completion_amount;
-    return sum + released;
-  }, 0);
-
   const hasRealEscrows = escrows.length > 0;
 
   return (
@@ -201,6 +190,12 @@ const Escrow = () => {
         </div>
       </header>
 
+      <div className="px-4 mt-3">
+        <PaymentsComingSoonNotice>
+          Escrow is coming soon. No funds are held or released through TIL yet, so the figures below stay empty. Until payments launch, creators and brands settle payment directly.
+        </PaymentsComingSoonNotice>
+      </div>
+
       {/* Summary Cards */}
       <div className="px-4 mt-4 grid grid-cols-2 gap-2.5">
         <div className="border border-border rounded-xl p-4">
@@ -208,15 +203,29 @@ const Escrow = () => {
             <Lock className="w-3.5 h-3.5 text-accent" />
             <span className="text-[10px] text-muted-foreground">In Escrow</span>
           </div>
-          <p className="font-heading font-bold text-lg text-foreground">₹{totalInEscrow.toLocaleString("en-IN")}</p>
+          <p className="font-heading font-bold text-lg text-foreground">—</p>
+          <ComingSoonBadge className="mt-1" />
         </div>
         <div className="border border-border rounded-xl p-4">
           <div className="flex items-center gap-2 mb-1">
             <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
             <span className="text-[10px] text-muted-foreground">Released</span>
           </div>
-          <p className="font-heading font-bold text-lg text-foreground">₹{totalReleased.toLocaleString("en-IN")}</p>
+          <p className="font-heading font-bold text-lg text-foreground">—</p>
+          <ComingSoonBadge className="mt-1" />
         </div>
+      </div>
+
+      {/* Money-moving action: disabled until a payment provider is connected */}
+      <div className="px-4 mt-3">
+        <Button
+          disabled
+          title="Coming soon"
+          data-testid="escrow-primary-action"
+          className="w-full h-10 rounded-xl text-xs font-heading"
+        >
+          <IndianRupee className="w-3.5 h-3.5" /> {role === "brand" ? "Fund escrow" : "Request payout"} · Coming soon
+        </Button>
       </div>
 
       {/* Collapsible How Milestone Release Works */}
@@ -239,7 +248,7 @@ const Escrow = () => {
         >
           <div className="pt-3 px-1">
             <p className="text-xs text-muted-foreground leading-relaxed mb-3">
-              Every campaign has its own brand-defined milestones. TIL holds funds/perks in escrow and releases them automatically when each milestone is verified. If no dispute is raised within 14 days of completion, funds auto-release. Brands set their own KPIs — views, posts, engagement, or deliverables — when creating a campaign.
+              Coming soon: every campaign will have its own brand-defined milestones. TIL will hold funds/perks in escrow and release them automatically when each milestone is verified. If no dispute is raised within 14 days of completion, funds will auto-release. Brands set their own KPIs — views, posts, engagement, or deliverables — when creating a campaign.
             </p>
             <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-2">
               {smartReleaseSteps.map((s, i) => (
@@ -258,7 +267,10 @@ const Escrow = () => {
 
       {/* Active Escrows - Dynamic Milestones */}
       <div className="px-4 mt-5 mb-4 space-y-3">
-        <h3 className="font-heading font-semibold text-sm text-foreground">Active Escrows</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="font-heading font-semibold text-sm text-foreground">Active Escrows</h3>
+          <ComingSoonBadge />
+        </div>
 
         {loading ? (
           <div className="text-center py-16"><div className="w-8 h-8 rounded-xl bg-accent/20 animate-pulse mx-auto" /></div>
@@ -271,7 +283,7 @@ const Escrow = () => {
                 <div key={escrow.id} className="border border-border rounded-xl overflow-hidden animate-fade-slide-up" style={{ animationDelay: `${i * 60}ms` }}>
                   <div className="p-4 pb-3">
                     <p className="font-heading font-semibold text-sm text-foreground truncate">{escrow.campaign_title}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">{role === "brand" ? escrow.creator_name : "Your earnings"} • ₹{escrow.total_amount.toLocaleString("en-IN")} total</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{role === "brand" ? escrow.creator_name : "Your earnings"} • ₹{escrow.total_amount.toLocaleString("en-IN")} agreed rate</p>
                     <div className="mt-3">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-[10px] text-muted-foreground">Deliverables</span>
@@ -281,6 +293,11 @@ const Escrow = () => {
                         <div className="h-full bg-accent rounded-full transition-all duration-700" style={{ width: `${progress}%` }} />
                       </div>
                     </div>
+                    {role === "brand" && (
+                      <Button disabled title="Coming soon" data-testid="escrow-release-action" size="sm" variant="outline" className="w-full mt-3 h-8 rounded-lg text-[10px] font-heading">
+                        Release payment · Coming soon
+                      </Button>
+                    )}
                   </div>
                 </div>
               );

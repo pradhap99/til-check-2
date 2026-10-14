@@ -10,8 +10,9 @@ import {
   Shield, ChevronRight, ChevronDown, ChevronUp, ArrowDownLeft, ArrowUpFromLine,
   CheckCircle, Gift, Building2, Sparkles, Flame, Copy, ArrowRight
 } from "lucide-react";
-import { toast } from "sonner";
 import SampleBadge from "@/components/SampleBadge";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 
 interface Transaction {
   id: string;
@@ -73,11 +74,6 @@ const Earnings = () => {
     failed: { color: "bg-destructive/10 text-destructive", label: "Failed" },
   };
 
-  const handleCopyLink = (brand: string) => {
-    navigator.clipboard.writeText(`https://til.app/ref/${brand.toLowerCase()}-${Date.now()}`);
-    toast.success("Link copied!");
-  };
-
   return (
     <Layout>
       <div className="page-transition">
@@ -85,6 +81,12 @@ const Earnings = () => {
           <h1 className="text-xl font-heading font-bold text-foreground">{role === "brand" ? "Payments" : "Wallet"}</h1>
           <p className="text-xs text-muted-foreground">{role === "brand" ? "Track campaign payments & escrow" : "Your wallet, payouts & earnings"}</p>
         </header>
+
+        <div className="px-4 mt-3">
+          <PaymentsComingSoonNotice>
+            Payouts, vouchers and bank transfers are coming soon. No money moves through TIL yet, so the buttons below are switched off. Until payments launch, creators and brands settle payment directly.
+          </PaymentsComingSoonNotice>
+        </div>
 
         {/* Premium Wallet Balance Card */}
         <div className="px-4 mt-4">
@@ -107,8 +109,11 @@ const Earnings = () => {
             <div className="flex items-start gap-2">
               <Gift className="w-4 h-4 text-accent shrink-0 mt-0.5" />
               <div>
-                <p className="text-[11px] font-heading font-semibold text-foreground">Vouchers give you UP TO 20% extra value!</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">₹10,000 balance = ₹12,000 in vouchers</p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-[11px] font-heading font-semibold text-foreground">Vouchers will give you up to 20% extra value</p>
+                  <ComingSoonBadge />
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-0.5">Planned: ₹10,000 balance = ₹12,000 in vouchers</p>
               </div>
             </div>
           </div>
@@ -117,14 +122,16 @@ const Earnings = () => {
         {/* Hero Voucher CTA */}
         <div className="px-4 mt-3">
           <button
-            onClick={() => navigate("/redeem")}
-            className="w-full rounded-2xl py-[18px] font-heading font-bold text-[18px] text-white btn-shimmer-hover btn-hover-lift relative overflow-hidden"
+            disabled
+            title="Coming soon"
+            data-testid="earnings-redeem-voucher"
+            className="w-full rounded-2xl py-[18px] font-heading font-bold text-[18px] text-white relative overflow-hidden opacity-50 cursor-not-allowed"
             style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)" }}
           >
             Redeem as Voucher ✨
           </button>
           <div className="text-center mt-1.5">
-            <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 font-heading font-bold">UP TO 20% BONUS VALUE</span>
+            <ComingSoonBadge />
           </div>
         </div>
 
@@ -132,12 +139,14 @@ const Earnings = () => {
         <div className="px-4 mt-2">
           <Button
             variant="outline"
+            disabled
+            title="Coming soon"
+            data-testid="earnings-transfer-bank"
             className="w-full h-10 rounded-xl font-heading text-xs text-muted-foreground border-border"
-            onClick={() => navigate("/bank-transfer")}
           >
-            <Building2 className="w-3.5 h-3.5 mr-1.5" /> Transfer to Bank
+            <Building2 className="w-3.5 h-3.5 mr-1.5" /> Transfer to Bank · Coming soon
           </Button>
-          <p className="text-[9px] text-muted-foreground text-center mt-1">2-3 business days processing</p>
+          <p className="text-[9px] text-muted-foreground text-center mt-1">Bank and UPI transfers are coming soon</p>
         </div>
 
         {/* Stats */}
@@ -232,9 +241,10 @@ const Earnings = () => {
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-heading font-semibold text-sm text-foreground">Affiliate Deals</h3>
+                <ComingSoonBadge />
                 <SampleBadge />
               </div>
-              <p className="text-[9px] text-muted-foreground">Share links. Earn passive commissions.</p>
+              <p className="text-[9px] text-muted-foreground">Share links and earn commissions. Affiliate payouts are coming soon.</p>
             </div>
           </div>
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
@@ -249,8 +259,8 @@ const Earnings = () => {
                     <p className="text-[10px] text-accent font-heading font-bold">{offer.commission}</p>
                   </div>
                 </div>
-                <Button size="sm" className="w-full h-7 rounded-lg text-[10px] bg-accent/10 text-accent hover:bg-accent/20 border-0 font-heading" onClick={() => handleCopyLink(offer.brand)}>
-                  <Copy className="w-3 h-3 mr-1" /> Copy Link
+                <Button size="sm" disabled title="Coming soon" data-testid="earnings-copy-link" className="w-full h-7 rounded-lg text-[10px] bg-accent/10 text-accent hover:bg-accent/20 border-0 font-heading">
+                  <Copy className="w-3 h-3 mr-1" /> Coming soon
                 </Button>
               </div>
             ))}
@@ -272,7 +282,7 @@ const Earnings = () => {
                 <p className="text-[10px] text-muted-foreground">Track your milestone-based payments</p>
               </div>
             </div>
-            <p className="text-[10px] text-muted-foreground mb-2">In Escrow: ₹0 | Released: ₹0</p>
+            <p className="text-[10px] text-muted-foreground mb-2">Escrow is coming soon.</p>
             <Button
               className="w-full h-9 rounded-xl text-xs bg-accent hover:bg-accent/90 text-accent-foreground font-heading"
               onClick={() => navigate("/escrow")}

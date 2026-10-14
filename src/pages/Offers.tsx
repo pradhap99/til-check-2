@@ -3,8 +3,9 @@ import Layout from "@/components/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Copy, Share2, Tag, TrendingUp, Info } from "lucide-react";
-import { toast } from "sonner";
 import SampleBadge from "@/components/SampleBadge";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 
 const categories = ["All", "Fashion", "Beauty", "Food", "Tech", "Lifestyle"];
 
@@ -22,21 +23,6 @@ const Offers = () => {
 
   const filtered = activeCategory === "All" ? offers : offers.filter(o => o.category === activeCategory);
 
-  const handleCopyLink = (brand: string) => {
-    navigator.clipboard.writeText(`https://til.app/ref/${brand.toLowerCase()}-${Date.now()}`);
-    toast.success("Link copied!");
-  };
-
-  const handleShare = async (brand: string, title: string) => {
-    const url = `https://til.app/ref/${brand.toLowerCase()}-${Date.now()}`;
-    if (navigator.share) {
-      await navigator.share({ title: `${brand} — ${title}`, text: `Check out this deal from ${brand}!`, url });
-    } else {
-      navigator.clipboard.writeText(url);
-      toast.success("Link copied!");
-    }
-  };
-
   return (
     <Layout>
       <div className="page-transition">
@@ -44,16 +30,23 @@ const Offers = () => {
           <h1 className="text-xl font-heading font-bold text-foreground">Offers & Affiliate Deals</h1>
           <div className="flex items-center gap-2">
             <p className="text-xs text-muted-foreground">Promote. Earn. Repeat.</p>
+            <ComingSoonBadge />
             <SampleBadge />
           </div>
         </header>
+
+        <div className="px-5 mt-3">
+          <PaymentsComingSoonNotice>
+            Affiliate links and commissions are coming soon. Links can't be copied yet and no sales are tracked. The offers below are samples of what is planned.
+          </PaymentsComingSoonNotice>
+        </div>
 
         {/* Explainer */}
         <div className="px-5 mt-3">
           <div className="rounded-xl border border-border bg-accent/5 p-3 flex items-start gap-2.5">
             <Info className="w-4 h-4 text-accent shrink-0 mt-0.5" />
             <p className="text-[11px] text-muted-foreground leading-relaxed">
-              Share these links with your audience. Every sale earns you a commission — tracked automatically through TIL.
+              Once affiliate links launch, you will share them with your audience and earn a commission on every sale, tracked through TIL.
             </p>
           </div>
         </div>
@@ -104,22 +97,27 @@ const Offers = () => {
               <div className="flex gap-2">
                 <Button
                   size="sm"
-                  className="flex-1 h-9 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-heading text-xs btn-hover-lift btn-shimmer-hover"
-                  onClick={() => handleCopyLink(offer.brand)}
+                  disabled
+                  title="Coming soon"
+                  data-testid="offers-copy-link"
+                  className="flex-1 h-9 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-heading text-xs"
                 >
-                  <Copy className="w-3 h-3" /> Copy Link
+                  <Copy className="w-3 h-3" /> Copy Link · Coming soon
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
+                  disabled
+                  title="Coming soon"
+                  aria-label="Share link (coming soon)"
+                  data-testid="offers-share-link"
                   className="h-9 rounded-xl font-heading text-xs"
-                  onClick={() => handleShare(offer.brand, offer.title)}
                 >
                   <Share2 className="w-3 h-3" />
                 </Button>
               </div>
 
-              <p className="text-[8px] text-muted-foreground mt-2 text-center">Powered by TIL Affiliate Network · 2% platform fee applies</p>
+              <p className="text-[8px] text-muted-foreground mt-2 text-center">TIL Affiliate Network is coming soon · 2% platform fee planned</p>
             </div>
           ))}
         </div>

@@ -8,6 +8,8 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
+import ComingSoonBadge from "@/components/ComingSoonBadge";
+import PaymentsComingSoonNotice from "@/components/PaymentsComingSoonNotice";
 import {
   ArrowLeft, Bell, Shield, Eye, Globe, Key, Smartphone, LogOut,
   Trash2, Moon, Sun, HelpCircle, MessageCircle, Mail, ChevronRight,
@@ -145,6 +147,9 @@ const Settings = () => {
         <div className="px-4 mt-3">
           <CollapsibleSection title="Payments" icon={Landmark} expanded={expandedSection === "payments"} onToggle={() => toggleSection("payments")}>
             <div className="space-y-3">
+              <PaymentsComingSoonNotice>
+                Payouts are coming soon. You can save your details now so they are ready, but no money moves through TIL yet.
+              </PaymentsComingSoonNotice>
               <div>
                 <label className="text-[10px] font-heading font-medium text-muted-foreground uppercase tracking-wider mb-1 block">Account Holder Name</label>
                 <Input value={accountHolder} onChange={e => setAccountHolder(e.target.value)} placeholder="Full name as per bank" className="h-10 rounded-xl text-sm" />
@@ -167,9 +172,12 @@ const Settings = () => {
               </div>
               <Button onClick={handleSavePayment} className="w-full h-10 rounded-xl text-sm">Save Payment Details</Button>
               <div className="bg-accent/5 border border-accent/10 rounded-xl p-3">
-                <p className="text-[10px] text-accent font-heading font-medium">Verify Bank Account</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">We'll deposit ₹1 to verify your account. This takes 1-2 business days.</p>
-                <Button variant="outline" size="sm" className="mt-2 h-7 text-[10px] rounded-lg">Start Verification</Button>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-[10px] text-accent font-heading font-medium">Verify Bank Account</p>
+                  <ComingSoonBadge />
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-0.5">When payments launch, we'll deposit ₹1 to verify your account.</p>
+                <Button variant="outline" size="sm" disabled title="Coming soon" data-testid="settings-verify-bank" className="mt-2 h-7 text-[10px] rounded-lg">Start Verification · Coming soon</Button>
               </div>
             </div>
           </CollapsibleSection>
