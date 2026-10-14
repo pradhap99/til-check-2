@@ -4,26 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import SampleBadge from "@/components/SampleBadge";
 import {
   ArrowLeft, Instagram, Youtube, Twitter, Linkedin, MapPin, Star, Users,
   TrendingUp, Share2, Copy, CheckCircle, Mail, ExternalLink,
-  Briefcase, IndianRupee, Image, Film, Layers, Edit3, Eye
+  Briefcase, IndianRupee, Image, Film, Layers, Edit3
 } from "lucide-react";
 import { toast } from "sonner";
-
-const mockCollabs = [
-  { brand: "boAt", logo: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=60&h=60&fit=crop", type: "Product Review" },
-  { brand: "Mamaearth", logo: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=60&h=60&fit=crop", type: "Sponsored Post" },
-  { brand: "Lenskart", logo: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=60&h=60&fit=crop", type: "Brand Ambassador" },
-];
-
-const defaultRates = [
-  { label: "Instagram Reel", range: "₹15,000 – ₹50,000" },
-  { label: "Instagram Story", range: "₹5,000 – ₹15,000" },
-  { label: "Static Post", range: "₹8,000 – ₹20,000" },
-  { label: "YouTube Integration", range: "₹25,000 – ₹1,00,000" },
-  { label: "Bundle Deal", range: "₹40,000 – ₹1,50,000" },
-];
 
 const sampleContentTypes = ["Reel", "Story", "Post", "Reel", "Story", "Post"];
 
@@ -166,7 +153,7 @@ const CreatorMediaKit = () => {
         {[
           { label: "Total Followers", value: totalFollowers > 0 ? `${(totalFollowers / 1000).toFixed(totalFollowers > 999999 ? 1 : 0)}${totalFollowers > 999999 ? "M" : "K"}` : "—", icon: Users },
           { label: "Engagement", value: creatorProfile.engagement_rate ? `${creatorProfile.engagement_rate}%` : "—", icon: TrendingUp },
-          { label: "Avg Views", value: creatorProfile.instagram_followers ? `${Math.round(creatorProfile.instagram_followers * 0.15 / 1000)}K` : "—", icon: Eye },
+          { label: "Rating", value: avgRating ?? "—", icon: Star },
           { label: "Campaigns", value: campaigns.length.toString(), icon: Briefcase },
         ].map((s, i) => (
           <div key={i} className="border border-border rounded-xl p-2.5 text-center">
@@ -222,19 +209,28 @@ const CreatorMediaKit = () => {
       {/* Rate Card */}
       <div className="px-4 mt-4">
         <p className="text-[10px] font-heading font-medium text-muted-foreground uppercase tracking-widest mb-2">Rate Card</p>
-        <div className="border border-border rounded-xl overflow-hidden">
-          {(rateCardRows || defaultRates.map(r => ({ label: r.label, value: r.range }))).map((row, i) => (
-            <div key={i} className={`flex items-center justify-between px-4 py-3 ${i > 0 ? "border-t border-border" : ""}`}>
-              <span className="text-xs text-foreground font-medium">{row.label}</span>
-              <span className="text-xs font-heading font-semibold text-foreground">{row.value}</span>
-            </div>
-          ))}
-        </div>
+        {rateCardRows ? (
+          <div className="border border-border rounded-xl overflow-hidden">
+            {rateCardRows.map((row, i) => (
+              <div key={i} className={`flex items-center justify-between px-4 py-3 ${i > 0 ? "border-t border-border" : ""}`}>
+                <span className="text-xs text-foreground font-medium">{row.label}</span>
+                <span className="text-xs font-heading font-semibold text-foreground">{row.value}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="border border-dashed border-border rounded-xl px-4 py-3">
+            <p className="text-xs text-muted-foreground">Rates on request. {isOwnProfile ? "Add your rates in Edit Profile." : "Message the creator for a quote."}</p>
+          </div>
+        )}
       </div>
 
       {/* Sample Content */}
       <div className="px-4 mt-4">
-        <p className="text-[10px] font-heading font-medium text-muted-foreground uppercase tracking-widest mb-2">Sample Content</p>
+        <div className="flex items-center gap-2 mb-2">
+          <p className="text-[10px] font-heading font-medium text-muted-foreground uppercase tracking-widest">Sample Content</p>
+          <SampleBadge />
+        </div>
         <div className="grid grid-cols-3 gap-2">
           {sampleContentTypes.map((type, i) => (
             <div key={i} className="aspect-[3/4] rounded-xl bg-gradient-to-br from-secondary to-secondary/50 border border-border flex flex-col items-center justify-center gap-1.5">
@@ -250,30 +246,25 @@ const CreatorMediaKit = () => {
       {/* Previous Collaborations */}
       <div className="px-4 mt-4">
         <p className="text-[10px] font-heading font-medium text-muted-foreground uppercase tracking-widest mb-2">
-          Previous Collaborations ({campaigns.length > 0 ? campaigns.length : mockCollabs.length})
+          Previous Collaborations ({campaigns.length})
         </p>
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-          {(campaigns.length > 0
-            ? campaigns.slice(0, 5).map((app, i) => ({
-                brand: (app as any).campaigns?.title || "Campaign",
-                logo: "",
-                type: (app as any).campaigns?.campaign_type?.replace(/_/g, " ") || "Collaboration",
-              }))
-            : mockCollabs
-          ).map((collab, i) => (
-            <div key={i} className="min-w-[140px] border border-border rounded-xl p-3 text-center shrink-0">
-              <div className="w-10 h-10 rounded-lg mx-auto bg-secondary overflow-hidden flex items-center justify-center">
-                {collab.logo ? (
-                  <img src={collab.logo} alt="" className="w-full h-full object-cover" />
-                ) : (
+        {campaigns.length > 0 ? (
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+            {campaigns.slice(0, 5).map((app, i) => (
+              <div key={i} className="min-w-[140px] border border-border rounded-xl p-3 text-center shrink-0">
+                <div className="w-10 h-10 rounded-lg mx-auto bg-secondary overflow-hidden flex items-center justify-center">
                   <Briefcase className="w-4 h-4 text-muted-foreground" />
-                )}
+                </div>
+                <p className="text-[11px] font-heading font-semibold text-foreground mt-2 truncate">{(app as any).campaigns?.title || "Campaign"}</p>
+                <p className="text-[9px] text-muted-foreground">{(app as any).campaigns?.campaign_type?.replace(/_/g, " ") || "Collaboration"}</p>
               </div>
-              <p className="text-[11px] font-heading font-semibold text-foreground mt-2 truncate">{collab.brand}</p>
-              <p className="text-[9px] text-muted-foreground">{collab.type}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="border border-dashed border-border rounded-xl px-4 py-3">
+            <p className="text-xs text-muted-foreground">No collaborations on TIL yet.</p>
+          </div>
+        )}
       </div>
 
       {/* Reviews */}

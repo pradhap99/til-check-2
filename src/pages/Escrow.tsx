@@ -5,10 +5,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import SampleBadge from "@/components/SampleBadge";
 import {
   ArrowLeft, Shield, Lock, Unlock, CheckCircle, Clock, AlertTriangle,
   ArrowRight, IndianRupee, FileCheck, ChevronRight, ChevronDown, ChevronUp,
-  Info, Tag, Star, Eye, Gift
+  Info, Star, Eye, Gift
 } from "lucide-react";
 
 interface EscrowItem {
@@ -53,7 +54,7 @@ interface MockEscrow {
 const mockEscrows: MockEscrow[] = [
   {
     id: "esc-1",
-    brand: "boAt",
+    brand: "Demo Audio",
     title: "Summer Audio Launch 2026",
     total: 60000,
     progress: 45,
@@ -67,7 +68,7 @@ const mockEscrows: MockEscrow[] = [
   },
   {
     id: "esc-2",
-    brand: "Mamaearth",
+    brand: "Example Skincare Co.",
     title: "Vitamin C Glow Series",
     total: 45000,
     progress: 60,
@@ -82,14 +83,14 @@ const mockEscrows: MockEscrow[] = [
   },
   {
     id: "esc-3",
-    brand: "Blue Tokai Coffee",
+    brand: "Placeholder Café",
     title: "Coffee & Content",
     total: 0,
     progress: 33,
     activeUntil: "May 5, 2026",
     isPerks: true,
     milestones: [
-      { label: "Post 1 Instagram Story tagging @bluetokaicoffee → Monthly subscription unlocked", pct: 33, amount: 0, status: "completed" },
+      { label: "Post 1 Instagram Story tagging @placeholdercafe → Monthly subscription unlocked", pct: 33, amount: 0, status: "completed" },
       { label: "Post 1 Reel showing morning coffee routine → Merchandise kit", pct: 34, amount: 0, status: "in_progress" },
       { label: "Attend brand event and post coverage → Partner invite access", pct: 33, amount: 0, status: "locked" },
     ],
@@ -290,12 +291,14 @@ const Escrow = () => {
               <>
                 <div className="flex items-center gap-2 mt-1">
                   <Info className="w-3.5 h-3.5 text-muted-foreground" />
-                  <p className="text-[10px] text-muted-foreground">Example escrows — real escrows appear when {role === "brand" ? "you accept creators" : "brands accept your applications"}</p>
+                  <p className="text-[10px] text-muted-foreground">Sample data — real escrows appear when {role === "brand" ? "you accept creators" : "brands accept your applications"}</p>
                 </div>
 
                 {mockEscrows.map((ex, i) => (
                   <div key={ex.id} className="border border-border rounded-xl overflow-hidden animate-fade-slide-up" style={{ animationDelay: `${i * 80}ms` }}>
-                    <Badge className="absolute top-2 right-2 bg-accent/10 text-accent border-0 text-[8px] z-10 relative ml-auto mr-2 mt-2"><Tag className="w-2.5 h-2.5 mr-0.5" />Example</Badge>
+                    <div className="flex justify-end px-3 pt-2">
+                      <SampleBadge />
+                    </div>
                     <div className="p-4 pb-3">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">

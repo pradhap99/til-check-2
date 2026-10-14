@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Bell, CheckCircle, Briefcase, MessageCircle, Star, TrendingUp, IndianRupee, Sparkles, Gift } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SampleBadge from "@/components/SampleBadge";
 
 interface Notification {
   id: string; title: string; message: string; type: string | null;
@@ -17,12 +18,12 @@ const typeIcons: Record<string, any> = {
 
 // Mock notifications for empty state
 const mockNotifications = [
-  { id: "mock-1", title: "boAt shortlisted you", message: "You've been shortlisted for Summer Audio Launch campaign", type: "application", read: false, created_at: new Date(Date.now() - 3600000).toISOString(), reference_id: null, reference_type: "campaign" },
-  { id: "mock-2", title: "New campaign matches your profile", message: "Mamaearth Beauty Week — perfect for your niche", type: "campaign", read: false, created_at: new Date(Date.now() - 10800000).toISOString(), reference_id: null, reference_type: "campaign" },
-  { id: "mock-3", title: "₹3,500 deposited", message: "Payment received for Lenskart collab. Check earnings.", type: "payment", read: true, created_at: new Date(Date.now() - 86400000).toISOString(), reference_id: null, reference_type: null },
-  { id: "mock-4", title: "Application accepted", message: "Your application for Sugar Cosmetics Bold Everyday was accepted!", type: "application", read: true, created_at: new Date(Date.now() - 172800000).toISOString(), reference_id: null, reference_type: "application" },
+  { id: "mock-1", title: "Demo Audio shortlisted you", message: "You've been shortlisted for Summer Launch campaign", type: "application", read: false, created_at: new Date(Date.now() - 3600000).toISOString(), reference_id: null, reference_type: "campaign" },
+  { id: "mock-2", title: "New campaign matches your profile", message: "Example Skincare Co. Beauty Week — perfect for your niche", type: "campaign", read: false, created_at: new Date(Date.now() - 10800000).toISOString(), reference_id: null, reference_type: "campaign" },
+  { id: "mock-3", title: "₹3,500 deposited", message: "Payment received for Sample Eyewear collab. Check earnings.", type: "payment", read: true, created_at: new Date(Date.now() - 86400000).toISOString(), reference_id: null, reference_type: null },
+  { id: "mock-4", title: "Application accepted", message: "Your application for Placeholder Cosmetics Bold Everyday was accepted!", type: "application", read: true, created_at: new Date(Date.now() - 172800000).toISOString(), reference_id: null, reference_type: "application" },
   { id: "mock-5", title: "Complete your media kit", message: "Add rate card and sample content to attract more brands", type: "profile", read: true, created_at: new Date(Date.now() - 259200000).toISOString(), reference_id: null, reference_type: null },
-  { id: "mock-6", title: "New message from Lenskart", message: "Regarding your SS'26 campaign deliverables", type: "message", read: true, created_at: new Date(Date.now() - 345600000).toISOString(), reference_id: null, reference_type: "message" },
+  { id: "mock-6", title: "New message from Sample Eyewear", message: "Regarding your SS'26 campaign deliverables", type: "message", read: true, created_at: new Date(Date.now() - 345600000).toISOString(), reference_id: null, reference_type: "message" },
 ];
 
 const Notifications = () => {
@@ -30,11 +31,14 @@ const Notifications = () => {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isSample, setIsSample] = useState(false);
 
   const fetchNotifications = async () => {
     if (!user) return;
     const { data } = await supabase.from("notifications").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(50);
-    setNotifications((data && data.length > 0) ? data : mockNotifications);
+    const real = data && data.length > 0 ? data : null;
+    setIsSample(!real);
+    setNotifications(real ?? mockNotifications);
     setLoading(false);
   };
 
@@ -102,6 +106,7 @@ const Notifications = () => {
         <div>
           <h1 className="text-xl font-heading font-bold text-foreground">Notifications</h1>
           {unreadCount > 0 && <p className="text-xs text-muted-foreground">{unreadCount} unread</p>}
+          {isSample && <SampleBadge className="mt-1" />}
         </div>
         {unreadCount > 0 && (
           <button onClick={markAllRead} className="text-xs text-primary font-heading font-medium">Mark all read</button>

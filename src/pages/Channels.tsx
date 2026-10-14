@@ -3,27 +3,28 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import SampleBadge from "@/components/SampleBadge";
 import {
   ArrowLeft, Heart, MessageCircle, Share2, Bookmark, Send,
   Shield, Plus, Image as ImageIcon, Filter
 } from "lucide-react";
 
 const showcasePosts = [
-  { creator: "Priya Sharma", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&h=60&fit=crop&crop=face", category: "Beauty", image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=600&fit=crop", caption: "My latest collaboration with Lenskart! Shot this campaign at sunrise for that golden glow ✨ #sponsored #lenskart", campaign: "Lenskart SS'26", likes: 1243, comments: 89, time: "2h ago" },
-  { creator: "Arjun Mehta", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face", category: "Tech", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop", caption: "Unboxing the new boAt Airdopes 🎧 Full review coming this weekend! Sound quality is insane. #boAthead #techreview", campaign: "boAt Summer", likes: 892, comments: 45, time: "5h ago" },
-  { creator: "Sneha Kapoor", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face", category: "Fashion", image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=600&fit=crop", caption: "Behind the scenes from the Myntra style drop shoot 🔥 Can't wait for you all to see the full collection!", campaign: "Myntra Style Drop", likes: 2100, comments: 156, time: "1d ago" },
-  { creator: "Rahul Verma", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop&crop=face", category: "Food", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=600&fit=crop", caption: "This Zomato campaign was so fun! Got to try 10 restaurants in one day 🍕 Street food never looked so good.", campaign: "Zomato Food Stories", likes: 567, comments: 34, time: "1d ago" },
+  { creator: "Priya Sharma", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=60&h=60&fit=crop&crop=face", category: "Beauty", image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=600&fit=crop", caption: "My latest collaboration with Sample Eyewear! Shot this campaign at sunrise for that golden glow ✨ #sponsored", campaign: "Sample Eyewear SS'26", likes: 1243, comments: 89, time: "2h ago" },
+  { creator: "Arjun Mehta", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face", category: "Tech", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop", caption: "Unboxing the new Demo Audio earbuds 🎧 Full review coming this weekend! #techreview", campaign: "Demo Audio Summer", likes: 892, comments: 45, time: "5h ago" },
+  { creator: "Sneha Kapoor", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face", category: "Fashion", image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=600&fit=crop", caption: "Behind the scenes from the Example Apparel style drop shoot 🔥 Can't wait for you all to see the full collection!", campaign: "Example Apparel Style Drop", likes: 2100, comments: 156, time: "1d ago" },
+  { creator: "Rahul Verma", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop&crop=face", category: "Food", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=600&fit=crop", caption: "This Sample Eats campaign was so fun! Got to try a lot of restaurants in one day 🍕 Street food never looked so good.", campaign: "Sample Eats Food Stories", likes: 567, comments: 34, time: "1d ago" },
   { creator: "Kavya Nair", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&h=60&fit=crop&crop=face", category: "Fitness", image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=600&fit=crop", caption: "Morning yoga routine collab with a wellness brand 🧘‍♀️ Real content, real results. Link in bio!", campaign: "Wellness Campaign", likes: 1890, comments: 112, time: "2d ago" },
-  { creator: "Zara Patel", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=40&h=40&fit=crop&crop=face", category: "Lifestyle", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&h=600&fit=crop", caption: "Nykaa festive collection haul! Every product is gorgeous ✨ #NykaaFestive #beauty", campaign: "Nykaa Festive Glow", likes: 734, comments: 56, time: "2d ago" },
-  { creator: "Dev Anand", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face", category: "Comedy", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop", caption: "Made a skit about tech gadgets and it went viral 😂 The Noise watch is actually fire tho", campaign: "Noise Smartwatch", likes: 3400, comments: 234, time: "3d ago" },
-  { creator: "Meera Pillai", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face", category: "Fashion", image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop", caption: "Styling sunglasses 3 ways for summer ☀️ Collab with Lenskart was a dream!", campaign: "Lenskart SS'26", likes: 1560, comments: 98, time: "4d ago" },
+  { creator: "Zara Patel", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=40&h=40&fit=crop&crop=face", category: "Lifestyle", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&h=600&fit=crop", caption: "Sample Beauty Store festive collection haul! Every product is gorgeous ✨ #beauty", campaign: "Sample Beauty Store Festive Glow", likes: 734, comments: 56, time: "2d ago" },
+  { creator: "Dev Anand", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face", category: "Comedy", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop", caption: "Made a skit about tech gadgets 😂 The Sample Wearables watch is actually fire tho", campaign: "Sample Wearables Smartwatch", likes: 3400, comments: 234, time: "3d ago" },
+  { creator: "Meera Pillai", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face", category: "Fashion", image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop", caption: "Styling sunglasses 3 ways for summer ☀️ Collab with Sample Eyewear was a dream!", campaign: "Sample Eyewear SS'26", likes: 1560, comments: 98, time: "4d ago" },
 ];
 
 const adminPosts = [
   { type: "Regulatory", color: "bg-destructive/10 text-destructive", title: "ASCI Guidelines Update 2026", content: "Mandatory disclosure rules for sponsored content are now in effect. All creators must use #Ad or #Sponsored for paid partnerships. Non-compliance may result in account suspension.", date: "Mar 8, 2026", hasImage: false },
   { type: "Opportunity", color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400", title: "ONDC Integration Live", content: "Brands can now run creator campaigns linked to ONDC storefronts. This opens up a new revenue channel for creators in the e-commerce space.", date: "Mar 6, 2026", hasImage: false },
   { type: "Platform Update", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400", title: "New Escrow Milestone Feature", content: "Payments can now be split into multiple milestones instead of just 50/50. Brands and creators can negotiate custom payment splits for each deliverable.", date: "Mar 5, 2026", hasImage: false },
-  { type: "Event", color: "bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400", title: "Connect & Create Creator Summit Chennai", content: "Join 500+ creators and 100+ brands at India's largest creator economy summit. Workshops, networking, and exclusive brand deals. April 15, 2026 — Registration open now!", date: "Mar 4, 2026", hasImage: true },
+  { type: "Event", color: "bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400", title: "Connect & Create Creator Summit Chennai", content: "Join creators and brands for a day of workshops and networking in Chennai. April 15, 2026.", date: "Mar 4, 2026", hasImage: true },
   { type: "Regulatory", color: "bg-destructive/10 text-destructive", title: "GST Compliance for Influencers", content: "Creators earning above ₹20L annually must register for GST. TIL now auto-generates GST-compliant invoices. Update your PAN and GST details in Settings.", date: "Mar 1, 2026", hasImage: false },
 ];
 
@@ -64,7 +65,10 @@ const Channels = () => {
       {tab === "spotlight" && (
         <div className="pb-4">
           {/* Filters */}
-          <div className="px-4 mt-3 flex gap-1.5 overflow-x-auto no-scrollbar">
+          <div className="px-4 mt-3 flex justify-end">
+            <SampleBadge />
+          </div>
+          <div className="px-4 mt-2 flex gap-1.5 overflow-x-auto no-scrollbar">
             {filterOptions.map(f => (
               <button key={f} onClick={() => setActiveFilter(f)} className={`px-3 py-1.5 rounded-full text-[11px] font-medium shrink-0 transition-all ${activeFilter === f ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"}`}>{f}</button>
             ))}
@@ -128,7 +132,10 @@ const Channels = () => {
       {/* Official Updates */}
       {tab === "updates" && (
         <div className="px-4 mt-4 space-y-3 pb-4">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Official announcements from TIL team</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Official announcements from TIL team</p>
+            <SampleBadge />
+          </div>
           {adminPosts.map((post, i) => (
             <div key={i} className="border border-border rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">

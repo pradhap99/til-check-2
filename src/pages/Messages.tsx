@@ -3,7 +3,8 @@ import Layout from "@/components/Layout";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, MessageCircle, Briefcase, Tag, Info } from "lucide-react";
+import { Search, MessageCircle, Briefcase, Info } from "lucide-react";
+import SampleBadge from "@/components/SampleBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -22,31 +23,31 @@ interface Conversation {
 const mockConversations = [
   {
     id: "example-1",
-    otherName: "Lenskart Brand Team",
+    otherName: "Sample Eyewear Brand Team",
     otherAvatar: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=80&h=80&fit=crop",
     lastMessage: "Your application is under review. We'll get back...",
     timeAgo: "2h",
-    campaignTag: "Lenskart SS'26",
+    campaignTag: "Sample Eyewear SS'26",
     isExample: true,
     unread: true,
   },
   {
     id: "example-2",
-    otherName: "Mamaearth Collab",
+    otherName: "Example Skincare Collab",
     otherAvatar: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=80&h=80&fit=crop",
     lastMessage: "Congratulations! You've been selected for...",
     timeAgo: "1d",
-    campaignTag: "Mamaearth Vitamin C",
+    campaignTag: "Example Skincare Vitamin C",
     isExample: true,
     unread: false,
   },
   {
     id: "example-3",
-    otherName: "boAt Partnerships",
+    otherName: "Demo Audio Partnerships",
     otherAvatar: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop",
     lastMessage: "Please share your media kit to proceed...",
     timeAgo: "3d",
-    campaignTag: "boAt Summer Audio",
+    campaignTag: "Demo Audio Summer Launch",
     isExample: true,
     unread: false,
   },
@@ -171,7 +172,7 @@ const Messages = () => {
               <>
                 <div className="px-4 py-2 flex items-center gap-2">
                   <Info className="w-3.5 h-3.5 text-muted-foreground" />
-                  <p className="text-[10px] text-muted-foreground">Example conversations — real chats appear when you connect with {role === "brand" ? "creators" : "brands"}</p>
+                  <p className="text-[10px] text-muted-foreground">Sample data — real chats appear when you connect with {role === "brand" ? "creators" : "brands"}</p>
                 </div>
                 {mockConversations.map((conv, i) => (
                   <div
@@ -187,7 +188,7 @@ const Messages = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1.5">
                           <h3 className="text-sm font-heading font-semibold text-foreground truncate">{conv.otherName}</h3>
-                          <Badge className="bg-accent/10 text-accent border-0 text-[8px] px-1.5 py-0"><Tag className="w-2.5 h-2.5 mr-0.5" />Example</Badge>
+                          <SampleBadge />
                         </div>
                         <span className="text-[10px] text-muted-foreground shrink-0 ml-2">{conv.timeAgo}</span>
                       </div>

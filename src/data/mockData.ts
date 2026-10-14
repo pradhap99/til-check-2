@@ -49,7 +49,7 @@ export const creators: Creator[] = [
     id: "3", name: "Sneha Kapoor", handle: "@snehakapoor",
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300",
     category: "Fashion", followers: "95K", engagement: "4.2%", platform: "Instagram", location: "Delhi", rate: "₹15K–25K", verified: true,
-    bio: "Fashion influencer & stylist. Collaborated with regional boutiques and Myntra sellers."
+    bio: "Fashion influencer & stylist. Collaborated with regional boutiques and online fashion sellers."
   },
   {
     id: "4", name: "Rahul Verma", handle: "@rahulverma",
@@ -73,104 +73,104 @@ export const creators: Creator[] = [
 
 export const campaigns: Campaign[] = [
   {
-    id: "1", brand: "Lenskart", logo: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=80&h=80&fit=crop",
-    title: "Lenskart SS'26 — Style Your Vision",
+    id: "1", brand: "Sample Eyewear", logo: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=80&h=80&fit=crop",
+    title: "Sample Eyewear SS'26 — Style Your Vision",
     budget: "₹1.2L–1.5L", category: "Fashion", deadline: "Mar 20, 2026",
-    slots: 45, filled: 18, description: "Fashion-forward creators for our premium John Jacobs collection.",
+    slots: 45, filled: 18, description: "Fashion-forward creators for our premium frames collection.",
     platforms: ["Instagram", "YouTube"],
-    location: "Select Citywalk, Delhi", date: "Apr 1 — Apr 20, 2026"
+    location: "Sample Mall, Saket, Delhi", date: "Apr 1 — Apr 20, 2026"
   },
   {
-    id: "2", brand: "Mamaearth", logo: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=80&h=80&fit=crop",
-    title: "Mamaearth Vitamin C Range",
+    id: "2", brand: "Example Skincare Co.", logo: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=80&h=80&fit=crop",
+    title: "Example Skincare Vitamin C Range",
     budget: "₹60K–90K", category: "Beauty", deadline: "Mar 25, 2026",
     slots: 80, filled: 32, description: "Skincare & beauty creators for our new Vitamin C range launch.",
     platforms: ["Instagram"],
-    location: "Phoenix Marketcity, Mumbai", date: "Mar 28 — Apr 12, 2026"
+    location: "Sample Mall, Kurla, Mumbai", date: "Mar 28 — Apr 12, 2026"
   },
   {
-    id: "3", brand: "boAt", logo: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop",
-    title: "boAt Summer Audio Launch",
+    id: "3", brand: "Demo Audio", logo: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop",
+    title: "Demo Audio Summer Launch",
     budget: "₹80K–1.2L", category: "Tech", deadline: "Apr 1, 2026",
-    slots: 30, filled: 12, description: "Tech & lifestyle creators needed to review our new Airdopes 500 ANC range.",
+    slots: 30, filled: 12, description: "Tech & lifestyle creators needed to review our new wireless earbuds range.",
     platforms: ["Instagram", "YouTube"],
-    location: "Forum Mall, Bangalore", date: "Apr 5 — Apr 25, 2026"
+    location: "Sample Mall, Koramangala, Bangalore", date: "Apr 5 — Apr 25, 2026"
   },
   {
-    id: "4", brand: "Zomato", logo: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=80&h=80&fit=crop",
-    title: "Zomato Food Stories",
+    id: "4", brand: "Sample Eats", logo: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=80&h=80&fit=crop",
+    title: "Sample Eats Food Stories",
     budget: "₹50K–80K", category: "Food", deadline: "Mar 28, 2026",
     slots: 60, filled: 25, description: "Food creators for authentic street food and restaurant reviews across India.",
     platforms: ["Instagram", "YouTube"],
-    location: "DLF Cyber City, Gurgaon", date: "Apr 8 — Apr 22, 2026"
+    location: "Sample Business Park, Gurgaon", date: "Apr 8 — Apr 22, 2026"
   },
   {
-    id: "5", brand: "Nykaa", logo: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=80&h=80&fit=crop",
-    title: "Nykaa Festive Glow",
+    id: "5", brand: "Sample Beauty Store", logo: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=80&h=80&fit=crop",
+    title: "Sample Beauty Store Festive Glow",
     budget: "₹40K–60K", category: "Beauty", deadline: "Apr 5, 2026",
     slots: 100, filled: 45, description: "Beauty creators for festive makeup looks and skincare routines.",
     platforms: ["Instagram"],
-    location: "Phoenix Palassio, Lucknow", date: "Apr 3 — Apr 18, 2026"
+    location: "Sample Mall, Gomti Nagar, Lucknow", date: "Apr 3 — Apr 18, 2026"
   },
   {
-    id: "6", brand: "Myntra", logo: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=80&h=80&fit=crop",
-    title: "Myntra Style Drop",
+    id: "6", brand: "Example Apparel Co.", logo: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=80&h=80&fit=crop",
+    title: "Example Apparel Style Drop",
     budget: "₹90K–1.4L", category: "Fashion", deadline: "Mar 18, 2026",
     slots: 20, filled: 8, description: "Premium fashion creators for exclusive designer collaboration.",
     platforms: ["Instagram", "YouTube"],
     location: "Indiranagar, Bangalore", date: "Mar 22 — Apr 2, 2026"
   },
   {
-    id: "7", brand: "Swiggy", logo: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=80&h=80&fit=crop",
-    title: "Swiggy Dine Out",
+    id: "7", brand: "Demo Dine", logo: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=80&h=80&fit=crop",
+    title: "Demo Dine Out",
     budget: "₹35K–55K", category: "Food", deadline: "Apr 10, 2026",
     slots: 75, filled: 30, description: "Food and lifestyle creators for restaurant discovery content.",
     platforms: ["Instagram"],
     location: "Connaught Place, Delhi", date: "Apr 5 — Apr 20, 2026"
   },
   {
-    id: "8", brand: "Noise", logo: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop",
-    title: "Noise Smartwatch Launch",
+    id: "8", brand: "Sample Wearables", logo: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop",
+    title: "Sample Wearables Smartwatch Launch",
     budget: "₹45K–70K", category: "Tech", deadline: "Apr 8, 2026",
     slots: 40, filled: 15, description: "Tech reviewers & fitness creators for our latest smartwatch.",
     platforms: ["YouTube", "Instagram"],
     location: "Sector 29, Gurgaon", date: "Apr 10 — Apr 28, 2026"
   },
   {
-    id: "cafe-001", brand: "Blue Tokai Coffee", logo: "",
-    title: "Blue Tokai — Coffee Culture Campaign",
+    id: "cafe-001", brand: "Placeholder Café", logo: "",
+    title: "Placeholder Café — Coffee Culture Campaign",
     budget: "₹25K–40K", category: "Cafe", deadline: "Apr 5, 2026",
     slots: 20, filled: 8, description: "Coffee culture content creators for in-cafe experience shoots.",
     platforms: ["Instagram"],
     location: "Koramangala, Bangalore", date: "Mar 20 — Apr 5, 2026"
   },
   {
-    id: "cafe-002", brand: "Third Wave Coffee", logo: "",
-    title: "Third Wave — Morning Ritual Series",
+    id: "cafe-002", brand: "Sample Coffee House", logo: "",
+    title: "Sample Coffee House — Morning Ritual Series",
     budget: "₹18K–30K", category: "Cafe", deadline: "Apr 15, 2026",
-    slots: 16, filled: 8, description: "Morning routine content featuring Third Wave cafes.",
+    slots: 16, filled: 8, description: "Morning routine content featuring Sample Coffee House cafés.",
     platforms: ["Instagram"],
     location: "Bandra West, Mumbai", date: "Apr 1 — Apr 15, 2026"
   },
   {
-    id: "dining-001", brand: "Social (by Impresario)", logo: "",
-    title: "SOCIAL — Urban Dining Experience",
+    id: "dining-001", brand: "Demo Dining Co.", logo: "",
+    title: "Demo Dining — Urban Dining Experience",
     budget: "₹30K–50K", category: "Dining", deadline: "Apr 10, 2026",
-    slots: 25, filled: 10, description: "Urban dining experience content for SOCIAL outlets.",
+    slots: 25, filled: 10, description: "Urban dining experience content for Demo Dining outlets.",
     platforms: ["Instagram", "YouTube"],
     location: "Hauz Khas Village, Delhi", date: "Mar 25 — Apr 10, 2026"
   },
   {
-    id: "staycation-001", brand: "Zostel", logo: "",
-    title: "Zostel — Backpacker Stories",
+    id: "staycation-001", brand: "Sample Stays", logo: "",
+    title: "Sample Stays — Backpacker Stories",
     budget: "₹40K–65K", category: "Staycation", deadline: "Apr 30, 2026",
-    slots: 12, filled: 6, description: "Backpacker and travel vlog content from Zostel locations.",
+    slots: 12, filled: 6, description: "Backpacker and travel vlog content from Sample Stays locations.",
     platforms: ["Instagram", "YouTube"],
     location: "Manali, Himachal Pradesh", date: "Apr 10 — Apr 30, 2026"
   },
   // Perks campaigns
   {
-    id: "cafe-perks-001", brand: "Third Wave Coffee", logo: "",
+    id: "cafe-perks-001", brand: "Sample Coffee House", logo: "",
     title: "Coffee Content Creator — Meal Collab",
     budget: "Perks", category: "Cafe", deadline: "Apr 30, 2026",
     slots: 20, filled: 0, description: "Coffee culture content with complimentary meals and subscriptions.",
@@ -179,19 +179,19 @@ export const campaigns: Campaign[] = [
     type: "Perks", perks: ["Free meal for 2", "Monthly coffee subscription", "₹500 voucher"], minLevel: 1,
   },
   {
-    id: "cafe-perks-002", brand: "Blue Tokai Coffee", logo: "",
+    id: "cafe-perks-002", brand: "Placeholder Café", logo: "",
     title: "Lifestyle Creator — Coffee & Content",
     budget: "Perks", category: "Cafe", deadline: "May 5, 2026",
-    slots: 10, filled: 0, description: "Lifestyle content featuring Blue Tokai cafes and products.",
+    slots: 10, filled: 0, description: "Lifestyle content featuring Placeholder Café locations and products.",
     platforms: ["Instagram"],
     location: "Koramangala, Bangalore", date: "Apr 5 — May 5, 2026",
     type: "Perks", perks: ["Free coffee for a month", "Launch event invite", "Merchandise kit"], minLevel: 2,
   },
   {
-    id: "dining-perks-001", brand: "Social (by Impresario)", logo: "",
+    id: "dining-perks-001", brand: "Demo Dining Co.", logo: "",
     title: "Food Creator — Dining Experience Pass",
     budget: "Perks", category: "Dining", deadline: "Apr 30, 2026",
-    slots: 8, filled: 0, description: "Premium dining experience content for SOCIAL outlets.",
+    slots: 8, filled: 0, description: "Premium dining experience content for Demo Dining outlets.",
     platforms: ["Instagram"],
     location: "Hauz Khas Village, Delhi", date: "Every weekend, Apr 2026",
     type: "Perks", perks: ["Dinner for 2", "Creator evening event invite", "₹1,000 voucher"], minLevel: 2,

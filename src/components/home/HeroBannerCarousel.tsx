@@ -1,28 +1,29 @@
 import { useState, useEffect, useCallback } from "react";
 import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SampleBadge from "@/components/SampleBadge";
 
 const slides = [
   {
     image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800",
-    title: "Lenskart SS'26 — Style Your Vision",
+    title: "Sample Eyewear SS'26 — Style Your Vision",
     subtitle: "Fashion-forward eyewear styling creators wanted",
     badge: "₹8L–15L",
-    campaignId: "3",
+    campaignId: "1",
   },
   {
     image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800",
-    title: "Beauty Week — Mamaearth",
+    title: "Beauty Week — Example Skincare Co.",
     subtitle: "Skincare creators for Vitamin C range",
     badge: "₹3L–7L",
     campaignId: "2",
   },
   {
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
-    title: "boAt Summer Audio Launch",
-    subtitle: "Tech creators wanted for Airdopes 500 ANC",
+    title: "Demo Audio Summer Launch",
+    subtitle: "Tech creators wanted for our new earbuds range",
     badge: "₹5L–10L",
-    campaignId: "1",
+    campaignId: "3",
   },
 ];
 
@@ -66,6 +67,8 @@ const HeroBannerCarousel = ({ onSlideChange }: HeroBannerCarouselProps) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
           </div>
         ))}
+
+        <SampleBadge className="absolute top-3 left-3 z-10 bg-background/90 hover:bg-background/90" />
 
         <div className="absolute top-3 right-3 bg-emerald-500 text-white text-[11px] font-heading font-bold px-2.5 py-1 rounded-lg z-10">
           {slides[current].badge}

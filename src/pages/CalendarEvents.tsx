@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import SampleBadge from "@/components/SampleBadge";
 import { format, addDays, isSameDay } from "date-fns";
 
 // Assign dates to campaigns for the calendar view
@@ -129,9 +130,12 @@ const CalendarEvents = () => {
 
         {/* Date Label */}
         <div className="px-5 mt-5 mb-3">
-          <h2 className="font-heading font-bold text-sm text-foreground">
-            {isSameDay(selectedDate, today) ? "All Upcoming Campaigns" : format(selectedDate, "EEEE, MMM d")}
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="font-heading font-bold text-sm text-foreground">
+              {isSameDay(selectedDate, today) ? "All Upcoming Campaigns" : format(selectedDate, "EEEE, MMM d")}
+            </h2>
+            <SampleBadge />
+          </div>
           <p className="text-[11px] text-muted-foreground mt-0.5">
             {displayCampaigns.length} campaign{displayCampaigns.length !== 1 ? "s" : ""} available
           </p>

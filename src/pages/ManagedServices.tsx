@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import Layout from "@/components/Layout";
+import SampleBadge from "@/components/SampleBadge";
 
 const tiers = [
   {
@@ -68,7 +69,7 @@ const tiers = [
 const upcomingEvents = [
   { name: "Chennai Creator Summit", date: "Apr 15, 2026", spots: 120, price: "₹999", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=200&fit=crop", type: "Creator Meet-up" },
   { name: "Mumbai Brand Activation Day", date: "Apr 28, 2026", spots: 50, price: "Free", image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=400&h=200&fit=crop", type: "Brand Activation" },
-  { name: "Bangalore Content Day with boAt", date: "May 3, 2026", spots: 30, price: "₹1,499", image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400&h=200&fit=crop", type: "Content Creation" },
+  { name: "Bangalore Content Day with Demo Audio", date: "May 3, 2026", spots: 30, price: "₹1,499", image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400&h=200&fit=crop", type: "Content Creation" },
 ];
 
 const ManagedServices = () => {
@@ -136,9 +137,9 @@ const ManagedServices = () => {
 
           <div className="px-4 flex gap-2 justify-center mb-4">
             {[
-              { icon: Users, label: "500+ Campaigns" },
-              { icon: Star, label: "4.8★ Rating" },
-              { icon: Shield, label: "Brand Safe" },
+              { icon: Users, label: "Creator shortlisting" },
+              { icon: Star, label: "Escrow handling" },
+              { icon: Shield, label: "Brand safety" },
             ].map((b, i) => (
               <div key={i} className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary text-[9px] font-medium text-muted-foreground">
                 <b.icon className="w-2.5 h-2.5" /> {b.label}
@@ -149,7 +150,7 @@ const ManagedServices = () => {
           <div className="px-4 space-y-3 pb-4">
             {tiers.map((tier, i) => (
               <div key={i} className={`border ${tier.color} rounded-2xl p-4 relative ${tier.popular ? "bg-accent/5" : ""}`}>
-                {tier.popular && <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-accent text-accent-foreground text-[9px] font-heading font-bold">Most Popular</span>}
+                {tier.popular && <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-accent text-accent-foreground text-[9px] font-heading font-bold">Recommended</span>}
                 <h3 className="font-heading font-bold text-sm text-foreground">{tier.name}</h3>
                 <p className="text-sm font-heading font-semibold text-accent mt-0.5">{tier.price}</p>
                 <p className="text-[10px] text-muted-foreground mt-1">{tier.description}</p>
@@ -220,7 +221,10 @@ const ManagedServices = () => {
             ))}
           </div>
 
-          <p className="text-xs font-heading font-semibold text-foreground">Upcoming Events</p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs font-heading font-semibold text-foreground">Upcoming Events</p>
+            <SampleBadge />
+          </div>
           {upcomingEvents.map((event, i) => (
             <div key={i} className="border border-border rounded-xl overflow-hidden">
               <img src={event.image} alt={event.name} className="w-full h-32 object-cover" />

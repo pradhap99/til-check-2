@@ -53,7 +53,7 @@ const plans = [
     period: "/month",
     annualPrice: "₹2,99,990/year (save 2 months)",
     description: "For growing brands running multiple campaigns simultaneously.",
-    badge: "Most Popular",
+    badge: "Recommended",
     features: [
       { label: "2% platform fee (save 3%)", included: true },
       { label: "Unlimited active campaigns", included: true },

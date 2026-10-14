@@ -1,14 +1,16 @@
 import { campaigns } from "@/data/mockData";
+import SampleBadge from "@/components/SampleBadge";
 
+// Placeholder brands only. Names match the sample campaigns in mockData so the filter works.
 const brands = [
-  { name: "Lenskart", color: "from-blue-500 to-blue-700", logo: campaigns.find(c => c.brand === "Lenskart")?.logo },
-  { name: "Mamaearth", color: "from-green-500 to-green-700", logo: campaigns.find(c => c.brand === "Mamaearth")?.logo },
-  { name: "boAt", color: "from-gray-700 to-gray-900", logo: campaigns.find(c => c.brand === "boAt")?.logo },
-  { name: "CRED", color: "from-purple-500 to-purple-700" },
-  { name: "Sugar", color: "from-pink-500 to-pink-700" },
-  { name: "Nykaa", color: "from-red-500 to-red-700", logo: campaigns.find(c => c.brand === "Nykaa")?.logo },
-  { name: "Zomato", color: "from-red-600 to-red-800", logo: campaigns.find(c => c.brand === "Zomato")?.logo },
-  { name: "Bewakoof", color: "from-orange-500 to-orange-700" },
+  { name: "Sample Eyewear", color: "from-blue-500 to-blue-700", logo: campaigns.find(c => c.brand === "Sample Eyewear")?.logo },
+  { name: "Example Skincare Co.", color: "from-green-500 to-green-700", logo: campaigns.find(c => c.brand === "Example Skincare Co.")?.logo },
+  { name: "Demo Audio", color: "from-gray-700 to-gray-900", logo: campaigns.find(c => c.brand === "Demo Audio")?.logo },
+  { name: "Sample Pay", color: "from-purple-500 to-purple-700" },
+  { name: "Placeholder Cosmetics", color: "from-pink-500 to-pink-700" },
+  { name: "Sample Beauty Store", color: "from-red-500 to-red-700", logo: campaigns.find(c => c.brand === "Sample Beauty Store")?.logo },
+  { name: "Sample Eats", color: "from-red-600 to-red-800", logo: campaigns.find(c => c.brand === "Sample Eats")?.logo },
+  { name: "Demo Apparel", color: "from-orange-500 to-orange-700" },
 ];
 
 interface BrandCirclesRowProps {
@@ -20,6 +22,9 @@ interface BrandCirclesRowProps {
 const BrandCirclesRow = ({ selectedBrand, onSelectBrand, activeBrand }: BrandCirclesRowProps) => {
   return (
     <section className="mt-4 px-5">
+      <div className="flex justify-end mb-1">
+        <SampleBadge />
+      </div>
       <div className="overflow-hidden">
         <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 px-1">
           {brands.map((brand, i) => {
@@ -59,7 +64,7 @@ const BrandCirclesRow = ({ selectedBrand, onSelectBrand, activeBrand }: BrandCir
                   </div>
                 </div>
                 <span
-                  className={`text-[9px] max-w-[48px] truncate text-center transition-all duration-300 ${
+                  className={`text-[9px] max-w-[64px] line-clamp-2 leading-tight text-center transition-all duration-300 ${
                     isHighlighted ? "font-bold text-accent" : "font-medium text-muted-foreground"
                   }`}
                 >

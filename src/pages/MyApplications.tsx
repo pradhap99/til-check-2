@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import SkeletonCard from "@/components/SkeletonCard";
+import SampleBadge from "@/components/SampleBadge";
 import {
   Clock, CheckCircle, XCircle, FileText, Briefcase, ChevronRight,
   Star, MessageCircle, Upload, AlertCircle, Eye, MessageSquare
@@ -92,25 +93,25 @@ const MyApplications = () => {
   // Mock applications when user has none
   const mockApplications: Application[] = [
     {
-      id: "mock-1", campaign_id: "1", pitch: "I'd love to create fashion-forward content featuring Lenskart's SS'26 collection with my signature styling approach.", proposed_rate: "12000", status: "shortlisted", brand_feedback: null, created_at: new Date(Date.now() - 2 * 86400000).toISOString(),
-      campaigns: { title: "Lenskart SS'26 — Style Your Vision", brand_user_id: "", status: "active" },
+      id: "mock-1", campaign_id: "1", pitch: "I'd love to create fashion-forward content featuring Sample Eyewear's SS'26 collection with my signature styling approach.", proposed_rate: "12000", status: "shortlisted", brand_feedback: null, created_at: new Date(Date.now() - 2 * 86400000).toISOString(),
+      campaigns: { title: "Sample Eyewear SS'26 — Style Your Vision", brand_user_id: "", status: "active" },
     },
     {
       id: "mock-2", campaign_id: "2", pitch: "As a skincare enthusiast, I can create authentic before/after content for the Vitamin C range.", proposed_rate: "8500", status: "accepted", brand_feedback: null, created_at: new Date(Date.now() - 5 * 86400000).toISOString(),
-      campaigns: { title: "Mamaearth Vitamin C Range", brand_user_id: "", status: "active" },
+      campaigns: { title: "Example Skincare Vitamin C Range", brand_user_id: "", status: "active" },
       deliverableCount: 4, submittedCount: 3, approvedCount: 2,
     },
     {
-      id: "mock-3", campaign_id: "3", pitch: "Tech reviews are my forte — I'll create engaging unboxing + review content for the Airdopes 500.", proposed_rate: "15000", status: "pending", brand_feedback: null, created_at: new Date(Date.now() - 1 * 86400000).toISOString(),
-      campaigns: { title: "boAt Summer Audio Launch", brand_user_id: "", status: "active" },
+      id: "mock-3", campaign_id: "3", pitch: "Tech reviews are my forte — I'll create engaging unboxing + review content for the new earbuds range.", proposed_rate: "15000", status: "pending", brand_feedback: null, created_at: new Date(Date.now() - 1 * 86400000).toISOString(),
+      campaigns: { title: "Demo Audio Summer Launch", brand_user_id: "", status: "active" },
     },
     {
       id: "mock-4", campaign_id: "5", pitch: "I specialize in festive beauty looks and have a loyal audience in the beauty niche.", proposed_rate: "6000", status: "rejected", brand_feedback: "Thank you for your interest. We've selected creators with a stronger focus on skincare tutorials.", created_at: new Date(Date.now() - 10 * 86400000).toISOString(),
-      campaigns: { title: "Nykaa Festive Glow", brand_user_id: "", status: "active" },
+      campaigns: { title: "Sample Beauty Store Festive Glow", brand_user_id: "", status: "active" },
     },
     {
       id: "mock-5", campaign_id: "4", pitch: "Food is my passion — I create cinematic street food and restaurant review content.", proposed_rate: "9000", status: "accepted", brand_feedback: null, created_at: new Date(Date.now() - 7 * 86400000).toISOString(),
-      campaigns: { title: "Zomato Food Stories", brand_user_id: "", status: "active" },
+      campaigns: { title: "Sample Eats Food Stories", brand_user_id: "", status: "active" },
       deliverableCount: 3, submittedCount: 3, approvedCount: 3,
     },
   ];
@@ -131,6 +132,12 @@ const MyApplications = () => {
         <h1 className="text-xl font-heading font-bold text-foreground">My Applications</h1>
         <p className="text-xs text-muted-foreground">Track your campaign applications & deliverables</p>
       </header>
+
+      {!loading && applications.length === 0 && (
+        <div className="px-5 mt-3 flex justify-end">
+          <SampleBadge />
+        </div>
+      )}
 
       <div className="px-5 mt-3 grid grid-cols-4 gap-2">
         {[

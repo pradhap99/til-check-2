@@ -259,7 +259,7 @@ const Settings = () => {
               </AlertDialog>
             </div>
           </CollapsibleSection>
-          <p className="text-[10px] text-muted-foreground text-center mt-4">TIL v1.0 · India's #1 Creator Marketplace</p>
+          <p className="text-[10px] text-muted-foreground text-center mt-4">TIL v1.0 · Built for Indian creators and brands</p>
         </div>
       </div>
     </Layout>

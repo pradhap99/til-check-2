@@ -8,6 +8,7 @@ import {
   Clock, MapPin
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SampleBadge from "@/components/SampleBadge";
 
 const mockFollowerGrowth = [
   { month: "Oct", value: 42 }, { month: "Nov", value: 48 },
@@ -44,7 +45,7 @@ const bestTimes = [
 
 const Analytics = () => {
   const { user, role } = useAuth();
-  const [stats, setStats] = useState({ campaigns: 0, applications: 0, accepted: 0, totalEarned: 0, creatorsWorked: 0, avgRating: 4.8 });
+  const [stats, setStats] = useState({ campaigns: 0, applications: 0, accepted: 0, totalEarned: 0, creatorsWorked: 0 });
   const [creatorProfile, setCreatorProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [socialConnected, setSocialConnected] = useState(false);
@@ -89,21 +90,21 @@ const Analytics = () => {
       <div className="px-5 mt-4 grid grid-cols-2 gap-2">
         {role === "creator" ? (
           <>
-            <StatCard icon={Eye} label="Profile Views" value="1,247" trend="+12%" up />
+            <StatCard icon={Eye} label="Profile Views" value="—" />
             <StatCard icon={Briefcase} label="Applications" value={stats.applications.toString()} />
             <StatCard icon={Target} label="Acceptance Rate" value={`${acceptanceRate}%`} />
-            <StatCard icon={Star} label="Avg Rating" value={stats.avgRating.toFixed(1)} />
-            <StatCard icon={Users} label="Followers" value={creatorProfile?.instagram_followers ? `${(creatorProfile.instagram_followers / 1000).toFixed(0)}K` : "45K"} />
-            <StatCard icon={TrendingUp} label="Engagement" value={creatorProfile?.engagement_rate ? `${creatorProfile.engagement_rate}%` : "5.8%"} />
+            <StatCard icon={Star} label="Avg Rating" value="—" />
+            <StatCard icon={Users} label="Followers" value={creatorProfile?.instagram_followers ? `${(creatorProfile.instagram_followers / 1000).toFixed(0)}K` : "—"} />
+            <StatCard icon={TrendingUp} label="Engagement" value={creatorProfile?.engagement_rate ? `${creatorProfile.engagement_rate}%` : "—"} />
           </>
         ) : (
           <>
             <StatCard icon={Briefcase} label="Campaigns" value={stats.campaigns.toString()} />
             <StatCard icon={Users} label="Applications" value={stats.applications.toString()} />
             <StatCard icon={TrendingUp} label="Total Spent" value="—" />
-            <StatCard icon={BarChart3} label="Avg ROI" value="3.2X" trend="+18%" up />
-            <StatCard icon={Star} label="Creator Rating" value="4.8" />
-            <StatCard icon={Target} label="Avg Engagement" value="8.2%" />
+            <StatCard icon={BarChart3} label="Avg ROI" value="—" />
+            <StatCard icon={Star} label="Creator Rating" value="—" />
+            <StatCard icon={Target} label="Avg Engagement" value="—" />
           </>
         )}
       </div>
@@ -129,7 +130,10 @@ const Analytics = () => {
             <>
               {/* Follower Growth Chart */}
               <div className="px-5 mt-5">
-                <h3 className="font-heading font-semibold text-sm text-foreground mb-3">Follower Growth</h3>
+                <div className="flex items-center gap-2 mb-3">
+                  <h3 className="font-heading font-semibold text-sm text-foreground">Follower Growth</h3>
+                  <SampleBadge />
+                </div>
                 <div className="border border-border rounded-2xl p-4">
                   <div className="flex items-end gap-2 h-24">
                     {mockFollowerGrowth.map((d, i) => (
@@ -147,7 +151,10 @@ const Analytics = () => {
 
               {/* Top Posts */}
               <div className="px-5 mt-5">
-                <h3 className="font-heading font-semibold text-sm text-foreground mb-3">Top Performing Posts</h3>
+                <div className="flex items-center gap-2 mb-3">
+                  <h3 className="font-heading font-semibold text-sm text-foreground">Top Performing Posts</h3>
+                  <SampleBadge />
+                </div>
                 <div className="grid grid-cols-3 gap-1.5">
                   {mockTopPosts.map((post, i) => (
                     <div key={i} className="relative rounded-xl overflow-hidden aspect-square">
@@ -164,7 +171,10 @@ const Analytics = () => {
 
               {/* Audience */}
               <div className="px-5 mt-5">
-                <h3 className="font-heading font-semibold text-sm text-foreground mb-3">Audience Demographics</h3>
+                <div className="flex items-center gap-2 mb-3">
+                  <h3 className="font-heading font-semibold text-sm text-foreground">Audience Demographics</h3>
+                  <SampleBadge />
+                </div>
                 <div className="grid grid-cols-2 gap-2.5">
                   {/* Gender */}
                   <div className="border border-border rounded-xl p-3">
@@ -212,9 +222,12 @@ const Analytics = () => {
 
               {/* Best Posting Times */}
               <div className="px-5 mt-5">
-                <h3 className="font-heading font-semibold text-sm text-foreground mb-3 flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-accent" /> Best Posting Times
-                </h3>
+                <div className="flex items-center gap-2 mb-3">
+                  <h3 className="font-heading font-semibold text-sm text-foreground flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 text-accent" /> Best Posting Times
+                  </h3>
+                  <SampleBadge />
+                </div>
                 <div className="border border-border rounded-xl p-3">
                   <div className="grid grid-cols-12 gap-0.5">
                     {bestTimes[0].map((val, i) => (
@@ -238,9 +251,9 @@ const Analytics = () => {
           <h3 className="font-heading font-semibold text-sm text-foreground mb-3">Connected Platforms</h3>
           <div className="space-y-2">
             {[
-              { platform: "Instagram", icon: Instagram, followers: creatorProfile?.instagram_followers || 45000, color: "from-pink-500 to-purple-600", connected: true },
-              { platform: "YouTube", icon: Youtube, followers: creatorProfile?.youtube_subscribers || 12000, color: "from-red-500 to-red-600", connected: !!creatorProfile?.youtube_subscribers },
-              { platform: "Twitter", icon: Twitter, followers: 8500, color: "from-blue-400 to-blue-600", connected: false },
+              { platform: "Instagram", icon: Instagram, followers: creatorProfile?.instagram_followers || null, color: "from-pink-500 to-purple-600", connected: !!creatorProfile?.instagram_followers },
+              { platform: "YouTube", icon: Youtube, followers: creatorProfile?.youtube_subscribers || null, color: "from-red-500 to-red-600", connected: !!creatorProfile?.youtube_subscribers },
+              { platform: "Twitter", icon: Twitter, followers: null, color: "from-blue-400 to-blue-600", connected: false },
             ].map((p, i) => (
               <div key={i} className="border border-border rounded-xl p-3.5 flex items-center gap-3">
                 <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${p.color} flex items-center justify-center`}>
@@ -248,7 +261,7 @@ const Analytics = () => {
                 </div>
                 <div className="flex-1">
                   <p className="font-heading font-medium text-sm text-foreground">{p.platform}</p>
-                  <p className="text-xs text-muted-foreground">{p.followers.toLocaleString("en-IN")} followers</p>
+                  <p className="text-xs text-muted-foreground">{p.followers !== null ? `${p.followers.toLocaleString("en-IN")} followers` : "Not connected"}</p>
                 </div>
                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${p.connected ? "bg-emerald-500/10 text-emerald-600" : "bg-secondary text-muted-foreground"}`}>
                   {p.connected ? "Connected" : "Connect"}
@@ -266,15 +279,15 @@ const Analytics = () => {
         </h3>
         <div className="space-y-2">
           {(role === "creator" ? [
-            { title: "Post Reels consistently", desc: "Creators posting 4+ Reels/week see 3x more brand inquiries" },
-            { title: "Optimize your rate card", desc: "Profiles with rate cards get 2x more campaign invitations" },
+            { title: "Post Reels consistently", desc: "Regular posting keeps your latest work in front of brands" },
+            { title: "Optimize your rate card", desc: "A clear rate card makes it easier for brands to evaluate you" },
             { title: "Respond within 24 hours", desc: "Fast responders are prioritized in brand search results" },
             { title: "Keep media kit updated", desc: "Updated media kits with recent metrics increase trust" },
           ] : [
-            { title: "Optimize creator selection", desc: "Focus on creators with 3-8% engagement rates for best ROI" },
-            { title: "Content diversity matters", desc: "Campaigns with Reels + Stories get 2.5x more reach" },
-            { title: "Tier-2 city creators", desc: "20% lower rates with comparable engagement for budget campaigns" },
-            { title: "Festival campaign timing", desc: "Start 3-4 weeks before major festivals for maximum impact" },
+            { title: "Optimize creator selection", desc: "Look at engagement rate alongside follower count when choosing creators" },
+            { title: "Content diversity matters", desc: "Mixing Reels and Stories gives your campaign more ways to be seen" },
+            { title: "Tier-2 city creators", desc: "Creators in smaller cities can be a good fit for budget campaigns" },
+            { title: "Festival campaign timing", desc: "Start planning well before major festivals so creators have time to deliver" },
           ]).map((tip, i) => (
             <div key={i} className="border border-border rounded-lg p-3.5 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
               <p className="font-heading font-medium text-sm text-foreground">{tip.title}</p>

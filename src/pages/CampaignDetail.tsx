@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import CampaignCard from "@/components/CampaignCard";
+import SampleBadge from "@/components/SampleBadge";
 import { ArrowLeft, Calendar, Users, MapPin, Share2, Bookmark, CheckCircle2, Clock, IndianRupee, Send, Utensils, Camera, Gift, FileText, ThumbsUp, ThumbsDown, Eye, TrendingUp, BarChart3, Pause, Play, Edit } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -180,6 +181,7 @@ const CampaignDetail = () => {
       <div className="px-4 mt-4 flex gap-2">
         <Badge className="bg-accent/10 text-accent border-0 text-[10px]">{experienceType}</Badge>
         <Badge className="bg-secondary text-muted-foreground border-0 text-[10px]">{campaign.category}</Badge>
+        {!campaign.isReal && <SampleBadge />}
       </div>
 
       <div className="px-4 mt-3">
@@ -377,7 +379,7 @@ const CampaignDetail = () => {
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
             {similarCampaigns.map((c, i) => (
               <div key={c.id} className="min-w-[280px] shrink-0" onClick={() => navigate(`/campaigns/${c.id}`)}>
-                <CampaignCard campaign={c} index={i} />
+                <CampaignCard campaign={c} index={i} sample />
               </div>
             ))}
           </div>

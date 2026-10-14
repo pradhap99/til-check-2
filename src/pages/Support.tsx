@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import Layout from "@/components/Layout";
+import SampleBadge from "@/components/SampleBadge";
 import {
   ArrowLeft, HelpCircle, MessageCircle, AlertTriangle, Search,
   ChevronRight, Send, Shield, Mail, Phone, Plus,
@@ -98,7 +99,7 @@ const Support = () => {
   const filteredFaqs = searchQuery ? currentFaqs.filter(f => f.q.toLowerCase().includes(searchQuery.toLowerCase()) || f.a.toLowerCase().includes(searchQuery.toLowerCase())) : currentFaqs;
 
   const sampleTickets = [
-    { id: "TK-2026-001", subject: "Payment delay for Zomato campaign", status: "In Progress", date: "Mar 7, 2026" },
+    { id: "TK-2026-001", subject: "Payment delay for Sample Eats campaign", status: "In Progress", date: "Mar 7, 2026" },
     { id: "TK-2026-002", subject: "Unable to upload deliverable video", status: "Open", date: "Mar 8, 2026" },
   ];
 
@@ -169,7 +170,7 @@ const Support = () => {
       {activeSection === "contact" && (
         <div className="px-4 mt-4 space-y-3 mb-8">
           {[
-            { icon: MessageCircle, label: "Live Chat", desc: "Typically replies in 5 minutes", subtitle: "Online now", online: true },
+            { icon: MessageCircle, label: "Live Chat", desc: "Chat with the TIL team", subtitle: "Replies as soon as we can", online: false },
             { icon: Mail, label: "Email Support", desc: "support@connectandcreate.in", subtitle: "Response within 24 hours", online: false },
             { icon: Phone, label: "WhatsApp Support", desc: "+91 98765 43210", subtitle: "Available 9AM–9PM IST", online: false },
           ].map((item, i) => (
@@ -257,6 +258,9 @@ const Support = () => {
           </div>
 
           {/* Sample Tickets */}
+          <div className="flex justify-end">
+            <SampleBadge />
+          </div>
           {sampleTickets.map((t, i) => (
             <div key={i} className="border border-border rounded-xl p-4">
               <div className="flex items-start justify-between">

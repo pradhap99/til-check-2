@@ -236,7 +236,7 @@ const BrandOnboarding = () => {
         <div className="space-y-4">
           <div>
             <label className="text-xs font-medium text-foreground mb-1.5 block">Business name *</label>
-            <input placeholder="e.g. boAt Lifestyle" value={businessName} onChange={e => setBusinessName(e.target.value)} className="w-full h-11 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
+            <input placeholder="e.g. Example Apparel Co." value={businessName} onChange={e => setBusinessName(e.target.value)} className="w-full h-11 px-3 rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring/20" />
           </div>
           <div>
             <label className="text-xs font-medium text-foreground mb-1.5 block">Website</label>

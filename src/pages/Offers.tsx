@@ -4,16 +4,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Copy, Share2, Tag, TrendingUp, Info } from "lucide-react";
 import { toast } from "sonner";
+import SampleBadge from "@/components/SampleBadge";
 
 const categories = ["All", "Fashion", "Beauty", "Food", "Tech", "Lifestyle"];
 
 const offers = [
-  { id: 1, brand: "Lenskart", title: "20% off eyewear", commission: "8%", perSale: "~₹240", category: "Fashion", color: "from-blue-500 to-blue-700" },
-  { id: 2, brand: "Mamaearth", title: "Buy 2 Get 1", commission: "10%", perSale: "~₹180", category: "Beauty", color: "from-green-500 to-green-700" },
-  { id: 3, brand: "Nykaa", title: "Beauty Essentials Kit", commission: "12%", perSale: "~₹320", category: "Beauty", color: "from-red-500 to-red-700" },
-  { id: 4, brand: "boAt", title: "Airdopes 500 ANC", commission: "6%", perSale: "~₹180", category: "Tech", color: "from-gray-700 to-gray-900" },
-  { id: 5, brand: "Bewakoof", title: "Summer Collection", commission: "9%", perSale: "~₹135", category: "Fashion", color: "from-orange-500 to-orange-700" },
-  { id: 6, brand: "Zomato", title: "Gold — 1 month free", commission: "₹150 flat", perSale: "₹150/signup", category: "Food", color: "from-red-600 to-red-800" },
+  { id: 1, brand: "Sample Eyewear", title: "20% off eyewear", commission: "8%", perSale: "~₹240", category: "Fashion", color: "from-blue-500 to-blue-700" },
+  { id: 2, brand: "Example Skincare Co.", title: "Buy 2 Get 1", commission: "10%", perSale: "~₹180", category: "Beauty", color: "from-green-500 to-green-700" },
+  { id: 3, brand: "Sample Beauty Store", title: "Beauty Essentials Kit", commission: "12%", perSale: "~₹320", category: "Beauty", color: "from-red-500 to-red-700" },
+  { id: 4, brand: "Demo Audio", title: "Wireless Earbuds", commission: "6%", perSale: "~₹180", category: "Tech", color: "from-gray-700 to-gray-900" },
+  { id: 5, brand: "Demo Apparel", title: "Summer Collection", commission: "9%", perSale: "~₹135", category: "Fashion", color: "from-orange-500 to-orange-700" },
+  { id: 6, brand: "Sample Eats", title: "1 month free", commission: "₹150 flat", perSale: "₹150/signup", category: "Food", color: "from-red-600 to-red-800" },
 ];
 
 const Offers = () => {
@@ -41,7 +42,10 @@ const Offers = () => {
       <div className="page-transition">
         <header className="px-5 pt-6 pb-2">
           <h1 className="text-xl font-heading font-bold text-foreground">Offers & Affiliate Deals</h1>
-          <p className="text-xs text-muted-foreground">Promote. Earn. Repeat.</p>
+          <div className="flex items-center gap-2">
+            <p className="text-xs text-muted-foreground">Promote. Earn. Repeat.</p>
+            <SampleBadge />
+          </div>
         </header>
 
         {/* Explainer */}

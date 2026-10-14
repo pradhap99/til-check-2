@@ -5,13 +5,16 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Gift, Check } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import SampleBadge from "@/components/SampleBadge";
 
+// Placeholder voucher brands only. These are sample rows, not real voucher partners.
+const HERO_BRAND = "Sample Marketplace";
 const vouchers = [
-  { brand: "Amazon", amounts: [500, 1000, 2000], color: "from-orange-500 to-orange-700", initial: "A", bestValue: [2000] },
-  { brand: "Flipkart", amounts: [500, 1000], color: "from-blue-500 to-blue-700", initial: "F", bestValue: [1000] },
-  { brand: "Swiggy", amounts: [250, 500], color: "from-orange-400 to-red-500", initial: "S", bestValue: [] },
-  { brand: "Zomato", amounts: [250, 500], color: "from-red-500 to-red-700", initial: "Z", bestValue: [] },
-  { brand: "Myntra", amounts: [500, 1000], color: "from-pink-500 to-rose-600", initial: "M", bestValue: [] },
+  { brand: HERO_BRAND, amounts: [500, 1000, 2000], color: "from-orange-500 to-orange-700", initial: "S", bestValue: [2000] },
+  { brand: "Example Store", amounts: [500, 1000], color: "from-blue-500 to-blue-700", initial: "E", bestValue: [1000] },
+  { brand: "Demo Dine", amounts: [250, 500], color: "from-orange-400 to-red-500", initial: "D", bestValue: [] },
+  { brand: "Sample Eats", amounts: [250, 500], color: "from-red-500 to-red-700", initial: "S", bestValue: [] },
+  { brand: "Example Apparel Co.", amounts: [500, 1000], color: "from-pink-500 to-rose-600", initial: "E", bestValue: [] },
 ];
 
 const Redeem = () => {
@@ -39,7 +42,10 @@ const Redeem = () => {
           </button>
           <div>
             <h1 className="text-lg font-heading font-bold text-foreground">Redeem as Voucher</h1>
-            <p className="text-[10px] text-muted-foreground">Choose from popular brands</p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-[10px] text-muted-foreground">Choose a voucher</p>
+              <SampleBadge />
+            </div>
           </div>
         </header>
 
@@ -54,25 +60,26 @@ const Redeem = () => {
             <div className="flex items-center gap-2">
               <Gift className="w-4 h-4 text-accent" />
               <span className="text-xs text-muted-foreground">Remaining balance</span>
+              <SampleBadge />
             </div>
             <span className="font-heading font-bold text-foreground">₹{(balance - redeemed).toLocaleString("en-IN")}</span>
           </div>
         </div>
 
-        {/* Hero Amazon ₹2000 card */}
+        {/* Hero ₹2000 card */}
         <div className="px-5 mt-4">
           <div
             className="rounded-2xl border-2 border-accent p-4 relative overflow-hidden btn-shimmer-hover cursor-pointer active:scale-[0.98] transition-transform"
             style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02))" }}
-            onClick={() => handleRedeem("Amazon", 2000)}
+            onClick={() => handleRedeem(HERO_BRAND, 2000)}
           >
             <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground border-0 text-[8px] font-heading">BEST VALUE</Badge>
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center">
-                <span className="text-white font-heading font-bold text-lg">A</span>
+                <span className="text-white font-heading font-bold text-lg">S</span>
               </div>
               <div>
-                <p className="font-heading font-bold text-lg text-foreground">Amazon ₹2,000</p>
+                <p className="font-heading font-bold text-lg text-foreground">{HERO_BRAND} ₹2,000</p>
                 <p className="text-[11px] text-emerald-500 font-heading font-semibold">₹2,400 credited for ₹2,000 balance</p>
                 <p className="text-[9px] text-muted-foreground mt-0.5">20% bonus value</p>
               </div>
@@ -83,7 +90,7 @@ const Redeem = () => {
         {/* Other vouchers in 2-col grid */}
         <div className="px-5 mt-4 grid grid-cols-2 gap-3 pb-4">
           {vouchers.map((v) =>
-            v.amounts.filter(amt => !(v.brand === "Amazon" && amt === 2000)).map(amt => {
+            v.amounts.filter(amt => !(v.brand === HERO_BRAND && amt === 2000)).map(amt => {
               const isBest = v.bestValue.includes(amt);
               return (
                 <button

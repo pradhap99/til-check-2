@@ -5,6 +5,7 @@ import HeroBannerCarousel from "./HeroBannerCarousel";
 import BrandCirclesRow from "./BrandCirclesRow";
 import ExperienceCards from "./ExperienceCards";
 import RecommendationCarousel from "@/components/RecommendationCarousel";
+import SampleBadge from "@/components/SampleBadge";
 import { ArrowRight, MapPin, Heart, TrendingUp, Star, Target, ChevronRight, List, Map, Flame, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -45,14 +46,7 @@ const campaignImages: Record<string, string> = {
   Staycation: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?w=520&h=280&fit=crop",
 };
 
-const successStories = [
-  { name: "Priya S.", campaigns: 12, niche: "Fashion", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=160&fit=crop&crop=face", quote: "TIL got me my first brand deal in just 3 days!" },
-  { name: "Vikram S.", campaigns: 8, niche: "Food", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=160&fit=crop&crop=face", quote: "Best platform for serious creators." },
-  { name: "Kavya N.", campaigns: 6, niche: "Beauty", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&h=160&fit=crop&crop=face", quote: "I earned more than my salary through TIL." },
-  { name: "Arjun T.", campaigns: 15, niche: "Tech", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=160&fit=crop&crop=face", quote: "The escrow system gives me full trust." },
-];
-
-const carouselBrandMap: Record<number, string> = { 0: "Lenskart", 1: "Mamaearth", 2: "boAt" };
+const carouselBrandMap: Record<number, string> = { 0: "Sample Eyewear", 1: "Example Skincare Co.", 2: "Demo Audio" };
 
 interface CreatorHomeContentProps {
   stats: { totalEarnings: number; pendingPayments: number; activeCampaigns: number; applicationsCount: number };
@@ -104,7 +98,10 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
       {/* Featured Opportunities */}
       <section className="mt-5">
         <div className="flex items-center justify-between px-5 mb-3">
-          <h3 className="font-heading font-bold text-[15px] text-foreground">Featured Opportunities</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-heading font-bold text-[15px] text-foreground">Featured Opportunities</h3>
+            <SampleBadge />
+          </div>
           <div className="flex items-center gap-2">
             <div className="flex bg-secondary rounded-lg p-0.5">
               <button
@@ -151,6 +148,7 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
           <div className="flex items-center gap-1.5 mb-3">
             <MapPin className="w-4 h-4 text-accent" />
             <h3 className="font-heading font-bold text-[15px] text-foreground">Near you in {userCity}</h3>
+            <SampleBadge />
           </div>
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
             {allCampaigns.slice(0, 3).map((campaign, i) => (
@@ -168,28 +166,10 @@ const CreatorHomeContent = ({ stats, statsLoading, userCity }: CreatorHomeConten
             View all stories <ArrowRight className="w-3 h-3" />
           </button>
         </div>
-        <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 pb-2">
-          {successStories.map((story, i) => (
-            <div
-              key={i}
-              onClick={() => navigate("/stories")}
-              className="min-w-[140px] max-w-[140px] shrink-0 rounded-2xl overflow-hidden bg-card border border-border relative cursor-pointer active:scale-[0.97] transition-transform animate-scale-in"
-              style={{ animationDelay: `${i * 80}ms` }}
-            >
-              <div className="h-[160px] relative">
-                <img src={story.avatar} alt={story.name} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 inset-x-0 p-2.5">
-                  <p className="text-white text-[10px] leading-snug italic">"{story.quote}"</p>
-                </div>
-              </div>
-              <div className="p-2.5">
-                <p className="text-[11px] font-heading font-semibold text-foreground">{story.name}</p>
-                <p className="text-[9px] text-muted-foreground">{story.campaigns} campaigns</p>
-                <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-accent/10 text-accent mt-1 inline-block">{story.niche}</span>
-              </div>
-            </div>
-          ))}
+        <div className="px-5">
+          <div className="rounded-2xl border border-dashed border-border bg-card p-5 text-center">
+            <p className="text-xs text-muted-foreground">No stories yet. Finish a campaign and yours could be the first.</p>
+          </div>
         </div>
         <div className="px-5 mt-2">
           <Button variant="outline" size="sm" className="w-full h-9 text-[10px] rounded-xl" onClick={() => navigate("/campaigns")}>

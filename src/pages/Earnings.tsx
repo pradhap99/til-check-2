@@ -11,6 +11,7 @@ import {
   CheckCircle, Gift, Building2, Sparkles, Flame, Copy, ArrowRight
 } from "lucide-react";
 import { toast } from "sonner";
+import SampleBadge from "@/components/SampleBadge";
 
 interface Transaction {
   id: string;
@@ -24,9 +25,9 @@ interface Transaction {
 }
 
 const affiliateOffers = [
-  { brand: "Lenskart", commission: "8%", color: "from-blue-500 to-blue-700" },
-  { brand: "Nykaa", commission: "12%", color: "from-red-500 to-red-700" },
-  { brand: "boAt", commission: "6%", color: "from-gray-700 to-gray-900" },
+  { brand: "Sample Eyewear", commission: "8%", color: "from-blue-500 to-blue-700" },
+  { brand: "Sample Beauty Store", commission: "12%", color: "from-red-500 to-red-700" },
+  { brand: "Demo Audio", commission: "6%", color: "from-gray-700 to-gray-900" },
 ];
 
 const Earnings = () => {
@@ -48,13 +49,13 @@ const Earnings = () => {
   }, [user, role]);
 
   const mockTransactions: Transaction[] = [
-    { id: "mock-1", amount: 9000, status: "completed", description: "Zomato Food Stories", created_at: "2026-02-28T10:00:00Z", campaign_id: "4", currency: "INR", payment_method: "upi" },
-    { id: "mock-2", amount: 8500, status: "completed", description: "Mamaearth Vitamin C", created_at: "2026-02-15T10:00:00Z", campaign_id: "2", currency: "INR", payment_method: "bank" },
-    { id: "mock-3", amount: 7200, status: "completed", description: "Sugar Cosmetics Reel", created_at: "2026-01-30T10:00:00Z", campaign_id: null, currency: "INR", payment_method: "upi" },
-    { id: "mock-4", amount: 15000, status: "completed", description: "boAt Audio Review", created_at: "2026-01-12T10:00:00Z", campaign_id: "3", currency: "INR", payment_method: "bank" },
-    { id: "mock-5", amount: 7800, status: "pending", description: "Nykaa New Year", created_at: "2025-12-31T10:00:00Z", campaign_id: "5", currency: "INR", payment_method: "upi" },
-    { id: "mock-6", amount: 5500, status: "completed", description: "Bewakoof Reel", created_at: "2025-12-15T10:00:00Z", campaign_id: null, currency: "INR", payment_method: "upi" },
-    { id: "mock-7", amount: 12000, status: "completed", description: "Lenskart Eyewear", created_at: "2025-11-28T10:00:00Z", campaign_id: "1", currency: "INR", payment_method: "bank" },
+    { id: "mock-1", amount: 9000, status: "completed", description: "Sample Eats Food Stories", created_at: "2026-02-28T10:00:00Z", campaign_id: "4", currency: "INR", payment_method: "upi" },
+    { id: "mock-2", amount: 8500, status: "completed", description: "Example Skincare Vitamin C", created_at: "2026-02-15T10:00:00Z", campaign_id: "2", currency: "INR", payment_method: "bank" },
+    { id: "mock-3", amount: 7200, status: "completed", description: "Placeholder Cosmetics Reel", created_at: "2026-01-30T10:00:00Z", campaign_id: null, currency: "INR", payment_method: "upi" },
+    { id: "mock-4", amount: 15000, status: "completed", description: "Demo Audio Review", created_at: "2026-01-12T10:00:00Z", campaign_id: "3", currency: "INR", payment_method: "bank" },
+    { id: "mock-5", amount: 7800, status: "pending", description: "Sample Beauty Store New Year", created_at: "2025-12-31T10:00:00Z", campaign_id: "5", currency: "INR", payment_method: "upi" },
+    { id: "mock-6", amount: 5500, status: "completed", description: "Demo Apparel Reel", created_at: "2025-12-15T10:00:00Z", campaign_id: null, currency: "INR", payment_method: "upi" },
+    { id: "mock-7", amount: 12000, status: "completed", description: "Sample Eyewear Frames", created_at: "2025-11-28T10:00:00Z", campaign_id: "1", currency: "INR", payment_method: "bank" },
   ];
 
   const displayTransactions = transactions.length > 0 ? transactions : mockTransactions;
@@ -62,7 +63,7 @@ const Earnings = () => {
 
   const totalEarned = hasMockData ? 47500 : transactions.filter(t => t.status === "completed").reduce((s, t) => s + t.amount, 0);
   const pending = hasMockData ? 7800 : transactions.filter(t => t.status === "pending").reduce((s, t) => s + t.amount, 0);
-  const thisMonth = hasMockData ? 18200 : transactions.filter(t => t.status === "completed" && new Date(t.created_at).getMonth() === new Date().getMonth()).reduce((s, t) => s + t.amount, 0);
+  const thisMonth = hasMockData ? 18400 : transactions.filter(t => t.status === "completed" && new Date(t.created_at).getMonth() === new Date().getMonth()).reduce((s, t) => s + t.amount, 0);
   const lastMonth = hasMockData ? 14800 : 0;
 
   const statusConfig: Record<string, { color: string; label: string }> = {
@@ -90,7 +91,10 @@ const Earnings = () => {
           <div className="rounded-2xl p-5 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #1a0533, #2d1b69)" }}>
             <div className="absolute top-0 right-0 w-32 h-32 rounded-full" style={{ background: "radial-gradient(circle, rgba(245,158,11,0.15), transparent 70%)" }} />
             <div className="relative z-10">
-              <p className="text-[10px] text-white/50 font-heading uppercase tracking-wider">Available Balance</p>
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] text-white/50 font-heading uppercase tracking-wider">Available Balance</p>
+                {hasMockData && <SampleBadge />}
+              </div>
               <h2 className="text-3xl font-heading font-bold mt-1" style={{ color: "#f59e0b" }}>₹{totalEarned.toLocaleString("en-IN")}</h2>
               {pending > 0 && <p className="text-[10px] text-white/40 mt-0.5">+ ₹{pending.toLocaleString("en-IN")} pending</p>}
             </div>
@@ -104,7 +108,7 @@ const Earnings = () => {
               <Gift className="w-4 h-4 text-accent shrink-0 mt-0.5" />
               <div>
                 <p className="text-[11px] font-heading font-semibold text-foreground">Vouchers give you UP TO 20% extra value!</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">₹10,000 balance = ₹12,000 in Amazon vouchers</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">₹10,000 balance = ₹12,000 in vouchers</p>
               </div>
             </div>
           </div>
@@ -137,7 +141,12 @@ const Earnings = () => {
         </div>
 
         {/* Stats */}
-        <div className="px-4 mt-4 grid grid-cols-3 gap-2">
+        {hasMockData && (
+          <div className="px-4 mt-4 flex justify-end">
+            <SampleBadge />
+          </div>
+        )}
+        <div className={`px-4 ${hasMockData ? "mt-1.5" : "mt-4"} grid grid-cols-3 gap-2`}>
           <div className="border border-border rounded-xl p-3 text-center">
             <Clock className="w-3.5 h-3.5 text-yellow-600 mx-auto mb-1" />
             <p className="font-heading font-bold text-sm text-foreground">₹{pending.toLocaleString("en-IN")}</p>
@@ -163,6 +172,7 @@ const Earnings = () => {
           >
             <div className="flex items-center gap-2">
               <h3 className="font-heading font-semibold text-sm text-foreground">Transaction History</h3>
+              {hasMockData && <SampleBadge />}
               <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-secondary text-muted-foreground font-heading">
                 {displayTransactions.length}
               </span>
@@ -220,7 +230,10 @@ const Earnings = () => {
           <div className="flex items-center gap-2 mb-3">
             <Flame className="w-4 h-4 text-accent" />
             <div>
-              <h3 className="font-heading font-semibold text-sm text-foreground">Affiliate Deals</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-heading font-semibold text-sm text-foreground">Affiliate Deals</h3>
+                <SampleBadge />
+              </div>
               <p className="text-[9px] text-muted-foreground">Share links. Earn passive commissions.</p>
             </div>
           </div>

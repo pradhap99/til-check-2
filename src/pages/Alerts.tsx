@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import { Bell, Search, MessageCircle } from "lucide-react";
+import SampleBadge from "@/components/SampleBadge";
 
 interface Notification {
   id: string;
@@ -12,12 +13,12 @@ interface Notification {
 
 const personalised: Notification[] = [
   { id: "p1", title: "Campaign Match Found", preview: "We found 3 new campaigns matching your profile and niche. Check them out before slots fill up!", date: "Just now", unread: true },
-  { id: "p2", title: "Application Accepted!", preview: "Congratulations! You have been accepted for Lenskart SS'26 — Style Your Vision campaign.", date: "2h ago", unread: true },
-  { id: "p3", title: "Campaign Reminder", preview: "Your upcoming collaboration with boAt starts in 2 days. Make sure your content is ready!", date: "5h ago", unread: false },
-  { id: "p4", title: "Review Request", preview: "Thanks for completing the Mamaearth campaign. Please rate your experience working with them.", date: "1d ago", unread: false },
-  { id: "p5", title: "Campaign Confirmation", preview: "Perfect! You have confirmed your participation in CRED's rewards campaign.", date: "2d ago", unread: false },
-  { id: "p6", title: "Campaign Full", preview: "The Sugar Cosmetics campaign is now full. Check similar campaigns in Beauty & Skincare.", date: "2d ago", unread: true },
-  { id: "p7", title: "Payment Released", preview: "Your payment of ₹15,000 for boAt Summer Audio has been released to your account.", date: "3d ago", unread: false },
+  { id: "p2", title: "Application Accepted!", preview: "Congratulations! You have been accepted for Sample Eyewear SS'26 — Style Your Vision campaign.", date: "2h ago", unread: true },
+  { id: "p3", title: "Campaign Reminder", preview: "Your upcoming collaboration with Demo Audio starts in 2 days. Make sure your content is ready!", date: "5h ago", unread: false },
+  { id: "p4", title: "Review Request", preview: "Thanks for completing the Example Skincare Co. campaign. Please rate your experience working with them.", date: "1d ago", unread: false },
+  { id: "p5", title: "Campaign Confirmation", preview: "Perfect! You have confirmed your participation in Sample Pay's rewards campaign.", date: "2d ago", unread: false },
+  { id: "p6", title: "Campaign Full", preview: "The Placeholder Cosmetics campaign is now full. Check similar campaigns in Beauty & Skincare.", date: "2d ago", unread: true },
+  { id: "p7", title: "Payment Released", preview: "Your payment of ₹15,000 for Demo Audio Summer Launch has been released to your account.", date: "3d ago", unread: false },
 ];
 
 const general: Notification[] = [
@@ -93,7 +94,10 @@ const Alerts = () => {
         </div>
 
         {/* Notification List */}
-        <div className="px-5 mt-4 pb-8 space-y-2">
+        <div className="px-5 mt-3 flex justify-end">
+          <SampleBadge />
+        </div>
+        <div className="px-5 mt-2 pb-8 space-y-2">
           {filtered.map((notif, i) => {
             const unread = isUnread(notif);
             return (

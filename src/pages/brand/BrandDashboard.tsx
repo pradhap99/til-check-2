@@ -5,6 +5,7 @@ import { Bell, Plus, Users, Briefcase, IndianRupee, UserCheck, ArrowRight, Check
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import SampleBadge from "@/components/SampleBadge";
 
 const mockStats = [
   { label: "Active Campaigns", value: "3", icon: Briefcase, color: "text-accent" },
@@ -14,9 +15,9 @@ const mockStats = [
 ];
 
 const mockCampaigns = [
-  { id: "1", title: "Lenskart SS'26 — Style Your Vision", budget: "₹8L–15L", date: "Apr 1 — Apr 20", status: "Active", applications: 18, image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=200&fit=crop" },
-  { id: "2", title: "Mamaearth Vitamin C Range", budget: "₹3L–7L", date: "Mar 28 — Apr 12", status: "Reviewing", applications: 32, image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=200&fit=crop" },
-  { id: "3", title: "boAt Summer Audio Launch", budget: "₹5L–10L", date: "Apr 5 — Apr 25", status: "Active", applications: 12, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=200&fit=crop" },
+  { id: "1", title: "Sample Eyewear SS'26 — Style Your Vision", budget: "₹8L–15L", date: "Apr 1 — Apr 20", status: "Active", applications: 18, image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=200&fit=crop" },
+  { id: "2", title: "Example Skincare Vitamin C Range", budget: "₹3L–7L", date: "Mar 28 — Apr 12", status: "Reviewing", applications: 32, image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=200&fit=crop" },
+  { id: "3", title: "Demo Audio Summer Launch", budget: "₹5L–10L", date: "Apr 5 — Apr 25", status: "Active", applications: 12, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=200&fit=crop" },
 ];
 
 const mockApplications = [
@@ -53,7 +54,10 @@ const BrandDashboard = () => {
           </header>
 
           {/* Stats */}
-          <div className="px-5 mt-4 grid grid-cols-2 gap-2">
+          <div className="px-5 mt-4 flex justify-end">
+            <SampleBadge />
+          </div>
+          <div className="px-5 mt-2 grid grid-cols-2 gap-2">
             {mockStats.map((s, i) => (
               <div key={i} className="border border-border rounded-2xl p-4 bg-card animate-fade-slide-up" style={{ animationDelay: `${i * 60}ms` }}>
                 <s.icon className={`w-4 h-4 ${s.color} mb-2`} />
@@ -66,7 +70,10 @@ const BrandDashboard = () => {
           {/* Active Campaigns */}
           <section className="mt-5">
             <div className="flex items-center justify-between px-5 mb-3">
-              <h3 className="font-heading font-bold text-[15px] text-foreground">Your Active Campaigns</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-heading font-bold text-[15px] text-foreground">Your Active Campaigns</h3>
+                <SampleBadge />
+              </div>
               <Link to="/campaigns" className="text-xs text-accent font-medium flex items-center gap-0.5">View all <ArrowRight className="w-3 h-3" /></Link>
             </div>
             <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 pb-2">
@@ -96,7 +103,10 @@ const BrandDashboard = () => {
           {/* Recent Applications */}
           <section className="px-5 mt-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-heading font-bold text-[15px] text-foreground">Recent Applications</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-heading font-bold text-[15px] text-foreground">Recent Applications</h3>
+                <SampleBadge />
+              </div>
               <Link to="/campaigns" className="text-xs text-accent font-medium flex items-center gap-0.5">All <ArrowRight className="w-3 h-3" /></Link>
             </div>
             <div className="space-y-2">

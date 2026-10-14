@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import SampleBadge from "@/components/SampleBadge";
 import {
   ArrowLeft, MessageSquare, Users, Plus, Search, Eye, Heart,
   Clock, ChevronRight, Lock, Globe
@@ -12,7 +13,7 @@ const forumCategories = [
   { id: "tips", emoji: "🎯", name: "Campaign Tips", posts: 234, lastActive: "2h ago", preview: "How to negotiate better rates with D2C brands" },
   { id: "pricing", emoji: "💰", name: "Pricing & Negotiations", posts: 189, lastActive: "4h ago", preview: "What's the going rate for a 30s Instagram Reel in 2026?" },
   { id: "growth", emoji: "📱", name: "Social Media Growth", posts: 456, lastActive: "1h ago", preview: "Algorithm changes: what's working on Instagram in March" },
-  { id: "collabs", emoji: "🤝", name: "Brand Collaborations", posts: 312, lastActive: "3h ago", preview: "My experience working with Mamaearth — honest review" },
+  { id: "collabs", emoji: "🤝", name: "Brand Collaborations", posts: 312, lastActive: "3h ago", preview: "My experience working with a skincare brand — honest review" },
   { id: "content", emoji: "🎬", name: "Content Creation", posts: 278, lastActive: "30m ago", preview: "Best budget-friendly lighting setup for home studio" },
   { id: "analytics", emoji: "📊", name: "Analytics & Insights", posts: 143, lastActive: "6h ago", preview: "Understanding CPE and how brands evaluate your content" },
 ];
@@ -35,9 +36,9 @@ const mockThreads: Record<string, { title: string; author: string; avatar: strin
 };
 
 const mockGroups = [
-  { name: "Lenskart SS'26 Creator Group", members: 27, desc: "Campaign coordination for Lenskart Summer/Spring 2026", cover: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=200&fit=crop", isPrivate: true, joined: true, tag: "Campaign" },
+  { name: "Sample Eyewear SS'26 Creator Group", members: 27, desc: "Campaign coordination for Sample Eyewear Summer/Spring 2026", cover: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=200&fit=crop", isPrivate: true, joined: true, tag: "Campaign" },
   { name: "Chennai Creators Network", members: 342, desc: "Connect with fellow creators from Chennai and Tamil Nadu", cover: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&h=200&fit=crop", isPrivate: false, joined: false, tag: "City" },
-  { name: "Beauty Influencers India", members: 1230, desc: "India's largest beauty creator community. Share tips, reviews, and opportunities.", cover: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=200&fit=crop", isPrivate: false, joined: true, tag: "Niche" },
+  { name: "Beauty Influencers India", members: 1230, desc: "Beauty creator community. Share tips, reviews, and opportunities.", cover: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=200&fit=crop", isPrivate: false, joined: true, tag: "Niche" },
   { name: "Tech Reviewers Club", members: 567, desc: "For tech enthusiasts and gadget reviewers. Discuss latest launches and review strategies.", cover: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=200&fit=crop", isPrivate: false, joined: false, tag: "Niche" },
   { name: "Food Bloggers Mumbai", members: 890, desc: "Mumbai's food creator community. Restaurant reviews, food photography tips.", cover: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=200&fit=crop", isPrivate: false, joined: false, tag: "City" },
   { name: "Fitness & Wellness Creators", members: 445, desc: "Share workout routines, nutrition tips, and wellness brand collabs.", cover: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&h=200&fit=crop", isPrivate: true, joined: false, tag: "Niche" },
@@ -82,7 +83,10 @@ const Community = () => {
       {tab === "forums" && !selectedCategory && (
         <div className="px-4 mt-4 space-y-2 pb-4">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">Categories</p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">Categories</p>
+              <SampleBadge />
+            </div>
             <Button size="sm" className="h-7 text-[10px] rounded-lg"><Plus className="w-3 h-3 mr-1" /> New Post</Button>
           </div>
           {forumCategories.map((cat) => (
@@ -106,9 +110,12 @@ const Community = () => {
       {tab === "forums" && selectedCategory && (
         <div className="px-4 mt-4 space-y-2 pb-4">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
-              {forumCategories.find(c => c.id === selectedCategory)?.name}
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
+                {forumCategories.find(c => c.id === selectedCategory)?.name}
+              </p>
+              <SampleBadge />
+            </div>
             <Button size="sm" className="h-7 text-[10px] rounded-lg"><Plus className="w-3 h-3 mr-1" /> New Post</Button>
           </div>
           {threads.map((t, i) => (
@@ -136,7 +143,10 @@ const Community = () => {
       {tab === "groups" && (
         <div className="px-4 mt-4 space-y-3 pb-4">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">Groups</p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">Groups</p>
+              <SampleBadge />
+            </div>
             <Button size="sm" className="h-7 text-[10px] rounded-lg"><Plus className="w-3 h-3 mr-1" /> Create Group</Button>
           </div>
           {mockGroups.map((g, i) => (

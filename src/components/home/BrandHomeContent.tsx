@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { creators, campaigns } from "@/data/mockData";
 import CreatorCard from "@/components/CreatorCard";
-import { ArrowRight, Plus, Sparkles, Shield, Wallet, Video, MessageSquare, UserCheck, ChefHat, TrendingUp, Users, FileCheck, BarChart3, Eye } from "lucide-react";
+import { ArrowRight, Plus, Sparkles, Shield, Wallet, Video, MessageSquare, UserCheck, ChefHat, Users, FileCheck, BarChart3, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CountUp from "@/components/CountUp";
+import SampleBadge from "@/components/SampleBadge";
 
 const trendingStyles = [
   { label: "UGC Talking Head", icon: MessageSquare, color: "bg-primary/10 text-primary" },
@@ -36,7 +37,7 @@ const BrandHomeContent = ({ stats, statsLoading }: BrandHomeContentProps) => {
         <div className="grid grid-cols-2 gap-2">
           {[
             { label: "Active Campaigns", value: stats.activeCampaigns, icon: Sparkles, color: "text-primary", dotColor: "bg-emerald-500" },
-            { label: "Total Applications", value: stats.applicationsCount, icon: Users, color: "text-accent", trend: "+12 this week" },
+            { label: "Total Applications", value: stats.applicationsCount, icon: Users, color: "text-accent" },
             { label: "Shortlisted", value: 0, icon: FileCheck, color: "text-chart-4" },
             { label: "Completed", value: 0, icon: BarChart3, color: "text-chart-2" },
           ].map((s, i) => (
@@ -49,7 +50,6 @@ const BrandHomeContent = ({ stats, statsLoading }: BrandHomeContentProps) => {
                 {statsLoading ? "—" : <CountUp end={s.value} duration={1200} />}
               </p>
               <p className="text-[10px] text-muted-foreground mt-0.5">{s.label}</p>
-              {s.trend && <p className="text-[9px] text-emerald-500 font-medium mt-0.5 flex items-center gap-0.5"><TrendingUp className="w-2.5 h-2.5" />{s.trend}</p>}
             </div>
           ))}
         </div>
@@ -77,7 +77,10 @@ const BrandHomeContent = ({ stats, statsLoading }: BrandHomeContentProps) => {
       {/* Your Campaigns */}
       <section className="mt-5">
         <div className="flex items-center justify-between px-5 mb-3">
-          <h3 className="font-heading font-bold text-[15px] text-foreground">Your Campaigns</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-heading font-bold text-[15px] text-foreground">Your Campaigns</h3>
+            <SampleBadge />
+          </div>
           <Link to="/campaigns" className="text-xs text-muted-foreground hover:text-foreground font-medium flex items-center gap-0.5 transition-colors">
             View all <ArrowRight className="w-3 h-3" />
           </Link>
@@ -130,7 +133,10 @@ const BrandHomeContent = ({ stats, statsLoading }: BrandHomeContentProps) => {
       {/* Recommended Creators */}
       <section className="px-5 mt-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-heading font-bold text-[15px] text-foreground">Recommended Creators</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-heading font-bold text-[15px] text-foreground">Recommended Creators</h3>
+            <SampleBadge />
+          </div>
           <Link to="/creators" className="text-xs text-muted-foreground hover:text-foreground font-medium flex items-center gap-0.5 transition-colors">
             View all <ArrowRight className="w-3 h-3" />
           </Link>
@@ -148,7 +154,10 @@ const BrandHomeContent = ({ stats, statsLoading }: BrandHomeContentProps) => {
       <section className="px-5 mt-5">
         <div className="rounded-2xl p-5 bg-[hsl(222,47%,11%)] border border-accent/20">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-heading font-semibold text-sm text-white">Campaign Performance</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-heading font-semibold text-sm text-white">Campaign Performance</h3>
+              <SampleBadge />
+            </div>
             <Eye className="w-4 h-4 text-accent" />
           </div>
           <div className="grid grid-cols-3 gap-3">

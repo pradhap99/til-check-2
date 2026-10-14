@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { creators } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import SampleBadge from "@/components/SampleBadge";
 import { ArrowLeft, CheckCircle, MapPin, Users, TrendingUp, Heart, Share2, MessageCircle, Instagram, Youtube, Twitter, Star, Send, Briefcase } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -167,6 +168,7 @@ const CreatorDetail = () => {
             <div className="pb-1">
               <h1 className="font-heading font-bold text-lg text-foreground tracking-tight">{creator.name}</h1>
               <p className="text-xs text-muted-foreground">{creator.handle}</p>
+              {mockCreator && <SampleBadge className="mt-1" />}
             </div>
           </div>
         </div>
@@ -190,7 +192,7 @@ const CreatorDetail = () => {
         {[
           { label: "Followers", value: creator.followers, icon: Users },
           { label: "Engagement", value: creator.engagement, icon: TrendingUp },
-          { label: "Rating", value: "4.8", icon: Star },
+          { label: "Verified", value: creator.verified ? "Yes" : "No", icon: CheckCircle },
         ].map((stat, i) => (
           <div key={i} className="glass-card rounded-lg p-3 text-center">
             <p className="font-heading font-bold text-sm text-card-foreground">{stat.value}</p>

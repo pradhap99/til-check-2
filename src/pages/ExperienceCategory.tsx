@@ -5,6 +5,7 @@ import { campaigns } from "@/data/mockData";
 import { ArrowLeft, MapPin, Calendar, Heart, Users, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import SampleBadge from "@/components/SampleBadge";
 
 const LEVEL_EMOJIS: Record<number, string> = { 1: "✨", 2: "🌟", 3: "🔥", 4: "💫", 5: "👑", 6: "🥇" };
 
@@ -73,7 +74,10 @@ const ExperienceCategory = () => {
           </button>
           <div>
             <h1 className="text-lg font-heading font-bold text-foreground">{config.emoji} {config.label}</h1>
-            <p className="text-[10px] text-muted-foreground">{filtered.length} campaigns available</p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-[10px] text-muted-foreground">{filtered.length} campaigns available</p>
+              <SampleBadge />
+            </div>
           </div>
         </header>
 

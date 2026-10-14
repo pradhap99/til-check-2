@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import BrandBottomNav from "@/components/BrandBottomNav";
+import SampleBadge from "@/components/SampleBadge";
 
 const tabs = ["All", "Pending", "Accepted", "Declined"];
 
@@ -33,7 +34,10 @@ const BrandApplications = () => {
             </button>
             <div>
               <h1 className="text-lg font-heading font-bold text-foreground">Applications</h1>
-              <p className="text-[10px] text-muted-foreground">Lenskart SS'26 Campaign</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[10px] text-muted-foreground">Sample Eyewear SS'26 Campaign</p>
+                <SampleBadge />
+              </div>
             </div>
           </header>
 

@@ -13,7 +13,7 @@ const helpSections = [
   {
     id: "what-is-til",
     title: "What is TIL?",
-    content: "TIL (The Influencer League) is India's premier creator economy platform connecting brands with creators for paid campaigns, barter collaborations, and affiliate deals. We handle discovery, escrow payments, and performance tracking — so both sides can focus on creating great content.",
+    content: "TIL (The Influencer League) is a creator-brand marketplace built for India, connecting brands with creators for paid campaigns, barter collaborations, and affiliate deals. We handle discovery, escrow payments, and performance tracking — so both sides can focus on creating great content.",
   },
   {
     id: "escrow",
@@ -38,7 +38,7 @@ const helpSections = [
   {
     id: "vouchers",
     title: "How do Vouchers work?",
-    content: "When you redeem your wallet balance as vouchers (Amazon, Flipkart, Swiggy, etc.), you get up to 20% bonus value — meaning ₹10,000 balance becomes ₹12,000 in vouchers. This is significantly better than a direct bank transfer where you receive the exact amount. Vouchers are delivered instantly to your email.",
+    content: "When you redeem your wallet balance as vouchers (shopping, food delivery and more), you get up to 20% bonus value — meaning ₹10,000 balance becomes ₹12,000 in vouchers. This is significantly better than a direct bank transfer where you receive the exact amount. Vouchers are delivered instantly to your email.",
   },
 ];
 

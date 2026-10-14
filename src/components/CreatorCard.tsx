@@ -1,13 +1,15 @@
 import { Creator } from "@/data/mockData";
 import { CheckCircle, MapPin } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import SampleBadge from "@/components/SampleBadge";
 
 interface CreatorCardProps {
   creator: Creator;
   index?: number;
+  /** True when the card renders hardcoded sample data rather than a database creator. */
+  sample?: boolean;
 }
 
-const CreatorCard = ({ creator, index = 0 }: CreatorCardProps) => {
+const CreatorCard = ({ creator, index = 0, sample = false }: CreatorCardProps) => {
   return (
     <div
       className="bg-card border border-border/80 rounded-2xl p-4 flex items-center gap-3.5 cursor-pointer hover-lift-lg opacity-0 animate-fade-up active:scale-[0.98] transition-all duration-300 shadow-sm hover:border-accent/40"
@@ -35,7 +37,8 @@ const CreatorCard = ({ creator, index = 0 }: CreatorCardProps) => {
           <span className="text-xs text-muted-foreground">·</span>
           <span className="text-xs text-muted-foreground">{creator.engagement} eng.</span>
         </div>
-        <div className="flex items-center gap-1.5 mt-1">
+        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+          {sample && <SampleBadge />}
           <span className="text-[10px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground font-medium">{creator.category}</span>
           <span className="text-[10px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground font-medium flex items-center gap-0.5">
             <MapPin className="w-2.5 h-2.5" /> {creator.location}

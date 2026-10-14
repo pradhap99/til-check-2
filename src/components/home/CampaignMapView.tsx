@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X, ZoomIn, ZoomOut, MapPin, Calendar, Navigation } from "lucide-react";
+import SampleBadge from "@/components/SampleBadge";
 
 const categoryColors: Record<string, { ring: string; dot: string; label: string }> = {
   Fashion: { ring: "border-amber-500/40", dot: "bg-amber-500", label: "Fashion" },
@@ -14,27 +15,27 @@ const categoryColors: Record<string, { ring: string; dot: string; label: string 
 
 const mapPins = [
   { id: "1", city: "Delhi", left: "38%", top: "22%", category: "Fashion", campaigns: [
-    { id: "1", brand: "Lenskart", title: "Style Your Vision", budget: "₹8L–15L", date: "Apr 1 — Apr 20", applied: 18 },
-    { id: "dining-001", brand: "SOCIAL", title: "Urban Dining Experience", budget: "₹4L–8L", date: "Mar 25 — Apr 10", applied: 10 },
+    { id: "1", brand: "Sample Eyewear", title: "Style Your Vision", budget: "₹8L–15L", date: "Apr 1 — Apr 20", applied: 18 },
+    { id: "dining-001", brand: "Demo Dining Co.", title: "Urban Dining Experience", budget: "₹4L–8L", date: "Mar 25 — Apr 10", applied: 10 },
   ]},
   { id: "2", city: "Mumbai", left: "25%", top: "52%", category: "Beauty", campaigns: [
-    { id: "2", brand: "Mamaearth", title: "Vitamin C Range", budget: "₹3L–7L", date: "Mar 28 — Apr 12", applied: 32 },
-    { id: "cafe-002", brand: "Third Wave", title: "Morning Ritual Series", budget: "₹2L–4L", date: "Apr 1 — Apr 15", applied: 8 },
+    { id: "2", brand: "Example Skincare Co.", title: "Vitamin C Range", budget: "₹3L–7L", date: "Mar 28 — Apr 12", applied: 32 },
+    { id: "cafe-002", brand: "Sample Coffee House", title: "Morning Ritual Series", budget: "₹2L–4L", date: "Apr 1 — Apr 15", applied: 8 },
   ]},
   { id: "3", city: "Bangalore", left: "35%", top: "68%", category: "Tech", campaigns: [
-    { id: "3", brand: "boAt", title: "Summer Audio Launch", budget: "₹5L–10L", date: "Apr 5 — Apr 25", applied: 12 },
+    { id: "3", brand: "Demo Audio", title: "Summer Audio Launch", budget: "₹5L–10L", date: "Apr 5 — Apr 25", applied: 12 },
   ]},
   { id: "4", city: "Hyderabad", left: "40%", top: "60%", category: "Food", campaigns: [
-    { id: "4", brand: "Zomato", title: "Food Stories", budget: "₹4L–8L", date: "Apr 8 — Apr 22", applied: 25 },
+    { id: "4", brand: "Sample Eats", title: "Food Stories", budget: "₹4L–8L", date: "Apr 8 — Apr 22", applied: 25 },
   ]},
   { id: "5", city: "Kolkata", left: "58%", top: "42%", category: "Beauty", campaigns: [
-    { id: "5", brand: "Nykaa", title: "Festive Glow", budget: "₹2L–5L", date: "Apr 3 — Apr 18", applied: 45 },
+    { id: "5", brand: "Sample Beauty Store", title: "Festive Glow", budget: "₹2L–5L", date: "Apr 3 — Apr 18", applied: 45 },
   ]},
   { id: "6", city: "Manali", left: "36%", top: "12%", category: "Staycation", campaigns: [
-    { id: "staycation-001", brand: "Zostel", title: "Backpacker Stories", budget: "₹5L–10L", date: "Apr 10 — Apr 30", applied: 6 },
+    { id: "staycation-001", brand: "Sample Stays", title: "Backpacker Stories", budget: "₹5L–10L", date: "Apr 10 — Apr 30", applied: 6 },
   ]},
   { id: "7", city: "Koramangala", left: "36%", top: "72%", category: "Cafe", campaigns: [
-    { id: "cafe-001", brand: "Blue Tokai", title: "Coffee Culture Campaign", budget: "₹3L–5L", date: "Mar 20 — Apr 5", applied: 8 },
+    { id: "cafe-001", brand: "Placeholder Café", title: "Coffee Culture Campaign", budget: "₹3L–5L", date: "Mar 20 — Apr 5", applied: 8 },
   ]},
 ];
 
@@ -73,7 +74,10 @@ const CampaignMapView = ({ campaigns }: CampaignMapViewProps) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h4 className="text-xs font-heading font-semibold text-foreground">Discover Campaigns Near You</h4>
-        <span className="text-[9px] px-2 py-0.5 rounded-full bg-accent/10 text-accent font-heading font-bold">{filteredPins.length} active</span>
+        <div className="flex items-center gap-1.5">
+          <SampleBadge />
+          <span className="text-[9px] px-2 py-0.5 rounded-full bg-accent/10 text-accent font-heading font-bold">{filteredPins.length} active</span>
+        </div>
       </div>
 
       {/* Filter pills */}

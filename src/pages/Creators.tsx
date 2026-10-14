@@ -10,6 +10,7 @@ import { Search, SlidersHorizontal, X, Users, Heart, MapPin, ArrowLeft, Flame, S
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import SampleBadge from "@/components/SampleBadge";
 
 const segments = ["Experiences", "Products", "Services", "Events", "Long-term"];
 const locationOptions = ["All", "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", "Pune", "Kolkata", "Jaipur", "Ahmedabad", "Goa", "Kochi", "Lucknow"];
@@ -35,11 +36,11 @@ const categoryTiles = [
 
 const trendingCreators = mockCreators.slice(0, 6);
 const featuredBrands = [
-  { name: "boAt", logo: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop", slots: 5 },
-  { name: "Mamaearth", logo: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=80&h=80&fit=crop", slots: 4 },
-  { name: "Lenskart", logo: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=80&h=80&fit=crop", slots: 10 },
-  { name: "CRED", logo: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=80&h=80&fit=crop", slots: 2 },
-  { name: "Sugar", logo: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=80&h=80&fit=crop", slots: 3 },
+  { name: "Demo Audio", logo: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop", slots: 5 },
+  { name: "Example Skincare Co.", logo: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=80&h=80&fit=crop", slots: 4 },
+  { name: "Sample Eyewear", logo: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=80&h=80&fit=crop", slots: 10 },
+  { name: "Sample Pay", logo: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=80&h=80&fit=crop", slots: 2 },
+  { name: "Placeholder Cosmetics", logo: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=80&h=80&fit=crop", slots: 3 },
 ];
 
 const recommendedCreators = mockCreators.slice(0, 8).map((c, i) => ({
@@ -137,7 +138,7 @@ const Creators = () => {
     <Layout>
       <header className="px-5 pt-6 pb-2">
         <h1 className="text-xl font-heading font-bold text-foreground">{isBrand ? "Find Creators" : "Discover"}</h1>
-        <p className="text-xs text-muted-foreground">{isBrand ? "Search from 12,400+ verified creators across India" : "Find creators & opportunities"}</p>
+        <p className="text-xs text-muted-foreground">{isBrand ? "Search verified creators across India" : "Find creators & opportunities"}</p>
       </header>
 
       {/* Segmented Nav - Creator only */}
@@ -258,6 +259,7 @@ const Creators = () => {
                 <div className="flex items-center gap-2">
                   <h3 className="font-heading font-bold text-[15px] text-foreground">Recommended For You</h3>
                   <Badge className="bg-accent/10 text-accent border-0 text-[8px]"><Zap className="w-2.5 h-2.5 mr-0.5" />AI Match</Badge>
+                  <SampleBadge />
                 </div>
                 <button className="text-xs text-muted-foreground flex items-center gap-0.5">See all <ChevronRight className="w-3 h-3" /></button>
               </div>
@@ -296,6 +298,7 @@ const Creators = () => {
                 <div className="flex items-center gap-2">
                   <h3 className="font-heading font-bold text-[15px] text-foreground">Trending This Week</h3>
                   <span className="text-sm">🔥</span>
+                  <SampleBadge />
                 </div>
               </div>
               <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 pb-1">
@@ -323,7 +326,10 @@ const Creators = () => {
             <>
               <section className="mb-5">
                 <div className="flex items-center justify-between px-5 mb-3">
-                  <h3 className="font-heading font-bold text-[15px] text-foreground">Trending Creators</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-heading font-bold text-[15px] text-foreground">Trending Creators</h3>
+                    <SampleBadge />
+                  </div>
                   <button onClick={() => setSearch("trending")} className="text-xs text-muted-foreground flex items-center gap-0.5">See all <ChevronRight className="w-3 h-3" /></button>
                 </div>
                 <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 pb-1">
@@ -350,6 +356,7 @@ const Creators = () => {
                   <div className="flex items-center gap-2">
                     <h3 className="font-heading font-bold text-[15px] text-foreground">Brands Hiring Now</h3>
                     <span className="text-[9px] px-2 py-0.5 rounded-full bg-destructive/10 text-destructive font-semibold">Urgent</span>
+                    <SampleBadge />
                   </div>
                 </div>
                 <div className="flex gap-2.5 overflow-x-auto no-scrollbar px-5 pb-1">
@@ -403,7 +410,7 @@ const Creators = () => {
                           if ((creator as any).isReal && (creator as any).realUserId) navigate(`/creators/${(creator as any).realUserId}`);
                           else navigate(`/creators/${creator.id}`);
                         }}>
-                          <CreatorCard creator={creator as any} index={i} />
+                          <CreatorCard creator={creator as any} index={i} sample={!creator.isReal} />
                         </div>
                         {(creator as any).isReal && (creator as any).realUserId && (
                           <button onClick={(e) => handleSaveCreator((creator as any).realUserId, e)} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center z-10 border border-border">
@@ -444,7 +451,7 @@ const Creators = () => {
                     if ((creator as any).isReal && (creator as any).realUserId) navigate(`/creators/${(creator as any).realUserId}`);
                     else navigate(`/creators/${creator.id}`);
                   }}>
-                    <CreatorCard creator={creator as any} index={i} />
+                    <CreatorCard creator={creator as any} index={i} sample={!creator.isReal} />
                   </div>
                   {role === "brand" && (creator as any).isReal && (creator as any).realUserId && (
                     <button onClick={(e) => handleSaveCreator((creator as any).realUserId, e)} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center z-10 border border-border">

@@ -222,7 +222,7 @@ const Auth = () => {
         {/* Trust badge */}
         <div className="mt-6 flex items-center gap-1.5 animate-fade-slide-up" style={{ animationDelay: "0.4s" }}>
           <CheckCircle className="w-3.5 h-3.5" style={{ color: "#f59e0b" }} />
-          <span className="text-[11px] text-white/50 font-medium">Trusted by 12,400+ creators</span>
+          <span className="text-[11px] text-white/50 font-medium">Built for Indian creators and brands</span>
         </div>
       </div>
     </div>

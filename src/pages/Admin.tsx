@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import CountUp from "@/components/CountUp";
+import SampleBadge from "@/components/SampleBadge";
 import {
   Users, BarChart3, Shield, AlertTriangle, CheckCircle, XCircle,
   Eye, Star, IndianRupee, ChevronRight, Megaphone,
@@ -40,10 +41,10 @@ const mockPendingCreators = [
 ];
 
 const mockPendingBrands = [
-  { name: "Sugar Cosmetics", type: "brand", industry: "Beauty Brand", city: "Mumbai", applied: "Mar 8", avatar: "" },
-  { name: "Curefit", type: "brand", industry: "Fitness & Health", city: "Bangalore", applied: "Mar 7", avatar: "" },
-  { name: "Sleepy Owl Coffee", type: "brand", industry: "Food & Beverage", city: "Delhi", applied: "Mar 6", avatar: "" },
-  { name: "Bewakoof", type: "brand", industry: "Fashion & Apparel", city: "Mumbai", applied: "Mar 9", avatar: "" },
+  { name: "Placeholder Cosmetics", type: "brand", industry: "Beauty Brand", city: "Mumbai", applied: "Mar 8", avatar: "" },
+  { name: "Sample Fitness Studio", type: "brand", industry: "Fitness & Health", city: "Bangalore", applied: "Mar 7", avatar: "" },
+  { name: "Sample Coffee Roasters", type: "brand", industry: "Food & Beverage", city: "Delhi", applied: "Mar 6", avatar: "" },
+  { name: "Demo Apparel", type: "brand", industry: "Fashion & Apparel", city: "Mumbai", applied: "Mar 9", avatar: "" },
 ];
 
 const Admin = () => {
@@ -195,16 +196,17 @@ const Admin = () => {
               <div><h2 className="font-heading font-bold text-xl text-foreground">Dashboard</h2><p className="text-xs text-muted-foreground mt-0.5">Platform overview</p></div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
-                  { label: "Pending", value: pendingCreators.length + pendingBrands.length, sub: "need review", icon: Clock, color: "text-amber-500" },
-                  { label: "Approved Today", value: 8, sub: "creators & brands", icon: UserCheck, color: "text-emerald-500" },
-                  { label: "Active Creators", value: stats.creators || 342, sub: "verified", icon: Users, color: "text-accent" },
-                  { label: "Active Brands", value: stats.brands || 89, sub: "registered", icon: Megaphone, color: "text-blue-500" },
+                  { label: "Pending", value: pendingCreators.length + pendingBrands.length, sub: "need review", icon: Clock, color: "text-amber-500", sample: true },
+                  { label: "Approved Today", value: null, sub: "creators & brands", icon: UserCheck, color: "text-emerald-500", sample: false },
+                  { label: "Active Creators", value: stats.creators, sub: "verified", icon: Users, color: "text-accent", sample: false },
+                  { label: "Active Brands", value: stats.brands, sub: "registered", icon: Megaphone, color: "text-blue-500", sample: false },
                 ].map((s, i) => (
                   <div key={i} className="border border-border rounded-xl p-4">
                     <s.icon className={`w-4 h-4 ${s.color} mb-2`} />
-                    <p className={`font-heading font-bold text-xl ${s.color}`}><CountUp end={s.value} duration={1500} /></p>
+                    <p className={`font-heading font-bold text-xl ${s.color}`}>{s.value === null ? "—" : <CountUp end={s.value} duration={1500} />}</p>
                     <p className="text-[10px] text-muted-foreground">{s.label}</p>
                     <p className="text-[9px] text-muted-foreground">{s.sub}</p>
+                    {s.sample && <SampleBadge className="mt-1" />}
                   </div>
                 ))}
               </div>
@@ -213,10 +215,10 @@ const Admin = () => {
                   <p className="text-xs font-heading font-semibold text-foreground mb-3">Key Metrics</p>
                   <div className="space-y-2.5">
                     {[
-                      { label: "Total Signups (this month)", value: `${stats.totalUsers || 45}` },
-                      { label: "Approval Rate", value: "87%" },
-                      { label: "Active Campaigns", value: `${stats.activeCampaigns || 12}` },
-                      { label: "Revenue (15%)", value: `₹${(stats.totalGMV * 0.15 || 125000).toLocaleString("en-IN")}` },
+                      { label: "Total Signups", value: `${stats.totalUsers}` },
+                      { label: "Approval Rate", value: "—" },
+                      { label: "Active Campaigns", value: `${stats.activeCampaigns}` },
+                      { label: "Revenue (15%)", value: `₹${(stats.totalGMV * 0.15).toLocaleString("en-IN")}` },
                     ].map((r, i) => (
                       <div key={i} className="flex justify-between text-xs">
                         <span className="text-muted-foreground">{r.label}</span>
@@ -229,9 +231,9 @@ const Admin = () => {
                   <p className="text-xs font-heading font-semibold text-foreground mb-3">Transaction Summary</p>
                   <div className="space-y-2.5">
                     {[
-                      { label: "Total GMV", value: `₹${(stats.totalGMV || 850000).toLocaleString("en-IN")}` },
-                      { label: "Pending Payouts", value: `₹${(stats.pendingPayouts || 125000).toLocaleString("en-IN")}` },
-                      { label: "Open Disputes", value: `${stats.openDisputes || 3}` },
+                      { label: "Total GMV", value: `₹${stats.totalGMV.toLocaleString("en-IN")}` },
+                      { label: "Pending Payouts", value: `₹${stats.pendingPayouts.toLocaleString("en-IN")}` },
+                      { label: "Open Disputes", value: `${stats.openDisputes}` },
                     ].map((r, i) => (
                       <div key={i} className="flex justify-between text-xs">
                         <span className="text-muted-foreground">{r.label}</span>
@@ -247,7 +249,10 @@ const Admin = () => {
           {/* Pending Approvals */}
           {tab === "pending" && (
             <div className="space-y-4">
-              <div><h2 className="font-heading font-bold text-xl text-foreground">Pending Approvals</h2><p className="text-xs text-muted-foreground">{pendingCreators.length + pendingBrands.length} awaiting review</p></div>
+              <div>
+                <div className="flex items-center gap-2"><h2 className="font-heading font-bold text-xl text-foreground">Pending Approvals</h2><SampleBadge /></div>
+                <p className="text-xs text-muted-foreground">{pendingCreators.length + pendingBrands.length} awaiting review</p>
+              </div>
               <div className="flex gap-1.5 flex-wrap">
                 {(["all", "creators", "brands", "today", "week"] as const).map(f => (
                   <button key={f} onClick={() => setPendingFilter(f)} className={`px-3 py-1.5 rounded-full text-[10px] font-medium transition-all ${pendingFilter === f ? "bg-foreground text-background" : "bg-secondary text-muted-foreground"}`}>

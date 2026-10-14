@@ -231,7 +231,7 @@ const Campaigns = () => {
             {filtered.map((campaign, i) => (
               <div key={`${campaign.id}-${i}`}>
                 <div onClick={() => navigate(`/campaigns/${campaign.id}`)}>
-                  <CampaignCard campaign={campaign} index={i} />
+                  <CampaignCard campaign={campaign} index={i} sample={!campaign.isReal} />
                 </div>
                 {role === "brand" && (campaign as any).isReal && (
                   <div className="mt-1">

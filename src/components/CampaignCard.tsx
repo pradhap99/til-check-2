@@ -1,11 +1,14 @@
 import { Campaign } from "@/data/mockData";
 import { Calendar, Users, Flame, Sparkles, ArrowRight, Lock, Star, MapPin } from "lucide-react";
 import { CREATOR_LEVELS } from "@/lib/creatorLevels";
+import SampleBadge from "@/components/SampleBadge";
 
 interface CampaignCardProps {
   campaign: Campaign & { compensationType?: string; minCreatorLevel?: number };
   index?: number;
   userLevel?: number;
+  /** True when the card renders hardcoded sample data rather than a database campaign. */
+  sample?: boolean;
 }
 
 const categoryColors: Record<string, string> = {
@@ -53,7 +56,7 @@ const platformColors: Record<string, string> = {
   Twitter: "bg-blue-400 text-white",
 };
 
-const CampaignCard = ({ campaign, index = 0, userLevel = 1 }: CampaignCardProps) => {
+const CampaignCard = ({ campaign, index = 0, userLevel = 1, sample = false }: CampaignCardProps) => {
   const slotsLeft = campaign.slots - campaign.filled;
   const progress = (campaign.filled / campaign.slots) * 100;
   const isHot = progress >= 70;
@@ -111,6 +114,7 @@ const CampaignCard = ({ campaign, index = 0, userLevel = 1 }: CampaignCardProps)
             )}
           </div>
           <span className="text-xs text-foreground font-medium">{campaign.brand}</span>
+          {sample && <SampleBadge className="ml-auto" />}
         </div>
 
         <h3 className="font-heading font-bold text-[15px] text-foreground leading-tight">{campaign.title}</h3>
