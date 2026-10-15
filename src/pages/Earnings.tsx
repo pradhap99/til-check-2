@@ -175,26 +175,34 @@ const Earnings = () => {
 
         {/* Collapsible Transaction History */}
         <div className="px-4 mt-5 mb-4">
-          <button
-            onClick={() => setTxOpen(!txOpen)}
-            className="w-full flex items-center justify-between py-2"
-          >
-            <div className="flex items-center gap-2">
+          <div className="w-full flex items-center justify-between py-2">
+            <button
+              onClick={() => setTxOpen(!txOpen)}
+              aria-expanded={txOpen}
+              aria-controls="transaction-history-list"
+              className="flex items-center gap-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+            >
               <h3 className="font-heading font-semibold text-sm text-foreground">Transaction History</h3>
               {hasMockData && <SampleBadge />}
               <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-secondary text-muted-foreground font-heading">
                 {displayTransactions.length}
               </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="text-[10px] text-primary font-heading font-medium flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
-                <Download className="w-3 h-3" /> Export
-              </button>
-              {txOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
-            </div>
-          </button>
+              {txOpen ? (
+                <ChevronUp className="w-4 h-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              )}
+            </button>
+            <button
+              className="text-[10px] text-primary font-heading font-medium flex items-center gap-0.5 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1.5 py-0.5"
+              aria-label="Export transaction history"
+            >
+              <Download className="w-3 h-3" /> Export
+            </button>
+          </div>
 
           <div
+            id="transaction-history-list"
             className="overflow-hidden transition-all duration-350 ease-in-out"
             style={{ maxHeight: txOpen ? `${displayTransactions.length * 80 + 20}px` : "0px" }}
           >
