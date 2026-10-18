@@ -21,6 +21,15 @@ interface CampaignData {
   applications_count?: number;
 }
 
+interface ActivityItem {
+  id: string;
+  creator_user_id: string;
+  status: string;
+  created_at: string;
+  creatorName: string;
+  creatorAvatar: string;
+}
+
 const experienceTypeMap: Record<string, string> = {
   Food: "Dining Experience", Beauty: "Salon Visit", Fashion: "Styling Session",
   Travel: "Staycation", Tech: "Product Unboxing", Fitness: "Studio Visit",
@@ -41,7 +50,7 @@ const CampaignDetail = () => {
   const [contentConcept, setContentConcept] = useState("");
   const [applying, setApplying] = useState(false);
   const [alreadyApplied, setAlreadyApplied] = useState(false);
-  const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
 
   const isOwner = user && campaign?.brand_user_id === user.id;
 
@@ -122,7 +131,10 @@ const CampaignDetail = () => {
       toast.success("Application submitted!");
       setApplyOpen(false); setAlreadyApplied(true);
       setPitch(""); setProposedRate(""); setContentConcept("");
-    } catch (e: any) { toast.error(e.message || "Failed to apply"); }
+    } catch (e: unknown) {
+      const err = e as Error;
+      toast.error(err.message || "Failed to apply");
+    }
     setApplying(false);
   };
 
@@ -147,11 +159,11 @@ const CampaignDetail = () => {
     <div className="min-h-screen bg-background max-w-lg mx-auto pb-4">
       {/* Header */}
       <div className="px-4 pt-4 flex items-center justify-between">
-        <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><ArrowLeft className="w-5 h-5 text-foreground" /></button>
+        <button onClick={() => navigate(-1)} aria-label="Go back" className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><ArrowLeft className="w-5 h-5 text-foreground" /></button>
         <h1 className="font-heading font-semibold text-sm text-foreground">{isOwner ? "Your Campaign" : "Campaign Details"}</h1>
         <div className="flex gap-2">
-          <button className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><Share2 className="w-4 h-4 text-muted-foreground" /></button>
-          {!isOwner && <button className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><Bookmark className="w-4 h-4 text-muted-foreground" /></button>}
+          <button aria-label="Share campaign" className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><Share2 className="w-4 h-4 text-muted-foreground" /></button>
+          {!isOwner && <button aria-label="Bookmark campaign" className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center"><Bookmark className="w-4 h-4 text-muted-foreground" /></button>}
         </div>
       </div>
 
@@ -159,7 +171,7 @@ const CampaignDetail = () => {
       <div className="px-4 mt-5">
         <div className="flex items-center gap-3">
           {campaign.logo ? (
-            <img src={campaign.logo} alt="" className="w-12 h-12 rounded-xl object-cover bg-secondary" />
+            <img src={campaign.logo} alt={`${campaign.brand} logo`} className="w-12 h-12 rounded-xl object-cover bg-secondary" />
           ) : (
             <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
               <span className="text-lg font-heading font-bold text-primary">{campaign.brand.charAt(0)}</span>
@@ -234,7 +246,7 @@ const CampaignDetail = () => {
               <div className="space-y-2">
                 {recentActivity.map((activity, i) => (
                   <div key={activity.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-secondary/50 opacity-0 animate-fade-up" style={{ animationDelay: `${i * 60}ms`, animationFillMode: "forwards" }}>
-                    <img src={activity.creatorAvatar} alt="" className="w-8 h-8 rounded-lg object-cover bg-secondary" />
+                    <img src={activity.creatorAvatar} alt={activity.creatorName} className="w-8 h-8 rounded-lg object-cover bg-secondary" />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-foreground">
                         <span className="font-medium">{activity.creatorName}</span>
